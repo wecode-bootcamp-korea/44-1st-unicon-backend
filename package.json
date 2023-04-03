@@ -1,0 +1,24 @@
+{
+  "name": "unicorn",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dbmate": "^2.2.0",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "morgan": "^1.10.0",
+    "mysql2": "^3.2.0",
+    "nodemon": "^2.0.22",
+    "typeorm": "^0.3.12"
+  }
+}
