@@ -5,7 +5,7 @@ CREATE TABLE order_item (
   order_id INT NOT NULL,
   product_id INT NOT NULL,
   quantity INT,
-  price INT,
+  price DECIMAL(7,2),
   PRIMARY KEY(id),
   CONSTRAINT userId_orderItem_FK FOREIGN KEY (user_id) REFERENCES users(id),
   CONSTRAINT ordersId_orderItem_FK FOREIGN KEY (order_id) REFERENCES orders(id),

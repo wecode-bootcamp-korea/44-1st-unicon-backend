@@ -5,7 +5,7 @@ CREATE TABLE review (
   user_id INT NOT NULL,
   title VARCHAR(50),
   content VARCHAR(500),
-  rating FLOAT,
+  rating DECIMAL(2,1),
   created_at TIMESTAMP NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY(id),
