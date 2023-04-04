@@ -5,7 +5,7 @@ const signUp = async (address, birth, email, name, password, phone, gender) => {
   try {
     const user = await appDataSource.query(
       `INSERT INTO users(
-		    names,
+        names,
         email,
         passwords,
         phone_number,
@@ -13,16 +13,9 @@ const signUp = async (address, birth, email, name, password, phone, gender) => {
         addresses,
         points
 
-		  ) VALUES (?, ?, ?, ?, ?, ?, 5000000);
-		`,
-      [name, email, password, phone, birth, address, point]
-    );
-    const genderTable = await appDataSource.query(
-      `INSERT INTO gender(
-          gender_detail
-        ) VALUES (?);
-      `,
-      [gender]
+      ) VALUES (?, ?, ?, ?, ?, ?, 5000);
+    `,
+      [name, email, password, phone, birth, address]
     );
   } catch (err) {
     const error = new Error('INVALID_DATA_INPUT');
