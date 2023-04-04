@@ -7,7 +7,7 @@ const signUp = async (name, birth, phone, email, gender, address, password) => {
   const emailValid = new RegExp('/^S+@S+.S+$/i');
 
   // password 정규표현식
-  const pwValid = new RegExp('^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$');
+  const pwValid = new RegExp('^(?=.*[A-Za-z])(?=.*[0-9])(?=.{8,20})');
 
   // 생일 정규 표현식
   const birthValid = new RegExp('/^(d{4})(/|-)(d{1,2})(/|-)(d{1,2})$/');
