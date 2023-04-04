@@ -42,6 +42,26 @@ const signUp = async (name, birth, phone, email, gender, address, password) => {
   );
 };
 
-module.exports = {
-  signUp,
+// 로그인 구현
+const signIn = async (email, password) => {
+  const user = await userDao.getUserByEmail(email);
+
+  if (!user) {
+    const err = new Error('NOT_AVAILABLE_USER');
+    err.statusCode = 401;
+    throw err;
+  }
+
+  const ismatch = await bcrypt.compare(password, users.password);
+
+  if (!ismatch) {
+    const err = new Error('PASSWORD_NOT_MATCH');
+    err.statusCode = 401;
+    throw err;
+  }
+
+  module.exports = {
+    signUp,
+    signIn,
+  };
 };
