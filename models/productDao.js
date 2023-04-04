@@ -1,23 +1,41 @@
 const appDataSource = require('./appDataSource');
-const { BaseError } = require('../middleware/error');
+const { baseError } = require('../middlewares/error');
 
 const getProductByProductId = async (productId) => {
   try {
     return await appDataSource.query(
       `SELECT 
-		  names,
-      descriptions,
-      sub_description,
-      sub_category_id,
-      price,
+		  p.names,
+      p.descriptions,
+      p.sub_description,
+      p.sub_category_id,
+      p.price,
       product_size,
-      is_new
-      FROM product
-      WHERE product.id=?;
+      p.is_new,
+      i.image_url
+      FROM product p
+      JOIN product_image i
+      ON p.id = i.product_id
+      WHERE product.id = ?;
 	 `[productId]
     );
   } catch (err) {
-    throw new BaseError(err, 400);
+    throw new baseError('INVALID_DATA_INPUT', 400);
   }
 };
-module.exports = { getProductByProductId };
+
+const getDetailByProductId = async (productId) => {
+  try {
+    return await appDataSource.query(
+      `SELECT 
+      descriptions
+      FROM product_detail
+      WHERE product_detail.product_id=?;
+	 `[productId]
+    );
+  } catch (err) {
+    throw new baseError('INVALID_DATA_INPUT', 400);
+  }
+};
+
+module.exports = { getProductByProductId, getDetailByProductId };
