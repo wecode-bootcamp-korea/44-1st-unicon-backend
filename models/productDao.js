@@ -16,10 +16,12 @@ const getProductByProductId = async (productId) => {
       FROM product p
       JOIN product_image i
       ON p.id = i.product_id
-      WHERE product.id = ?;
-	 `[productId]
+      WHERE p.id = ?;
+	 `,
+      [productId]
     );
   } catch (err) {
+    console.log(err);
     throw new baseError('INVALID_DATA_INPUT', 400);
   }
 };
@@ -31,7 +33,8 @@ const getDetailByProductId = async (productId) => {
       descriptions
       FROM product_detail
       WHERE product_detail.product_id=?;
-	 `[productId]
+	 `,
+      [productId]
     );
   } catch (err) {
     throw new baseError('INVALID_DATA_INPUT', 400);
