@@ -1,4 +1,4 @@
-const catchErr = (func) => {
+const catchError = (func) => {
   return (req, res, next) => {
     func(req, res, next).catch((err) => next(err));
   };
@@ -11,9 +11,9 @@ const errorHandler = (err, req, res, next) => {
 class BaseError extends Error {
   constructor(message, statusCode) {
     super(message);
-    //this.message = message;
+
     this.status = statusCode;
     Error.captureStackTrace(this, this.constructor);
   }
 }
-module.exports = { catchErr, BaseError, errorHandler };
+module.exports = { catchError, BaseError, errorHandler };
