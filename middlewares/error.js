@@ -8,12 +8,12 @@ const errorHandler = (err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
   res.status(err.statusCode).json({ message: err.message });
 };
-class BaseError extends Error {
+class baseError extends Error {
   constructor(message, statusCode) {
     super(message);
-
-    this.status = statusCode;
-    Error.captureStackTrace(this, this.constructor);
+    this.message = message;
+    this.statusCode = statusCode;
   }
 }
-module.exports = { catchError, BaseError, errorHandler };
+
+module.exports = { catchError, baseError, errorHandler };
