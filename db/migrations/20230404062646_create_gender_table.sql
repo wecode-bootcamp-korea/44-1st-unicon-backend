@@ -6,4 +6,4 @@ CREATE TABLE gender (
   CONSTRAINT userId_gender_FK FOREIGN KEY (user_id) REFERENCES users(id)
 )
 -- migrate:down
-
+DROP TABLE gender;

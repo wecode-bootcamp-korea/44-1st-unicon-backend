@@ -7,4 +7,4 @@ CREATE TABLE order_item_status (
   CONSTRAINT orderItemID_orderItemStatus_FK FOREIGN KEY (order_item_id) REFERENCES order_item(id)
 )
 -- migrate:down
-
+DROP TABLE order_item_status;

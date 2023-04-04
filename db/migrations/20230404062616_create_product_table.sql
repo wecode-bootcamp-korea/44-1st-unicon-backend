@@ -4,3 +4,4 @@ CREATE TABLE main_category(
   title VARCHAR(50)
 )
 -- migrate:down
+DROP TABLE main_category;

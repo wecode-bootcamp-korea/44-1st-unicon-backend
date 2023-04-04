@@ -8,4 +8,4 @@ CREATE TABLE sub_category (
   CONSTRAINT mainCategory_subCategory_FK FOREIGN KEY (main_category_id) REFERENCES main_category(id)
 )
 -- migrate:down
-
+DROP TABLE sub_category;

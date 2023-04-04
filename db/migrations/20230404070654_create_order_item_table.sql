@@ -12,4 +12,4 @@ CREATE TABLE order_item (
   CONSTRAINT productId_orderItem_FK FOREIGN KEY (product_id) REFERENCES product(id)
 )
 -- migrate:down
-
+DROP TABLE order_item;

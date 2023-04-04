@@ -13,4 +13,4 @@ CREATE TABLE product (
   CONSTRAINT subCategory_product_FK FOREIGN KEY (sub_category_id) REFERENCES sub_category(id)
 )
 -- migrate:down
-
+DROP TABLE product;

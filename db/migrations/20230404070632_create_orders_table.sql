@@ -9,4 +9,4 @@ CREATE TABLE orders (
   CONSTRAINT userId_orders_FK FOREIGN KEY (user_id) REFERENCES users(id)
 )
 -- migrate:down
-
+DROP TABLE orders;

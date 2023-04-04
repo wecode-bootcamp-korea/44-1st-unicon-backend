@@ -7,4 +7,4 @@ CREATE TABLE product_detail (
   CONSTRAINT productId_productDetail_FK FOREIGN KEY (product_id) REFERENCES product(id)
 )
 -- migrate:down
-
+DROP TABLE product_detail;

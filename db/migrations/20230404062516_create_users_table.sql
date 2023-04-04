@@ -12,4 +12,4 @@ CREATE TABLE users (
   updated_at TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP
 )
 -- migrate:down
-
+DROP TABLE users;
