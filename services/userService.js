@@ -31,7 +31,7 @@ const signUp = async (name, birth, phone, email, gender, address, password) => {
   //Bcrypt 비밀번호 암호화
   const saltRounds = 12;
   const hashedPassword = await bcrypt.hash(password, saltRounds);
-  return userDao.createUser(
+  return userDao.signUp(
     name,
     birth,
     phone,
