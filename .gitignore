@@ -1,3 +1,5 @@
+db/schema.sql
+
 # Created by https://www.toptal.com/developers/gitignore/api/vim,macos,windows,linux,visualstudiocode,dotenv,node
 # Edit at https://www.toptal.com/developers/gitignore?templates=vim,macos,windows,linux,visualstudiocode,dotenv,node
 ### dotenv ###
