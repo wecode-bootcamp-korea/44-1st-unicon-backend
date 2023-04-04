@@ -13,24 +13,36 @@ const signUp = async (address, birth, email, name, password, phone, gender) => {
         addresses,
         points
 
-		  ) VALUES (?, ?, ?, ?, ?, ?, 5000000);
+		  ) VALUES (?, ?, ?, ?, ?, ?, 5000);
 		`,
-      [name, email, password, phone, birth, address, point]
-    );
-    const genderTable = await appDataSource.query(
-      `INSERT INTO gender(
-          gender_detail
-        ) VALUES (?);
-      `,
-      [gender]
+      [name, email, password, phone, birth, address]
     );
   } catch (err) {
     const error = new Error('INVALID_DATA_INPUT');
+    console.log(err);
     error.statusCode = 500;
     throw error;
   }
 };
 
+const signIn = async (email, password) => {
+  try {
+    await appDataSource.query(
+      `SELECT
+      email,
+      password
+
+     FROM
+      users
+    WHERE
+      
+    
+    `
+    );
+  } catch (err) {}
+};
+
 module.exports = {
   signUp,
+  signIn,
 };
