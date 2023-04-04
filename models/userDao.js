@@ -1,29 +1,28 @@
 const appDataSource = require('./appDataSource');
 
 // 유저 회원가입
-const createUser = async (
-  address,
-  birth,
-  email,
-  name,
-  gender,
-  password,
-  phone
-) => {
+const signUp = async (address, birth, email, name, password, phone, gender) => {
   try {
-    return await appDataSource.query(
+    const user = await appDataSource.query(
       `INSERT INTO users(
-		    name,
+		    names,
         email,
-        password,
+        passwords,
         phone_number,
         birth,
-        address,
-        point
+        addresses,
+        points
 
 		  ) VALUES (?, ?, ?, ?, ?, ?, 5000000);
 		`,
-      [address, birth, email, name, gender, password, phone]
+      [name, email, password, phone, birth, address, point]
+    );
+    const genderTable = await appDataSource.query(
+      `INSERT INTO gender(
+          gender_detail
+        ) VALUES (?);
+      `,
+      [gender]
     );
   } catch (err) {
     const error = new Error('INVALID_DATA_INPUT');
@@ -33,5 +32,5 @@ const createUser = async (
 };
 
 module.exports = {
-  createUser,
+  signUp,
 };
