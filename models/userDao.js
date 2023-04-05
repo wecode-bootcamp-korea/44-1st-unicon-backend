@@ -11,19 +11,19 @@ const signUp = async (
   gender
 ) => {
   try {
+    const DEFAULT_POINTS = 9999;
     const user = await appDataSource.query(
       `INSERT INTO users(
-		    names,
-        email,
-        passwords,
-        phone_number,
-        addresses,
-        birth,
-        points
-
-		  ) VALUES (?, ?, ?, ?, ?, ?, 5000);
-		`,
-      [name, email, hashedPassword, phone, address, birth]
+		      names,
+          email,
+          passwords,
+          phone_number,
+          addresses,
+          birth,
+          points
+       ) VALUES (?, ?, ?, ?, ?, ?, ?);
+		  `,
+      [name, email, hashedPassword, phone, address, birth, DEFAULT_POINTS]
     );
   } catch (err) {
     const error = new Error('INVALID_DATA_INPUT');
@@ -38,14 +38,14 @@ const getUserbyEmail = async (email) => {
   try {
     const [user] = await appDataSource.query(
       `SELECT
-         names,
-         email,
-         passwords,
-         id
+          id,
+          names,
+          email,
+          passwords
       FROM
-         users
+          users
       WHERE
-         users.email = ?;
+          users.email = ?;
       `,
       [email]
     );

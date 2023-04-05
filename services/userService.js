@@ -2,7 +2,6 @@ const userDao = require('../models/userDao');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-// 회원가입 구현
 const signUp = async (name, email, password, phone, address, birth, gender) => {
   //Bcrypt 비밀번호 암호화
   const saltRounds = 12;
@@ -18,7 +17,6 @@ const signUp = async (name, email, password, phone, address, birth, gender) => {
   );
 };
 
-// 로그인 구현
 const signIn = async (email, password) => {
   const users = await userDao.getUserbyEmail(email);
 

@@ -1,19 +1,28 @@
-const validateToken = async (req, res, next) => {
-  try {
-    const jwtToken = req.headers.authorization;
-    const decoded = jwt.verify(jwtToken, process.env.SECRET_KEY);
+const loginRequired = async (req, res, next) => {
+  // 1) Getting token and check of It's there
+  const accessToken = req.headers.authorization;
+  if (!accessToken) {
+    const error = new Error('NEED_ACCESS_TOKEN');
+    error.statusCode = 401;
 
-    req.user = decoded.payLoad.id;
-    next();
-  } catch (err) {
-    const error = new Error('INVALID_TOKEN');
-    error.statusCode = err.statusCode || 500;
-    next(error);
+    return res.status(error.statusCode).json({ message: error.message });
   }
+  // 2) Verification token
+  const decoded = await jwt.verify(accessToken, process.env.JWT_SECRET);
 
-  return validateToken;
+  // 3) Check if user still exists
+  const user = await userService.getUserById(decoded.id);
+  if (!user) {
+    const error = new Error('USER_DOES_NOT_EXIST');
+    error.statusCode = 404;
+
+    return res.status(error.statusCode).json({ message: error.message });
+  }
+  // 4) Grant Access
+  req.user = user;
+  next();
 };
 
 module.exports = {
-  validateToken,
+  loginRequired,
 };

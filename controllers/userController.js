@@ -28,7 +28,7 @@ const signIn = catchError(async (req, res) => {
   }
 
   const Token = await userService.signIn(email, password);
-  return res.status(201).json({ accesstoken: Token });
+  return res.status(200).json({ accesstoken: Token });
 });
 
 module.exports = {
