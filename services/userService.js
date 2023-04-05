@@ -20,6 +20,7 @@ const signUp = async (address, birth, email, name, password, phone, gender) => {
 
 // 로그인 구현
 const signIn = async (email, password) => {
+  const email = await userDao.getUserbyEmail(email);
   if (!email) {
     const err = new Error('NOT_AVAILABLE_USER');
     err.statusCode = 401;
@@ -34,7 +35,7 @@ const signIn = async (email, password) => {
   }
 
   //Bcrypt 검증
-  const checkHash = bcrypt.compare(password, hashedPassword);
+  const checkHash = await bcrypt.compare(password, hashedPassword);
 
   if (!checkHash) {
     const err = Error('NOT_AVAILABLE_USER');
@@ -47,10 +48,18 @@ const signIn = async (email, password) => {
   const jwtToken = jwt.sign(payLoad, process.env.SECRET_KEY, {
     expiresIn: '1d',
   });
+  const decoded = jwt.verify(jwtToken, process.env.SECRET_KEY);
+  console.log(decoded);
 
   return jwtToken;
 };
+
+// const getUserbyId = async (id) => {
+//   return await userDao.getUserById(id);
+// };
+
 module.exports = {
   signUp,
   signIn,
+  // getUserbyId,
 };

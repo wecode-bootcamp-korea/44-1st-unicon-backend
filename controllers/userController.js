@@ -28,7 +28,7 @@ const signIn = catchError(async (req, res) => {
   }
 
   await userService.signIn(email, password);
-  return res.status(201).json({ message: 'SIGNUP_SUCCESS' });
+  return res.status(201).json({ message: 'SIGNIN_SUCCESS' });
 });
 
 module.exports = {

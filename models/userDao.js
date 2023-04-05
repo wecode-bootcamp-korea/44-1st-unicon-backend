@@ -1,5 +1,5 @@
 const appDataSource = require('./appDataSource');
-
+const { catchError } = require('../middlewares/error.js');
 // 유저 회원가입
 const signUp = async (address, birth, email, name, password, phone, gender) => {
   try {
@@ -25,24 +25,27 @@ const signUp = async (address, birth, email, name, password, phone, gender) => {
   }
 };
 
-const signIn = async (email, password) => {
-  try {
-    await appDataSource.query(
-      `SELECT
-      email,
-      password
-
-     FROM
-      users
-    WHERE
-      
-    
-    `
-    );
-  } catch (err) {}
-};
+// 로그인
+const getUserbyEmail = catchError(async (email) => {
+  await appDataSource.query(
+    `SELECT
+         names,
+         email,
+         passwords,
+         phone_number,
+         addresses,
+         birth,
+         points
+      FROM
+         users
+      WHERE
+         users.email = ?
+      `,
+    [email]
+  );
+});
 
 module.exports = {
   signUp,
-  signIn,
+  getUserbyEmail,
 };
