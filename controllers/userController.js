@@ -2,19 +2,19 @@ const userService = require('../services/userService.js');
 const { catchError } = require('../middlewares/error.js');
 
 const signUp = catchError(async (req, res) => {
-  const { address, birth, email, name, gender, password, phone } = req.body;
+  const { name, email, password, phone, address, birth, gender } = req.body;
 
-  if (!address || !birth || !email || !name || !password || !phone || !gender) {
+  if (!name || !email || !password || !phone || !address || !birth || !gender) {
     return res.status(400).json({ message: 'KEY_ERROR' });
   }
 
   await userService.signUp(
-    address,
-    birth,
-    email,
     name,
+    email,
     password,
     phone,
+    address,
+    birth,
     gender
   );
   return res.status(201).json({ message: 'SIGNUP_SUCCESS' });
@@ -27,8 +27,8 @@ const signIn = catchError(async (req, res) => {
     return res.status(400).json({ message: 'KEY_ERROR' });
   }
 
-  await userService.signIn(email, password);
-  return res.status(201).json({ message: 'SIGNIN_SUCCESS' });
+  const Token = await userService.signIn(email, password);
+  return res.status(201).json({ accesstoken: Token });
 });
 
 module.exports = {

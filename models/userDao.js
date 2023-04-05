@@ -1,7 +1,15 @@
 const appDataSource = require('./appDataSource');
-const { catchError } = require('../middlewares/error.js');
+
 // 유저 회원가입
-const signUp = async (name, email, password, phone, birth, address, gender) => {
+const signUp = async (
+  name,
+  email,
+  hashedPassword,
+  phone,
+  address,
+  birth,
+  gender
+) => {
   try {
     const user = await appDataSource.query(
       `INSERT INTO users(
@@ -9,13 +17,13 @@ const signUp = async (name, email, password, phone, birth, address, gender) => {
         email,
         passwords,
         phone_number,
-        birth,
         addresses,
+        birth,
         points
 
 		  ) VALUES (?, ?, ?, ?, ?, ?, 5000);
 		`,
-      [name, email, password, phone, birth, address]
+      [name, email, hashedPassword, phone, address, birth]
     );
   } catch (err) {
     const error = new Error('INVALID_DATA_INPUT');
@@ -26,24 +34,29 @@ const signUp = async (name, email, password, phone, birth, address, gender) => {
 };
 
 // 로그인
-const getUserbyEmail = catchError(async (email) => {
-  await appDataSource.query(
-    `SELECT
+const getUserbyEmail = async (email) => {
+  try {
+    const [user] = await appDataSource.query(
+      `SELECT
          names,
          email,
          passwords,
-         phone_number,
-         addresses,
-         birth,
-         points
+         id
       FROM
          users
       WHERE
-         users.email = ?
+         users.email = ?;
       `,
-    [email]
-  );
-});
+      [email]
+    );
+    return user;
+  } catch (err) {
+    const error = new Error('NOT_FOUND_EMAIL');
+    console.log(err);
+    error.statusCode = 500;
+    throw error;
+  }
+};
 
 module.exports = {
   signUp,
