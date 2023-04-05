@@ -1,13 +1,10 @@
 const productService = require('../services/productService');
 const { catchError } = require('../middlewares/error');
 
-const getProductByProductId = catchError(async (req, res) => {
+const getProductById = catchError(async (req, res) => {
   const { productId } = req.params;
-  const { main_category } = req.query;
-  const product = await productService.getProductByProductId(
-    productId,
-    main_category
-  );
+  const { mainCategory } = req.query;
+  const product = await productService.getProductById(productId, mainCategory);
   return res.status(200).json({ product });
 });
 
@@ -18,11 +15,24 @@ const getDetailByProductId = catchError(async (req, res) => {
 });
 
 const getAllproduct = catchError(async (req, res) => {
+  const { filter } = req.query;
+  if (filter) {
+    const productsListFilter = await productService.getAllproductOrder(filter);
+    return res.status(200).json({ productsListFilter });
+  }
   const productsList = await productService.getAllproduct();
   return res.status(200).json({ productsList });
 });
+
+const categoryPage = catchError(async (req, res) => {
+  const { mc, sc, filter } = req.query;
+  const category = await productService.categoryPage(mc, sc, filter);
+  return res.status(200).json({ category });
+});
+
 module.exports = {
-  getProductByProductId,
+  getProductById,
   getDetailByProductId,
   getAllproduct,
+  categoryPage,
 };
