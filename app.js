@@ -1,31 +1,38 @@
-require('dotenv').config();
+const express = require("express");
+const cors = require("cors");
+const morgan = require("morgan");
+const dotenv = require("dotenv");
 
-const express = require('express');
-const cors = require('cors');
-const morgan = require('morgan');
+dotenv.config();
 
-const routes = require('./routes');
+const routes = require("./routes");
 
 const app = express();
 
-const { errorHandler } = require('./middlewares/error');
-
 app.use(cors());
-app.use(morgan('tiny'));
+app.use(morgan("combined"));
 app.use(express.json());
 app.use(routes);
-app.use(errorHandler);
-const PORT = process.env.PORT;
 
-app.get('/ping', (req, res) => {
-  res.json({ message: 'pong' });
+const { errorHandler } = require('./middlewares/error');
+
+app.get("/ping", (req, res) => {
+  res.status(200).json({ message: "pong" });
+
 });
 
-const start = async () => {
+const PORT = process.env.PORT;
+
+const start = () => {
   try {
-    app.listen(3000, () => console.log(`Server islistening on 3000`));
+    app.listen(PORT, () => console.log(`server is listening on ${PORT}`));
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 };
+
 start();
+
+
+
+
