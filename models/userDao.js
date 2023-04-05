@@ -1,7 +1,7 @@
 const appDataSource = require('./appDataSource');
 const { catchError } = require('../middlewares/error.js');
 // 유저 회원가입
-const signUp = async (address, birth, email, name, password, phone, gender) => {
+const signUp = async (name, email, password, phone, birth, address, gender) => {
   try {
     const user = await appDataSource.query(
       `INSERT INTO users(
