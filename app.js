@@ -16,6 +16,7 @@ app.use(morgan('tiny'));
 app.use(express.json());
 app.use(routes);
 app.use(errorHandler);
+
 const PORT = process.env.PORT;
 
 app.get('/ping', (req, res) => {

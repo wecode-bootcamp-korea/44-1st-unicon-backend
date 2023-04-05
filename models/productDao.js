@@ -8,15 +8,18 @@ const getProductByProductId = async (productId) => {
 		  p.names,
       p.descriptions,
       p.sub_description,
-      p.sub_category_id,
+      sub_category.title,
       p.price,
       product_size,
       p.is_new,
-      i.image_url
-      FROM product p
-      JOIN product_image i
+      JSON_ARRAYAGG(i.image_url) AS image_url
+      FROM product_image i
+      JOIN product p
       ON p.id = i.product_id
-      WHERE p.id = ?;
+      JOIN sub_category
+      ON sub_category.id = p.sub_category_id
+      WHERE p.id = ?
+      GROUP BY p.id;
 	 `,
       [productId]
     );
@@ -30,9 +33,9 @@ const getDetailByProductId = async (productId) => {
   try {
     return await appDataSource.query(
       `SELECT 
-      descriptions
-      FROM product_detail
-      WHERE product_detail.product_id=?;
+      d.descriptions
+      FROM product_detail d
+      WHERE d.product_id=?;
 	 `,
       [productId]
     );
@@ -41,4 +44,7 @@ const getDetailByProductId = async (productId) => {
   }
 };
 
-module.exports = { getProductByProductId, getDetailByProductId };
+module.exports = {
+  getProductByProductId,
+  getDetailByProductId,
+};
