@@ -17,7 +17,12 @@ const getDetailByProductId = catchError(async (req, res) => {
   return res.status(200).json({ detail });
 });
 
+const getAllproduct = catchError(async (req, res) => {
+  const productsList = await productService.getAllproduct();
+  return res.status(200).json({ productsList });
+});
 module.exports = {
   getProductByProductId,
   getDetailByProductId,
+  getAllproduct,
 };
