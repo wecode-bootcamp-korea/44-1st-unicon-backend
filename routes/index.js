@@ -10,5 +10,5 @@ router.use('/users', userRouter.router);
 router.use('/products', productRouter.router);
 router.use('/orders', orderRouter.router);
 
-router.post('', loginRequired, orderController.Order);
+router.post('', loginRequired, orderController.createOrder);
 module.exports = router;

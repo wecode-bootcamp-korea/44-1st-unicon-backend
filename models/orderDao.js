@@ -1,13 +1,13 @@
 const appDataSource = require('./appDataSource');
 
-const Order = async (user_id, order_number, total_amount) => {
+const createOrder = async (user_id, order_number, total_amount) => {
   try {
     const user = await appDataSource.query(
       `INSERT INTO orders(
 		      user_id,
           order_number,
           total_amount
-       ) VALUES (?, ?, ?, );
+       ) VALUES (?, ?, ? );
 		  `,
       [user_id, order_number, total_amount]
     );
@@ -20,5 +20,5 @@ const Order = async (user_id, order_number, total_amount) => {
 };
 
 module.exports = {
-  Order,
+  createOrder,
 };
