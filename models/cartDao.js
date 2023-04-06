@@ -1,6 +1,6 @@
 const appDataSource = require("./myDataSources");
 
-const createCartItem = async ( userId, productId, quantity ) => {
+const createCartItem = async ({userId, productId, quantity }) => {
   try {
     const product = await appDataSource.query('SELECT * FROM product where product.id =?', [productId])
 
@@ -8,7 +8,7 @@ const createCartItem = async ( userId, productId, quantity ) => {
 
     const [item] = await appDataSource.query( //json 
       `SELECT JSON_OBJECT(
-             'id', p.id,
+             'product_id', p.id,
              'name', p.names,
              'descriptions', p.descriptions,
               'sub_descriptions', p.sub_descriptions,
@@ -68,7 +68,7 @@ const getCartList = async (userId) =>{
     return lists;
 }
 
-const updateCartItemQuantity = async ( userId, productId, quantity ) => {
+const updateCartItemQuantity = async ({userId, productId, quantity }) => {
   try {
     await appDataSource.query(
       `UPDATE cart
@@ -83,7 +83,7 @@ const updateCartItemQuantity = async ( userId, productId, quantity ) => {
   }
 };
 
-const deleteCart = async (userId, productId) => {
+const deleteCart = async ({userId, productId}) => {
   await appDataSource.query(
     `
         DELETE

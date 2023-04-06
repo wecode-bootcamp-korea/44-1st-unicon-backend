@@ -1,6 +1,6 @@
 const cartDao = require("../models/cartDao");
 
-const createCartItem = async ( userId, productId, quantity ) => {
+const createCartItem = async ({userId, productId, quantity }) => {
   if (quantity <= 0) {
     const error = new Error("quantity must be more than 0");
     error.statusCode = 400;
@@ -24,7 +24,14 @@ const getCartList = async (userId) => {
   return await cartDao.getCartList(userId);
 };
 
-const updateCart = async (userId, productId, quantity) =>{
+const updateCart = async ({userId, productId, quantity}) =>{
+
+    if(quantity ==0 ){
+      await cartDao.deleteCart(userId, productId);
+
+      return "cartDeleted"
+    }
+
     await cartDao.patchCart(
         userId,
         productId,
@@ -36,7 +43,7 @@ const updateCart = async (userId, productId, quantity) =>{
       return "cartUpdated"
 } 
 
-const deleteCart = async (userId, productId) => {
+const deleteCart = async ({userId, productId}) => {
   await cartDao.deleteCart(
       userId,
       productId
