@@ -9,27 +9,27 @@ const createCartItem = async ({ userId, productId, quantity }) => {
 
     console.log('product: ' + product);
 
-    const [item] = await appDataSource.query(
-      `SELECT JSON_OBJECT(
-             'product_id', p.id,
-             'name', p.names,
-             'descriptions', p.descriptions,
-              'sub_descriptions', p.sub_descriptions,
-              'product_size', p.product_size,
-             'price', p.price
-           ) AS item
-         FROM product AS p
-         WHERE p.id = ?`,
-      [productId]
-    );
-    console.log('item: ' + item[0]);
-    await appDataSource.query(
-      `INSERT INTO cart(user_id, item)
-         VALUES (?, ?)`,
-      [userId, JSON.stringify({ ...item, quantity })]
-    );
+    // const [item] = await appDataSource.query(
+    //   `SELECT JSON_OBJECT(
+    //          'product_id', p.id,
+    //          'name', p.names,
+    //          'descriptions', p.descriptions,
+    //           'sub_descriptions', p.sub_descriptions,
+    //           'product_size', p.product_size,
+    //          'price', p.price
+    //        ) AS item
+    //      FROM product AS p
+    //      WHERE p.id = ?`,
+    //   [productId]
+    // );
+    // console.log('item: ' + item[0]);
+    // await appDataSource.query(
+    //   `INSERT INTO cart(user_id, item)
+    //      VALUES (?, ?)`,
+    //   [userId, JSON.stringify({ ...item, quantity })]
+    // );
 
-    return { message: 'cartItem added to your cart' };
+    // return { message: 'cartItem added to your cart' };
   } catch (error) {
     console.error(error);
     throw new Error('failed to create cart item');
