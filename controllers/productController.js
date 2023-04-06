@@ -10,7 +10,7 @@ const getProductById = catchError(async (req, res) => {
 
 const categoryPage = catchError(async (req, res) => {
   const { mc, sc, pf } = req.query;
-  const [category] = await productService.categoryPage(mc, sc, pf);
+  const category = await productService.categoryPage(mc, sc, pf);
   return res.status(200).json(category);
 });
 

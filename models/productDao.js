@@ -26,7 +26,7 @@ const categoryPage = async (mc, sc, pf) => {
 
     return await appDataSource.query(
       `SELECT
-      p.id
+      p.id,
       p.names,
       p.price,
       p.sub_description,
