@@ -7,15 +7,15 @@ const createCartItem = async ({userId, productId, quantity }) => {
 
     throw error;
   }
-  //if productId doesnt exist
+
   await cartDao.findMatched(productId);
-  console.log(2)
+
    await cartDao.createCartItem({
     userId,
     productId,
     quantity,
   });
-  console.log(3)
+
   return "cart created"
 };
 
@@ -24,7 +24,7 @@ const getCartList = async (userId) => {
   return await cartDao.getCartList(userId);
 };
 
-const updateCart = async ({userId, productId, quantity}) =>{
+const updatedCart = async ({userId, productId, quantity}) =>{
 
     if(quantity ==0 ){
       await cartDao.deleteCart(userId, productId);
