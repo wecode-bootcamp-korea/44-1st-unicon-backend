@@ -10,7 +10,6 @@ const createCartItem = async ({ userId, productId, quantity }) => {
     console.log('product: ' + product);
 
     const [item] = await appDataSource.query(
-      //json
       `SELECT JSON_OBJECT(
              'product_id', p.id,
              'name', p.names,
@@ -70,7 +69,7 @@ const getCartList = async (userId) => {
   );
 
   const parsedLists = JSON.parse(lists.Lists);
-  
+
   const updatedLists = parsedLists.map((item) => {
     const { price, quantity } = item;
     const total_price = price * quantity;
@@ -84,8 +83,6 @@ const getCartList = async (userId) => {
 
   return { Lists: updatedLists, totalSum };
 };
-
-
 
 const updateCartItemQuantity = async ({ userId, productId, quantity }) => {
   try {
@@ -101,7 +98,6 @@ const updateCartItemQuantity = async ({ userId, productId, quantity }) => {
     throw new Error('failed to update cart item quantity');
   }
 };
-
 
 const deleteCart = async ({ userId, productId }) => {
   await appDataSource.query(
