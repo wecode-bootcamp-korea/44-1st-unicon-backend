@@ -1,7 +1,7 @@
 const appDataSource = require('./appDataSource');
 const { baseError } = require('../middlewares/error');
 
-const getProductByProductId = async (productId) => {
+const getProductById = async (productId) => {
   try {
     return await appDataSource.query(
       `SELECT 
@@ -25,7 +25,7 @@ const getProductByProductId = async (productId) => {
     );
   } catch (err) {
     console.log(err);
-    throw new baseError('INVALID_DATA_INPUT', 400);
+    throw new baseError('INVALID_DATA_INPUT', 500);
   }
 };
 
@@ -40,11 +40,11 @@ const getDetailByProductId = async (productId) => {
       [productId]
     );
   } catch (err) {
-    throw new baseError('INVALID_DATA_INPUT', 400);
+    throw new baseError('INVALID_DATA_INPUT', 500);
   }
 };
 
 module.exports = {
-  getProductByProductId,
+  getProductById,
   getDetailByProductId,
 };
