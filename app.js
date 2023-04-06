@@ -36,7 +36,7 @@ app.get('/ping', (req, res) => {
 
 const start = async () => {
   try {
-    app.listen(3000, () => console.log(`Server islistening on 3000`));
+    app.listen(3000, () => console.log(`Server is listening on 3000`));
   } catch (err) {
     console.log(err);
   }
