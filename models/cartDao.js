@@ -93,6 +93,7 @@ const updateCartItemQuantity = async ({ userId, productId, quantity }) => {
     );
     return { message: 'cartItem quantity updated' };
   } catch (error) {
+    // commit 하기 전으로 돌리기 
     console.error(error);
     throw new Error('failed to update cart item quantity');
   }

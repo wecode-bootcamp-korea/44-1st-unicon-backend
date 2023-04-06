@@ -1,5 +1,6 @@
 const cartService = require('../services/cartService');
-const catchError = require('./errorHandlers');
+const { catchError } = require('../middlewares/error');
+
 
 const createCartItem = catchError(async (req, res) => {
   try {

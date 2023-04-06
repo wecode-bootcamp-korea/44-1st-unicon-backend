@@ -54,6 +54,6 @@ const deleteCart = async ({userId, productId}) => {
 module.exports = {
   createCartItem,
   getCartList,
-  updateCart,
+  updatedCart,
   deleteCart
 };
