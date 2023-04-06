@@ -11,6 +11,9 @@ const categoryPage = async (mc, sc, pf) => {
     if (mc) {
       condition = `WHERE main_category.id = ${mc}`;
     }
+    if (pf) {
+      condition = `WHERE ORDER BY p.price ${pf}`;
+    }
 
     if (mc & pf) {
       condition = `WHERE main_category.id = ${mc} AND ORDER BY p.price ${pf}`;
@@ -23,6 +26,7 @@ const categoryPage = async (mc, sc, pf) => {
 
     return await appDataSource.query(
       `SELECT
+      p.id
       p.names,
       p.price,
       p.sub_description,
@@ -42,48 +46,6 @@ const categoryPage = async (mc, sc, pf) => {
     const error = new Error('INVALID_DATA');
     error.statusCode = 500;
     throw error;
-  }
-};
-const getAllproduct = async () => {
-  try {
-    return await appDataSource.query(
-      `SELECT
-      p.id,
-      p.names,
-      p.price,
-      p.sub_description,
-      JSON_ARRAYAGG(i.image_url) AS image_url
-      FROM product p
-      JOIN product_image i
-      ON p.id = i.product_id
-      GROUP BY p.id
-      LIMIT 15;
-      `
-    );
-  } catch (err) {
-    throw new baseError('INVALID_DATA_INPUT', 500);
-  }
-};
-
-const getAllproductOrder = async (filter) => {
-  try {
-    return await appDataSource.query(
-      `SELECT
-      p.names,
-      p.price,
-      p.sub_description,
-      JSON_ARRAYAGG(i.image_url) AS image_url
-      FROM product p
-      JOIN product_image i
-      ON p.id = i.product_id
-      GROUP BY p.id
-      ORDER BY p.price ${filter}
-      LIMIT 15;
-      `
-    );
-  } catch (err) {
-    console.log(err);
-    throw new baseError('INVALID_DATA_INPUT', 500);
   }
 };
 
@@ -118,7 +80,5 @@ const getProductById = async (productId) => {
 
 module.exports = {
   getProductById,
-  getAllproduct,
-  getAllproductOrder,
   categoryPage,
 };
