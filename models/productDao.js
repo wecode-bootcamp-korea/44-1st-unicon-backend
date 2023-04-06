@@ -44,9 +44,7 @@ const categoryPage = async (mc, sc, pf, start, count) => {
       [count, start]
     );
   } catch (err) {
-    const error = new Error('INVALID_DATA');
-    error.statusCode = 500;
-    throw error;
+    throw new baseError('INVALID_DATA');
   }
 };
 
