@@ -5,6 +5,6 @@ const cartRouter = require("./cartRouter")
 const orderRouter = require("./orderRouter")
 
 router.use("/cart", cartRouter)
-router.use("/order", orderRouter)
+// router.use("/order", orderRouter)
 
 module.exports = router;
