@@ -43,6 +43,7 @@ const getAllproduct = async () => {
   try {
     return await appDataSource.query(
       `SELECT
+      p.id,
       p.names,
       p.price,
       p.sub_description,
@@ -71,12 +72,12 @@ const getAllproductOrder = async (filter) => {
       JOIN product_image i
       ON p.id = i.product_id
       GROUP BY p.id
-      ORDER BY p.price ?
+      ORDER BY p.price ${filter}
       LIMIT 15;
-      `,
-      [filter]
+      `
     );
   } catch (err) {
+    console.log(err);
     throw new baseError('INVALID_DATA_INPUT', 500);
   }
 };

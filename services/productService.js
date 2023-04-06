@@ -3,11 +3,10 @@ const productDao = require('../models/productDao');
 const getProductById = async (productId, mainCategory) => {
   if (mainCategory == 3) {
     const product = await productDao.getProductById(productId);
-    const subProduct = await productDao.getProductByProductId(2);
-
+    const subProduct = await productDao.getProductById(2);
     return { product: product, subProduct: subProduct };
   }
-  return productDao.getProductByProductId(productId, mainCategory);
+  return productDao.getProductById(productId);
 };
 
 const getDetailByProductId = async (productId) => {
@@ -19,7 +18,7 @@ const getAllproduct = async () => {
 };
 
 const getAllproductOrder = async (filter) => {
-  return await productDao.getAllproduct(filter);
+  return await productDao.getAllproductOrder(filter);
 };
 
 const categoryPage = async (mc, sc, filter) => {
