@@ -3,7 +3,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const signUp = async (name, email, password, phone, address, birth, gender) => {
-  //Bcrypt 비밀번호 암호화
   const saltRounds = 12;
   const hashedPassword = await bcrypt.hash(password, saltRounds);
   return userDao.signUp(
@@ -34,7 +33,6 @@ const signIn = async (email, password) => {
     throw err;
   }
 
-  // JWT 발급
   const payLoad = { id: users.id };
   const jwtToken = jwt.sign(payLoad, process.env.SECRET_KEY, {
     expiresIn: '1d',
