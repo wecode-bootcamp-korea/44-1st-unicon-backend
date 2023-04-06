@@ -1,6 +1,7 @@
+const express = require('express');
+
 require('dotenv').config();
 
-const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const appDataSource = require('./models/appDataSource');
@@ -13,6 +14,7 @@ const { errorHandler } = require('./middlewares/error');
 app.use(cors());
 app.use(morgan('tiny'));
 app.use(express.json());
+
 appDataSource
   .initialize()
   .then(() => {

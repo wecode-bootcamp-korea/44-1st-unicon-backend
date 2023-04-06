@@ -35,13 +35,12 @@ const categoryPage = async (mc, sc, pf) => {
       JOIN  (SELECT product_id, JSON_ARRAYAGG(image_url) AS image_url FROM product_image GROUP BY product_id) AS image
       ON image.product_id = p.id
       ${condition}
-  
       ;`
     );
   } catch (err) {
     console.log(err);
     const error = new Error('INVALID_DATA');
-    error.statusCode = 400;
+    error.statusCode = 500;
     throw error;
   }
 };
@@ -58,7 +57,6 @@ const getAllproduct = async () => {
       JOIN product_image i
       ON p.id = i.product_id
       GROUP BY p.id
-      ORDER BY p.price 
       LIMIT 15;
       `
     );
@@ -66,6 +64,7 @@ const getAllproduct = async () => {
     throw new baseError('INVALID_DATA_INPUT', 500);
   }
 };
+
 const getAllproductOrder = async (filter) => {
   try {
     return await appDataSource.query(
@@ -113,7 +112,6 @@ const getProductById = async (productId) => {
       [productId]
     );
   } catch (err) {
-    console.log(err);
     throw new baseError('INVALID_DATA_INPUT', 500);
   }
 };
