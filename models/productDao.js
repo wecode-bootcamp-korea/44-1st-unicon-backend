@@ -1,15 +1,15 @@
 const appDataSource = require('./appDataSource');
 const { baseError } = require('../middlewares/error');
 
-const categoryPage = async (mc, sc, filter) => {
+const categoryPage = async (mc, sc, pf) => {
   try {
     let condition = '';
     if (sc && filter) {
-      condition = `WHERE sub_category.id = ${sc} ORDER BY p.price ${filter}`;
+      condition = `WHERE sub_category.id = ${sc} ORDER BY p.price ${pf}`;
     } else if (sc) {
       condition = `WHERE sub_category.id = ${sc}`;
     } else if (mc & filter) {
-      condition = `WHERE main_category.id = ${mc} AND ORDER BY p.price ${filter}`;
+      condition = `WHERE main_category.id = ${mc} AND ORDER BY p.price ${pf}`;
     } else if (mc) {
       condition = `WHERE main_category.id = ${mc}`;
     }

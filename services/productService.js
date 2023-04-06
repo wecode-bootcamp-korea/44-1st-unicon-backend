@@ -21,8 +21,8 @@ const getAllproductOrder = async (filter) => {
   return await productDao.getAllproductOrder(filter);
 };
 
-const categoryPage = async (mc, sc, filter) => {
-  return await productDao.categoryPage(mc, sc, filter);
+const categoryPage = async (mc, sc, pf) => {
+  return await productDao.categoryPage(mc, sc, pf);
 };
 
 module.exports = {

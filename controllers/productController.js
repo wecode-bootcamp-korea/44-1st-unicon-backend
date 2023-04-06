@@ -26,8 +26,8 @@ const getAllproduct = catchError(async (req, res) => {
 });
 
 const categoryPage = catchError(async (req, res) => {
-  const { mc, sc, filter } = req.query;
-  const category = await productService.categoryPage(mc, sc, filter);
+  const { mc, sc, pf } = req.query;
+  const category = await productService.categoryPage(mc, sc, pf);
   return res.status(200).json(category);
 });
 
