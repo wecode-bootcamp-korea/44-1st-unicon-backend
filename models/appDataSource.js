@@ -8,6 +8,7 @@ const appDataSource = new DataSource({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
 });
+
 appDataSource
   .initialize()
   .then(() => {
@@ -16,4 +17,5 @@ appDataSource
   .catch((err) => {
     console.log('Error occurred during Data Source initialization', err);
   });
+
 module.exports = appDataSource;
