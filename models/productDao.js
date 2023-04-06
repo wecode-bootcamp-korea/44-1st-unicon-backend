@@ -4,38 +4,22 @@ const { baseError } = require('../middlewares/error');
 const getProductById = async (productId) => {
   try {
     return await appDataSource.query(
-      `SELECT 
-		  p.names,
-      p.descriptions,
-      p.sub_description,
-      sub_category.title,
+      `SELECT
+      p.names,
       p.price,
-      product_size,
-      p.is_new,
-      JSON_ARRAYAGG(i.image_url) AS image_url
-      FROM product_image i
-      JOIN product p
-      ON p.id = i.product_id
+      p.sub_description,
+      image.image_url,
+      pd.descriptions AS detail
+      FROM product p
       JOIN sub_category
-      ON sub_category.id = p.sub_category_id
-      WHERE p.id = ?
-      GROUP BY p.id;
-	 `,
-      [productId]
-    );
-  } catch (err) {
-    console.log(err);
-    throw new baseError('INVALID_DATA_INPUT', 500);
-  }
-};
-
-const getDetailByProductId = async (productId) => {
-  try {
-    return await appDataSource.query(
-      `SELECT 
-      d.descriptions
-      FROM product_detail d
-      WHERE d.product_id=?;
+      ON p.sub_category_id = sub_category.id
+      JOIN main_category
+      ON sub_category.main_category_id = main_category.id
+      JOIN  (SELECT product_id, JSON_ARRAYAGG(image_url) AS image_url FROM product_image GROUP BY product_id) AS image
+      ON image.product_id = p.id
+      JOIN product_detail pd
+      ON pd.product_id = p.id
+      WHERE p.id =?;
 	 `,
       [productId]
     );
@@ -46,5 +30,4 @@ const getDetailByProductId = async (productId) => {
 
 module.exports = {
   getProductById,
-  getDetailByProductId,
 };
