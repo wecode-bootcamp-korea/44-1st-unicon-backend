@@ -1,7 +1,7 @@
 const appDataSource = require('./appDataSource');
 const { baseError } = require('../middlewares/error');
 
-const categoryPage = async (mc, sc, pf) => {
+const categoryPage = async (mc, sc, pf, start, count) => {
   try {
     let condition = '';
     if (sc) {
@@ -11,6 +11,7 @@ const categoryPage = async (mc, sc, pf) => {
     if (mc) {
       condition = `WHERE main_category.id = ${mc}`;
     }
+
     if (pf) {
       condition = `WHERE ORDER BY p.price ${pf}`;
     }
@@ -22,7 +23,6 @@ const categoryPage = async (mc, sc, pf) => {
     if (sc && pf) {
       condition = `WHERE sub_category.id = ${sc} ORDER BY p.price ${pf}`;
     }
-    console.log(condition);
 
     return await appDataSource.query(
       `SELECT
@@ -39,10 +39,11 @@ const categoryPage = async (mc, sc, pf) => {
       JOIN  (SELECT product_id, JSON_ARRAYAGG(image_url) AS image_url FROM product_image GROUP BY product_id) AS image
       ON image.product_id = p.id
       ${condition}
-      ;`
+      LIMIT ? OFFSET ?;
+      ;`,
+      [count, start]
     );
   } catch (err) {
-    console.log(err);
     const error = new Error('INVALID_DATA');
     error.statusCode = 500;
     throw error;
