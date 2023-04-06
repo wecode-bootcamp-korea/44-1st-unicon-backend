@@ -11,8 +11,15 @@ const getProductById = catchError(async (req, res) => {
 });
 
 const categoryPage = catchError(async (req, res) => {
-  const { mc, sc, pf, start = 0, count = 15 } = req.query;
-  const category = await productService.categoryPage(mc, sc, pf, start, count);
+  const { mc, sc, pf, start = 0, count = 15, isnew } = req.query;
+  const category = await productService.categoryPage(
+    mc,
+    sc,
+    pf,
+    start,
+    count,
+    isnew
+  );
   return res.status(200).json(category);
 });
 

@@ -1,9 +1,10 @@
 const appDataSource = require('./appDataSource');
 const { baseError } = require('../middlewares/error');
 
-const categoryPage = async (mc, sc, pf, start, count) => {
+const categoryPage = async (mc, sc, pf, start, count, isnew) => {
   try {
     let condition = '';
+    let order = '';
     if (sc) {
       condition = `WHERE sub_category.id = ${sc}`;
     }
@@ -12,18 +13,21 @@ const categoryPage = async (mc, sc, pf, start, count) => {
       condition = `WHERE main_category.id = ${mc}`;
     }
 
+    if (isnew) {
+      condition = `WHERE is_new IS NOT NULL`;
+    }
+
+    if (mc & isnew) {
+      condition = `WHERE main_category.id = ${mc} AND is_new IS NOT NULL`;
+    }
+
+    if (sc && isnew) {
+      condition = `WHERE sub_category.id = ${sc} AND is_new IS NOT NULL`;
+    }
+
     if (pf) {
-      condition = `WHERE ORDER BY p.price ${pf}`;
+      order = `ORDER BY p.price ${pf}`;
     }
-
-    if (mc & pf) {
-      condition = `WHERE main_category.id = ${mc} AND ORDER BY p.price ${pf}`;
-    }
-
-    if (sc && pf) {
-      condition = `WHERE sub_category.id = ${sc} ORDER BY p.price ${pf}`;
-    }
-
     return await appDataSource.query(
       `SELECT
       p.id,
@@ -39,11 +43,13 @@ const categoryPage = async (mc, sc, pf, start, count) => {
       JOIN  (SELECT product_id, JSON_ARRAYAGG(image_url) AS image_url FROM product_image GROUP BY product_id) AS image
       ON image.product_id = p.id
       ${condition}
+      ${order}
       LIMIT ? OFFSET ?;
       ;`,
       [count, start]
     );
   } catch (err) {
+    console.log(err);
     throw new baseError('INVALID_DATA');
   }
 };
