@@ -8,4 +8,5 @@ const orderRouter = require('./orderRouter');
 router.use('/users', userRouter.router);
 router.use('/orders', orderRouter.router);
 
+router.post('', loginRequired, orderController.Order);
 module.exports = router;

@@ -1,6 +1,5 @@
 const appDataSource = require('./appDataSource');
 
-// 유저 회원가입
 const signUp = async (
   name,
   email,
@@ -33,7 +32,6 @@ const signUp = async (
   }
 };
 
-// 로그인
 const getUserbyEmail = async (email) => {
   try {
     const [user] = await appDataSource.query(
