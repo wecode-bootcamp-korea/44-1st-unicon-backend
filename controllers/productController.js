@@ -3,16 +3,9 @@ const { catchError } = require('../middlewares/error');
 
 const getProductById = catchError(async (req, res) => {
   const { productId } = req.params;
-  const { mainCategory } = req.query;
-
   const product = await productService.getProductById(productId, mainCategory);
-  return res.status(200).json(product);
-});
 
-const getDetailByProductId = catchError(async (req, res) => {
-  const { productId } = req.params;
-  const detail = await productService.getDetailByProductId(productId);
-  return res.status(200).json(detail);
+  return res.status(200).json(product);
 });
 
 const getAllproduct = catchError(async (req, res) => {
@@ -33,7 +26,6 @@ const categoryPage = catchError(async (req, res) => {
 
 module.exports = {
   getProductById,
-  getDetailByProductId,
   getAllproduct,
   categoryPage,
 };
