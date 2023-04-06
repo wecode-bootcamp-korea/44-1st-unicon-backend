@@ -6,30 +6,16 @@ const createCartItem = async ({ userId, productId, quantity }) => {
       'SELECT * FROM product where product.id =?',
       [productId]
     );
+    if (product === 0) {
+      throw new Error('Invalid product ');
+    }
+    await appDataSource.query(
+      `INSERT INTO cart(user_id, product_id, quantity)
+         VALUES (?, ?, ?)`,
+      [userId, productId, quantity]
+    );
 
-    console.log('product: ' + product);
-
-    // const [item] = await appDataSource.query(
-    //   `SELECT JSON_OBJECT(
-    //          'product_id', p.id,
-    //          'name', p.names,
-    //          'descriptions', p.descriptions,
-    //           'sub_descriptions', p.sub_descriptions,
-    //           'product_size', p.product_size,
-    //          'price', p.price
-    //        ) AS item
-    //      FROM product AS p
-    //      WHERE p.id = ?`,
-    //   [productId]
-    // );
-    // console.log('item: ' + item[0]);
-    // await appDataSource.query(
-    //   `INSERT INTO cart(user_id, item)
-    //      VALUES (?, ?)`,
-    //   [userId, JSON.stringify({ ...item, quantity })]
-    // );
-
-    // return { message: 'cartItem added to your cart' };
+    return { message: 'cartItem added to your cart' };
   } catch (error) {
     console.error(error);
     throw new Error('failed to create cart item');
@@ -52,23 +38,36 @@ const findMatched = async (productId) => {
 const getCartList = async (userId) => {
   const [lists] = await appDataSource.query(
     `SELECT 
-            u.id AS userId,
-            JSON_ARRAYAGG(
-                 c.item
-            ) AS Lists
-          FROM 
-            users AS u            
-            JOIN cart AS c
-            ON  c.user_id = u.id 
-          WHERE 
-            u.id = ?
-          GROUP BY 
-            u.id
-          `,
+    u.id AS userId,
+    JSON_ARRAYAGG(
+         JSON_OBJECT(
+             'id', p.id,
+             'names', p.names,
+             'descriptions', p.descriptions,
+             'sub_description', p.sub_description,
+             'sub_category_id', p.sub_category_id,
+             'product_size', p.product_size,
+             'is_new', p.is_new,
+             'price', p.price,
+             'quantity', c.quantity
+         )
+    ) AS Lists
+    FROM 
+        users AS u            
+        JOIN cart AS c
+        ON  c.user_id = u.id 
+        JOIN product AS p
+        ON c.product_id = p.id
+    WHERE 
+        u.id = ?
+    GROUP BY 
+        u.id
+    `,
     [userId]
   );
 
-  const parsedLists = JSON.parse(lists.Lists);
+  const { Lists } = lists;
+  const parsedLists = JSON.parse(Lists);
 
   const updatedLists = parsedLists.map((item) => {
     const { price, quantity } = item;
@@ -88,8 +87,8 @@ const updateCartItemQuantity = async ({ userId, productId, quantity }) => {
   try {
     await appDataSource.query(
       `UPDATE cart
-       SET item = JSON_SET(item, '$.quantity', ?)
-       WHERE user_id = ? AND JSON_EXTRACT(item, '$.id') = ?`,
+       SET quantity = ?
+       WHERE user_id = ? AND product_id = ? `,
       [quantity, userId, productId]
     );
     return { message: 'cartItem quantity updated' };
@@ -104,7 +103,7 @@ const deleteCart = async ({ userId, productId }) => {
     `
         DELETE
         FROM cart AS c
-        WHERE c.user_id = ? AND JSON_EXTRACT(item, '$.id') = ?
+        WHERE c.user_id = ? AND c.product_id = ?
       `,
     [userId, productId]
   );
