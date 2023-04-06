@@ -6,8 +6,8 @@ db/schema.sql
 ### dotenv ###
 .env
 ### Linux ###
-db/migrations/schema.sql
 db/schema.sql
+db/migrations/schema.sql
 *~
 # temporary files which can be created if a process still has a handle open of a deleted file
 .fuse_hidden*
