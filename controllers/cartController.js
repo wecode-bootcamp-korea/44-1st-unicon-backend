@@ -1,6 +1,7 @@
 const cartService = require('../services/cartService');
+const catchError = require('./errorHandlers');
 
-const createCartItem = async (req, res) => {
+const createCartItem = catchError(async (req, res) => {
   //cart를 만들고 나서 carItem을 만들기
   try {
     const { productId, quantity } = req.body;
@@ -17,7 +18,7 @@ const createCartItem = async (req, res) => {
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
-};
+});
 
 const getCartList = async (req, res) => {
   try {
@@ -30,17 +31,17 @@ const getCartList = async (req, res) => {
   }
 };
 
-const updateCart = async (req, res) => {
+const updateCart = catchError(async (req, res) => {
   const userId = req.userId;
 
   const { quantity } = req.body;
 
   const productId = req.params;
 
-  const update = await cartService.updateCart({userId, productId, quantity});
+  const update = await cartService.updateCart({ userId, productId, quantity });
 
   res.status(201).json({ message: update });
-};
+});
 
 const deleteCart = async (req, res) => {
   const userId = req.userId;
