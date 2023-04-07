@@ -50,8 +50,21 @@ const reviewById = async (productId) => {
   }
 };
 
+const deleteReview = async (userId, productId) => {
+  try {
+    return await appDataSource.query(
+      `DELETE FROM review
+      WHERE user_id = ? AND product_id = ?
+      `,
+      [userId, productId]
+    );
+  } catch (err) {
+    throw new baseError('INVALID_DATA');
+  }
+};
 module.exports = {
   createReview,
   isOrder,
   reviewById,
+  deleteReview,
 };

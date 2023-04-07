@@ -29,7 +29,19 @@ const reviewById = catchError(async (req, res) => {
   return res.status(200).json(review);
 });
 
+const deleteReview = catchError(async (req, res) => {
+  const { userId, productId } = req.params;
+  if (!userId || !productId) {
+    return res.status(400).json({ message: 'KEY_ERROR' });
+  }
+  const deleteReview = await reviewDao.deleteReview(userId, productId);
+  if (deleteReview.affectedRows == 0)
+    throw new BaseError('NOT_YOUR_POST_CAN_NOT_DELETE', 401);
+
+  return res.status(204);
+});
 module.exports = {
   createReview,
   reviewById,
+  deleteReview,
 };
