@@ -26,7 +26,7 @@ const signUp = async (
     );
   } catch (err) {
     const error = new Error('INVALID_DATA_INPUT');
-    console.log(err);
+
     error.statusCode = 500;
     throw error;
   }
