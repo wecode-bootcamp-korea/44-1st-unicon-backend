@@ -1,4 +1,4 @@
-const appDataSource = require('./myDataSources');
+const appDataSource = require('./appDataSource');
 
 const signUp = async (
   name,

@@ -1,4 +1,4 @@
-const appDataSource = require('./myDataSources');
+const appDataSource = require('./appDataSource');
 
 const createCartItem = async ({ userId, productId, quantity }) => {
   try {
