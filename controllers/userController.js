@@ -17,18 +17,18 @@ const signUp = catchError(async (req, res) => {
     birth,
     gender
   );
-  return res.status(201).json({ message: 'SIGNUP_SUCCESS' });
+   res.status(201).json({ message: 'SIGNUP_SUCCESS' });
 });
 
 const signIn = catchError(async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(400).json({ message: 'KEY_ERROR' });
+    res.status(400).json({ message: 'KEY_ERROR' });
   }
 
   const Token = await userService.signIn(email, password);
-  return res.status(200).json({ accesstoken: Token });
+  res.status(200).json({ accesstoken: Token });
 });
 
 module.exports = {

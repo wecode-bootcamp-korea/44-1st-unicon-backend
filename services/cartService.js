@@ -9,7 +9,7 @@ const createCartItem = async ({ userId, productId, quantity }) => {
   }
 
   const cart = await cartDao.findMatched(productId);
-  if(cart.length==0){
+  if(cart.length===0){
     const error = new Error(`product with ID ${productId} not found`);
     error.statusCode = 400;
 
@@ -48,7 +48,7 @@ const updatedCart = async ({ userId, productId, quantity }) => {
 const deleteCart = async ({ userId, productId }) => {
 
   const cart = await cartDao.findMatchedProductId(productId)
-  if(cart.length==0){
+  if(cart.length===0){
     const error = new Error(`cart with ID ${productId} not found`);
     error.statusCode = 400;
 

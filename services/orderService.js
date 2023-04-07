@@ -1,31 +1,33 @@
 const orderDao = require('../models/orderDao');
-const { v4 } = require('uuid');
 
-const uuid = () => {
-  const tokens = v4().split('-');
-  return tokens[2] + tokens[1] + tokens[0] + tokens[3] + tokens[4];
-};
-uuid();
+const createOrders = async (userId) => {
+  const existingOrders = await orderDao.findMatchedOrdersByUserId(userId) || [];
 
-const createOrders = async (userId, orderNumber, totalAmount) => {
+  if (existingOrders.length === 0) {
+    await orderDao.createOrders(userId); 
+  }
 
-  const uuIdorderNumber = await uuid;
-  orderDao.createOrderItem(userId, orderId, productId, quantity);
-  return await orderDao.createOrders(userId, uuIdorderNumber, totalAmount);
-};
+  const cartItems = await orderDao.findMatched(userId); 
+  console.log("cartItems:" + cartItems)
+  if (cartItems.length > 0) {
+    await orderDao.createOrderItem(cartItems); 
+  }
 
-const createOrderStatus = async (status, orderId) => {
-
-  return await orderDao.createOrderStatus(status, orderId);
+  await orderDao.updatedOrders(userId); 
+  return 'orderCreated';
 };
 
-const createOrderItemStatus = async (status, orderItemId) => {
-    
-  return await orderDao.createOrderItemstatus(status, orderItemId);
-};
+// const createOrderStatus = async (status, orderId) => {
+
+//   return await orderDao.createOrderStatus(status, orderId);
+// };
+
+// const createOrderItemStatus = async (status, orderItemId) => {
+
+//   return await orderDao.createOrderItemstatus(status, orderItemId);
+// };
 module.exports = {
   createOrders,
-  createOrderItem,
-  createOrderStatus,
-  createOrderItemStatus,
+  //   createOrderStatus,
+  //   createOrderItemStatus,
 };
