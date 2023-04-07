@@ -50,7 +50,7 @@ const categoryPage = async (mc, sc, pf, start, count, isnew) => {
     );
   } catch (err) {
     console.log(err);
-    throw new baseError('INVALID_DATA');
+    throw new baseError('INVALID_DATA', 500);
   }
 };
 
