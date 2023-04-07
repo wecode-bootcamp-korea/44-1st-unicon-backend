@@ -1,9 +1,14 @@
 const orderDao = require('../models/orderDao');
 
-const createOrder = async (user_id, order_number, total_amount) => {
-  return orderDao.createOrder(user_id, order_number, total_amount);
+const createOrders = async (userId, orderNumber, totalAmount) => {
+  return await orderDao.createOrders(userId, orderNumber, totalAmount);
+};
+
+const createOrderItem = async (userId, orderId, productId, quantity) => {
+  return await orderDao.createOrderItem(userId, orderId, productId, quantity);
 };
 
 module.exports = {
-  createOrder,
+  createOrders,
+  createOrderItem,
 };

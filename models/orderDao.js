@@ -1,15 +1,15 @@
 const appDataSource = require('./appDataSource');
 
-const createOrder = async (user_id, order_number, total_amount) => {
+const createOrders = async (userId, orderNumber, totalAmount) => {
   try {
-    const user = await appDataSource.query(
+    await appDataSource.query(
       `INSERT INTO orders(
-		      user_id,
+		      users_id,
           order_number,
           total_amount
-       ) VALUES (?, ?, ? );
+          ) VALUES ( ?, ?, ? );
 		  `,
-      [user_id, order_number, total_amount]
+      [userId, orderNumber, totalAmount]
     );
   } catch (err) {
     const error = new Error('INVALID_DATA_INPUT');
@@ -19,6 +19,27 @@ const createOrder = async (user_id, order_number, total_amount) => {
   }
 };
 
+const createOrderItem = async (userId, orderId, productId, quantity) => {
+  try {
+    await appDataSource.query(
+      `INSERT INTO order_item(
+        user_id,
+        order_id,
+        product_id,
+        quantity,
+        price
+        ) VALUES (?, ?, ?, ?);
+        `,
+      [userId, orderId, productId, quantity]
+    );
+  } catch (err) {
+    const error = new Error('INVALID_DATA_INPUT');
+    console.log(err);
+    error.statusCode = 500;
+    throw error;
+  }
+};
 module.exports = {
-  createOrder,
+  createOrders,
+  createOrderItem,
 };

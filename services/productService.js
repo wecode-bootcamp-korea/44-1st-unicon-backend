@@ -4,4 +4,4 @@ const getProductById = async (productId) => {
   return await productDao.getProductById(productId);
 };
 
-module.exports = { getProductById, getDetailByProductId };
+module.exports = { getProductById };

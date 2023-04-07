@@ -11,7 +11,7 @@ const signUp = async (
 ) => {
   try {
     const DEFAULT_POINTS = 9999;
-    const user = await appDataSource.query(
+    await appDataSource.query(
       `INSERT INTO users(
 		      names,
           email,
@@ -56,7 +56,31 @@ const getUserbyEmail = async (email) => {
   }
 };
 
+const getUserById = async (id) => {
+  try {
+    const [result] = await appDataSource.query(
+      `SELECT
+        id,
+        names,
+        email,
+        passwords
+      FROM 
+        users
+      WHERE 
+          users.id = ?;
+        `,
+      [id]
+    );
+    return result;
+  } catch (err) {
+    const error = new Error('dataSource Error');
+    error.statusCode = 400;
+    throw error;
+  }
+};
+
 module.exports = {
   signUp,
   getUserbyEmail,
+  getUserById,
 };

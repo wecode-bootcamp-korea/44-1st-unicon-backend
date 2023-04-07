@@ -1,17 +1,23 @@
 const orderService = require('../services/orderService.js');
 const { catchError } = require('../middlewares/error.js');
 
-const createOrder = catchError(async (req, res) => {
-  const { user_id, order_number, total_amount } = req.body;
+const createOrders = catchError(async (req, res) => {
+  const { orderNumber, totalAmount } = req.body;
 
-  if (!user_id || !order_number || !total_amount) {
+  if (!orderNumber || !totalAmount) {
     return res.status(400).json({ message: 'KEY_ERROR' });
   }
 
-  await orderService.createOrder(user_id, order_number, total_amount);
+  await orderService.createOrders(orderNumber, totalAmount);
   return res.status(201).json({ message: 'ORDER_SUCCESS' });
 });
 
+const createOrderItem = catchError(async (req, res) => {
+  await orderService.createOrderItems();
+  return res.status(201).json({ message: 'CONFIRMED_ORDER_ITEMS' });
+});
+
 module.exports = {
-  createOrder,
+  createOrders,
+  createOrderItem,
 };
