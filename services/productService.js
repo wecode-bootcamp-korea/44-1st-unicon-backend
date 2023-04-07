@@ -1,14 +1,28 @@
 const productDao = require('../models/productDao');
 
 const getProductById = async (productId) => {
-  return productDao.getProductById(productId);
+  return await productDao.getProductById(productId);
 };
 
-const categoryPage = async (mc, sc, pf, start, count, isnew) => {
-  return await productDao.categoryPage(mc, sc, pf, start, count, isnew);
+const getProductList = async (
+  mainCategory,
+  subCategory,
+  pricefilter,
+  start,
+  limit,
+  isnew
+) => {
+  return await productDao.getProductList(
+    mainCategory,
+    subCategory,
+    pricefilter,
+    start,
+    limit,
+    isnew
+  );
 };
 
 module.exports = {
   getProductById,
-  categoryPage,
+  getProductList,
 };

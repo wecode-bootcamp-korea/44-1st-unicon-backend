@@ -1,33 +1,50 @@
 const appDataSource = require('./appDataSource');
 const { baseError } = require('../middlewares/error');
 
-const categoryPage = async (mc, sc, pf, start, count, isnew) => {
+const getProductList = async (
+  mainCategory,
+  subCategory,
+  pricefilter,
+  start,
+  limit,
+  isnew
+) => {
   try {
+    let conditionMain = '';
+    let conditionSub = '';
+    let order = 'ORDER BY p.id';
+    let conditionIsNew = '';
     let condition = '';
-    let order = '';
-    if (sc) {
-      condition = `WHERE sub_category.id = ${sc}`;
+    if (mainCategory) {
+      conditionMain = `main_category.id = ${mainCategory}`;
     }
 
-    if (mc) {
-      condition = `WHERE main_category.id = ${mc}`;
+    if (subCategory) {
+      conditionSub = `sub_category.id = ${subCategory}`;
     }
 
     if (isnew) {
-      condition = `WHERE is_new IS NOT NULL`;
+      conditionIsNew = `is_new IS NOT NULL`;
     }
 
-    if (mc & isnew) {
-      condition = `WHERE main_category.id = ${mc} AND is_new IS NOT NULL`;
+    if (pricefilter) {
+      order = `ORDER BY p.price ${pricefilter}`;
     }
 
-    if (sc && isnew) {
-      condition = `WHERE sub_category.id = ${sc} AND is_new IS NOT NULL`;
+    if (mainCategory || subCategory || isnew) {
+      condition = `WHERE `;
+      const array = [conditionMain, conditionSub, conditionIsNew];
+      array.forEach((str, index) => {
+        if (str && (index == 0 || !array[index - 1])) {
+          condition += str;
+        }
+        if (str && (index != 0) & array[index - 1]) {
+          condition += ` AND `;
+          condition += str;
+        }
+      });
     }
 
-    if (pf) {
-      order = `ORDER BY p.price ${pf}`;
-    }
     return await appDataSource.query(
       `SELECT
       p.id,
@@ -44,12 +61,11 @@ const categoryPage = async (mc, sc, pf, start, count, isnew) => {
       ON image.product_id = p.id
       ${condition}
       ${order}
-      LIMIT ? OFFSET ?;
+      LIMIT ? OFFSET ?
       ;`,
-      [count, start]
+      [start, limit]
     );
   } catch (err) {
-    console.log(err);
     throw new baseError('INVALID_DATA', 500);
   }
 };
@@ -85,5 +101,5 @@ const getProductById = async (productId) => {
 
 module.exports = {
   getProductById,
-  categoryPage,
+  getProductList,
 };
