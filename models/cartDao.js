@@ -76,7 +76,7 @@ const getCartList = async (userId) => {
     0
   );
 
-  return { Lists: updatedLists, totalItemPrice };
+  return {updatedLists, totalItemPrice };
 };
 
 const updateCartItemQuantity = async ({ userId, productId, quantity }) => {
