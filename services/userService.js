@@ -34,14 +34,19 @@ const signIn = async (email, password) => {
   }
 
   const payLoad = { id: users.id };
-  const jwtToken = jwt.sign(payLoad, process.env.SECRET_KEY, {
+  const jwtToken = jwt.sign(payLoad, process.env.SECRETKEY, {
     expiresIn: '1d',
   });
 
   return jwtToken;
 };
 
+const getUserById = async (id) => {
+  return await userDao.getUserById(id);
+ };
+
 module.exports = {
   signUp,
   signIn,
+  getUserById
 };

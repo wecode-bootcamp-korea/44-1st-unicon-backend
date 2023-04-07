@@ -6,7 +6,7 @@ const createCartItem = async ({ userId, productId, quantity }) => {
       'SELECT * FROM product where product.id =?',
       [productId]
     );
-    if (product === 0) {
+    if (product <= 0) {
       throw new Error('Invalid product ');
     }
     await appDataSource.query(
@@ -22,17 +22,16 @@ const createCartItem = async ({ userId, productId, quantity }) => {
   }
 };
 
-const findMatched = async (productId) => {
-  try {
-    return await appDataSource.query(`SELECT * FROM product WHERE id = ?`, [
-      productId,
-    ]);
-  } catch {
-    const error = new Error('datasource error, couldnt find product');
-    error.statusCode = 400;
+const findMatchedProductId = async (productId) => {
+  return await appDataSource.query(`SELECT * FROM cart WHERE product_id = ?`, [
+    productId,
+  ]);
+};
 
-    throw error;
-  }
+const findMatched = async (productId) => {
+  return await appDataSource.query(`SELECT * FROM product WHERE id = ?`, [
+    productId,
+  ]);
 };
 
 const getCartList = async (userId) => {
@@ -66,36 +65,48 @@ const getCartList = async (userId) => {
     [userId]
   );
 
-  const { Lists } = lists;
-  const parsedLists = JSON.parse(Lists);
-
-  const updatedLists = parsedLists.map((item) => {
+  const updatedLists = lists.Lists.map((item) => {
     const { price, quantity } = item;
-    const total_price = price * quantity;
-    return { ...item, total_price };
+    const totalPrice = price * quantity;
+    return { ...item, totalPrice };
   });
 
-  const totalSum = updatedLists.reduce(
-    (accumulator, currentValue) => accumulator + currentValue.total_price,
+  const totalItemPrice = updatedLists.reduce(
+    (accumulator, currentValue) => accumulator + currentValue.totalPrice,
     0
   );
 
-  return { Lists: updatedLists, totalSum };
+  return { Lists: updatedLists, totalItemPrice };
 };
 
 const updateCartItemQuantity = async ({ userId, productId, quantity }) => {
+  const queryRunner = appDataSource.createQueryRunner();
+  await queryRunner.connect();
+
+  await queryRunner.startTransaction();
   try {
-    await appDataSource.query(
+    await queryRunner.query(
       `UPDATE cart
        SET quantity = ?
-       WHERE user_id = ? AND product_id = ? `,
+       WHERE cart.user_id = ? AND cart.product_id = ? `,
       [quantity, userId, productId]
     );
-    return { message: 'cartItem quantity updated' };
+
+    const [updatedCartItem] = await queryRunner.query(
+      `SELECT 
+         id, user_id, product_id, quantity
+       FROM cart
+       WHERE cart.user_id = ? AND cart.product_id = ?`,
+      [userId, productId]
+    );
+
+    await queryRunner.commitTransaction();
+    return { message: 'cartItem quantity updated', updatedCartItem };
   } catch (error) {
-    // commit 하기 전으로 돌리기 
-    console.error(error);
+    await queryRunner.rollbackTransaction();
     throw new Error('failed to update cart item quantity');
+  } finally {
+    await queryRunner.release();
   }
 };
 
@@ -108,6 +119,37 @@ const deleteCart = async ({ userId, productId }) => {
       `,
     [userId, productId]
   );
+  return 'cartDeleted';
+};
+
+const addCartItemQuantity = async ({ userId, productId, quantity }) => {
+  const queryRunner = appDataSource.createQueryRunner();
+  await queryRunner.connect();
+
+  await queryRunner.startTransaction();
+  try {
+    await queryRunner.query(
+      `UPDATE cart
+       SET quantity = quantity+ ?
+       WHERE cart.user_id = ? AND cart.product_id = ? `,
+      [quantity, userId, productId]
+    );
+    const [updatedCartItem] = await queryRunner.query(
+      `SELECT 
+         id, user_id, product_id, quantity
+       FROM cart
+       WHERE cart.user_id = ? AND cart.product_id = ?`,
+      [userId, productId]
+    );
+    await queryRunner.commitTransaction();
+    return { message: 'cartItem quantity updated', updatedCartItem };
+  } catch (error) {
+    console.error(error);
+    await queryRunner.rollbackTransaction();
+    throw new Error('failed to update cart item quantity');
+  } finally {
+    await queryRunner.release();
+  }
 };
 
 module.exports = {
@@ -116,4 +158,6 @@ module.exports = {
   getCartList,
   updateCartItemQuantity,
   deleteCart,
+  findMatchedProductId,
+  addCartItemQuantity,
 };

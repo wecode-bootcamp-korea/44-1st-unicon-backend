@@ -11,7 +11,7 @@ const { loginRequired } = require('../middlewares/auth');
 
 const userRouter = require('./userRouter');
 
-//router.use('/users', userRouter.router);
+router.use('/users', userRouter.router);
 //router.use('/products', productRouter.router);
 router.use("/cart", cartRouter)
 
