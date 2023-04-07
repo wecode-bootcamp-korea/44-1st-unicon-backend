@@ -61,6 +61,7 @@ const getCartList = async (userId) => {
         u.id = ?
     GROUP BY 
         u.id
+    ORDER BY id DESC
     `,
     [userId]
   );
