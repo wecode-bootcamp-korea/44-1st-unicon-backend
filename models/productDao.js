@@ -11,20 +11,20 @@ const getProductList = async (
 ) => {
   try {
     let conditionMain = '';
-    let conditionSub = '';
     let order = 'ORDER BY p.id';
-    let conditionIsNew = '';
     let condition = '';
+    let condition1 = [];
+
     if (mainCategory) {
-      conditionMain = `main_category.id = ${mainCategory}`;
+      condition1.push(`main_category.id = ${mainCategory}`);
     }
 
     if (subCategory) {
-      conditionSub = `sub_category.id = ${subCategory}`;
+      condition1.push(`sub_category.id = ${subCategory}`);
     }
 
     if (isnew) {
-      conditionIsNew = `is_new IS NOT NULL`;
+      condition1.push(`is_new IS NOT NULL`);
     }
 
     if (pricefilter) {
@@ -33,19 +33,16 @@ const getProductList = async (
 
     if (mainCategory || subCategory || isnew) {
       condition = `WHERE `;
-      const array = [conditionMain, conditionSub, conditionIsNew];
-      array.forEach((str, index) => {
-        if (str && (index == 0 || !array[index - 1])) {
-          condition += str;
-        }
-        if (str && (index != 0) & array[index - 1]) {
-          condition += ` AND `;
-          condition += str;
-        }
-      });
+      if (condition1.length != 1) {
+        conditionMain = condition1.join(` AND `);
+      }
+      if (condition1.length == 1) {
+        conditionMain = condition1;
+      }
+      condition = condition.concat(conditionMain);
     }
 
-    return await appDataSource.query(
+    const post = await appDataSource.query(
       `SELECT
       p.id,
       p.names,
@@ -63,16 +60,20 @@ const getProductList = async (
       ${order}
       LIMIT ? OFFSET ?
       ;`,
-      [start, limit]
+      [limit, start]
     );
+    return post;
   } catch (err) {
-    throw new baseError('INVALID_DATA', 500);
+    console.log(err);
+    const error = new Error('INVAFAF');
+    error.statusCode = 500;
+    throw error;
   }
 };
 
 const getProductById = async (productId) => {
   try {
-    return await appDataSource.query(
+    const productDetail = await appDataSource.query(
       `SELECT
       p.id,
       p.names,
@@ -94,6 +95,7 @@ const getProductById = async (productId) => {
 	 `,
       [productId]
     );
+    return productDetail;
   } catch (err) {
     throw new baseError('INVALID_DATA_INPUT', 500);
   }

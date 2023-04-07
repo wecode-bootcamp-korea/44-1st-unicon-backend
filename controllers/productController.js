@@ -14,12 +14,15 @@ const getProductById = catchError(async (req, res) => {
 });
 
 const getProductList = catchError(async (req, res) => {
+  const DEFAULT_LIMIT = 15;
+  const DEFAULT_START = 0;
+
   const {
     mainCategory,
     subCategory,
     pricefilter,
-    start = 15,
-    limit = 0,
+    start = DEFAULT_START,
+    limit = DEFAULT_LIMIT,
     isnew,
   } = req.query;
 
@@ -31,6 +34,7 @@ const getProductList = catchError(async (req, res) => {
     limit,
     isnew
   );
+
   return res.status(200).json(category);
 });
 
