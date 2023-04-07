@@ -1,21 +1,36 @@
 const jwt = require('jsonwebtoken');
+const userService = require("../services/userService")
 
-const authorize = (req, res, next) => {
-    const token = req.headers.authorization;
-  
-    if (!token) {
-      return res.status(401).json({ message: 'unauthorized' });
+const loginRequired = async (req, res, next) => {
+  try {
+    // 1) Getting token and check of It's there
+    const accessToken = req.headers.authorization;
+    if (!accessToken) {
+      const error = new Error('NEED_ACCESS_TOKEN');
+      error.statusCode = 401;
+
+      return res.status(error.statusCode).json({ message: error.message });
     }
-  
-    try { 
-      const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-      req.userId = decoded.userId;
-      
-      next();
-    } catch (err) {
-      return res.status(401).json({ message: 'unauthorized' });
+    // 2) Verification token
+    const decoded = await jwt.verify(accessToken, process.env.SECRETKEY);
+
+    // 3) Check if user still exists
+    const user = await userService.getUserById(decoded.id);
+    if (!user) {
+      const error = new Error('USER_DOES_NOT_EXIST');
+      error.statusCode = 404;
+
+      return res.status(error.statusCode).json({ message: error.message });
     }
-  };
+    // 4) Grant Access
+    req.user = user;
+    next();
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
 
-
-module.exports = { authorize }
+module.exports = {
+  loginRequired,
+};
