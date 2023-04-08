@@ -2,11 +2,6 @@ const appDataSource = require('./appDataSource');
 
 const { v4 } = require('uuid');
 
-// const generateRandomCode = () => {
-//     const tokens = uuid().split('-');
-//     return tokens[2] + tokens[1] + tokens[0] + tokens[3] + tokens[4];
-// };
-
 const createOrders = async (userId) => {
   const orderNumber = v4();
   console.log(orderNumber);

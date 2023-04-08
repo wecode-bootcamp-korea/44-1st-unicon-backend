@@ -14,7 +14,6 @@ const createOrders = catchError(async (req, res) => {
   return res.status(201).json({ message: result });
 });
 
-
 module.exports = {
   createOrders,
 };
