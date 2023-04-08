@@ -1,3 +1,6 @@
+const userService = require('../services/userService');
+const jwt = require('jsonwebtoken');
+
 const loginRequired = async (req, res, next) => {
   // 1) Getting token and check of It's there
   const accessToken = req.headers.authorization;
