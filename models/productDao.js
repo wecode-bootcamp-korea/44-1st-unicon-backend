@@ -1,5 +1,6 @@
 const appDataSource = require('./appDataSource');
 const { baseError } = require('../middlewares/error');
+const conditionMake = require('./conditionMake');
 
 const getProductList = async (
   mainCategory,
@@ -10,38 +11,19 @@ const getProductList = async (
   isnew
 ) => {
   try {
-    let conditionMain = '';
-    let order = 'ORDER BY p.id';
-    let condition = '';
-    let condition1 = [];
-
-    if (mainCategory) {
-      condition1.push(`main_category.id = ${mainCategory}`);
-    }
-
-    if (subCategory) {
-      condition1.push(`sub_category.id = ${subCategory}`);
-    }
-
-    if (isnew) {
-      condition1.push(`is_new IS NOT NULL`);
-    }
-
-    if (pricefilter) {
-      order = `ORDER BY p.price ${pricefilter}`;
-    }
-
-    if (mainCategory || subCategory || isnew) {
-      condition = `WHERE `;
-      if (condition1.length != 1) {
-        conditionMain = condition1.join(` AND `);
-      }
-      if (condition1.length == 1) {
-        conditionMain = condition1;
-      }
-      condition = condition.concat(conditionMain);
-    }
-
+    let filter = new conditionMake(
+      mainCategory,
+      subCategory,
+      isnew,
+      pricefilter
+    );
+    let condition = ``;
+    filter.mainCondition();
+    filter.subCondition();
+    filter.newCondition();
+    filter.priceCondition();
+    if (mainCategory || subCategory || isnew || pricefilter)
+      condition = `WHERE ` + filter.mixCondition();
     const post = await appDataSource.query(
       `SELECT
       p.id,
@@ -57,7 +39,6 @@ const getProductList = async (
       JOIN  (SELECT product_id, JSON_ARRAYAGG(image_url) AS image_url FROM product_image GROUP BY product_id) AS image
       ON image.product_id = p.id
       ${condition}
-      ${order}
       LIMIT ? OFFSET ?
       ;`,
       [limit, start]
