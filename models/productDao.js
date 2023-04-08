@@ -17,13 +17,16 @@ const getProductList = async (
       isnew,
       pricefilter
     );
+
     let condition = ``;
+
     filter.mainCondition();
     filter.subCondition();
     filter.newCondition();
     filter.priceCondition();
-    if (mainCategory || subCategory || isnew || pricefilter)
-      condition = `WHERE ` + filter.mixCondition();
+    const versity = filter.mixCondition();
+    if (versity) condition = `WHERE ` + versity;
+
     const post = await appDataSource.query(
       `SELECT
       p.id,
