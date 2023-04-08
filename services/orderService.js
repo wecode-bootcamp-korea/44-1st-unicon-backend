@@ -1,33 +1,31 @@
 const orderDao = require('../models/orderDao');
 
 const createOrders = async (userId) => {
-  const existingOrders = await orderDao.findMatchedOrdersByUserId(userId) || [];
+  try {
+    const orders = await orderDao.findMatchedOrdersByUserId(userId);
 
-  if (existingOrders.length === 0) {
-    await orderDao.createOrders(userId); 
+    if (orders === undefined || orders === null) {
+      await orderDao.createOrders(userId);
+    }
+
+    //product_id에 대한 order_item이 존재하는 경우, createOrder을 안함
+    const orderId =await orderDao.createOrderItems(userId);
+
+    const totalAmount = await orderDao.updatedOrders(orderId);
+
+    const imageUrl = await orderDao.getImageUrlByProductId(orderId);
+
+    return {totalAmount, imageUrl};
+  } catch (err) {
+    console.log(err);
+    throw new Error(
+      `Failed to create orders for userId ${userId}: ${err.message}`
+    );
   }
-
-  const cartItems = await orderDao.findMatched(userId); 
-  console.log("cartItems:" + cartItems)
-  if (cartItems.length > 0) {
-    await orderDao.createOrderItem(cartItems); 
-  }
-
-  await orderDao.updatedOrders(userId); 
-  return 'orderCreated';
 };
 
-// const createOrderStatus = async (status, orderId) => {
+//금액 총 합, 각 product_id에 대한 imgurl 호출 구현 필수
 
-//   return await orderDao.createOrderStatus(status, orderId);
-// };
-
-// const createOrderItemStatus = async (status, orderItemId) => {
-
-//   return await orderDao.createOrderItemstatus(status, orderItemId);
-// };
 module.exports = {
   createOrders,
-  //   createOrderStatus,
-  //   createOrderItemStatus,
 };

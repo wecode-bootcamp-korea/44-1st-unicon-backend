@@ -68,12 +68,12 @@ const getCartList = async (userId) => {
   const updatedLists = lists.Lists.map((item) => {
     const { price, quantity } = item;
     const totalPrice = price * quantity;
-    return { ...item, totalPrice };
+    return { ...item, totalPrice }; //모든 객체의 속성을 새로운 객체에 복사 
   });
 
   const totalItemPrice = updatedLists.reduce(
     (accumulator, currentValue) => accumulator + currentValue.totalPrice,
-    0
+    0 
   );
 
   return {updatedLists, totalItemPrice };

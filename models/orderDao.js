@@ -4,7 +4,6 @@ const { v4 } = require('uuid');
 
 const createOrders = async (userId) => {
   const orderNumber = v4();
-  console.log(orderNumber);
   try {
     await appDataSource.query(
       `INSERT INTO orders(
@@ -22,124 +21,143 @@ const createOrders = async (userId) => {
   }
 };
 
-const findMatched = async (userId) => {
+const findMatchedOrdersByUserId = async (userId) => {
   try {
     const [result] = await appDataSource.query(
-      `SELECT 
-           JSON_ARRAYAGG(
-             JSON_OBJECT(
-               'id', cart.id,
-               'user_id', cart.user_id,
-               'order_id', orders.id,
-               'product_id', cart.product_id,
-               'price', product.price,
-               'quantity', cart.quantity
-             )
-           ) as order_item
-         FROM cart
-         JOIN product ON cart.product_id = product.id
-         JOIN orders ON cart.user_id = orders.user_id
-         WHERE cart.user_id = ?`,
+      `SELECT *
+      FROM orders 
+      WHERE orders.user_id =? `,
       [userId]
     );
-    if (!result) {
-      throw new Error(`No cart data found for userId ${userId}`);
-    }
-    const orderItems = JSON.parse(result.order_item);
-    return orderItems;
+    return result;
   } catch (err) {
     throw new Error(
-      `Failed to find cart data for userId ${userId}: ${err.message}`
+      `Failed to find matched orders for userId ${userId}: ${err.message}`
     );
   }
 };
 
-const findMatchedOrdersByUserId = async (userId) => {
-  return await appDataSource.query(
-    `SELECT *
-    FROM orders 
-    WHERE orders.user_id =?  `,
-    [userId]
-  );
-};
-
-const createOrderItem = async (userId) => {
+const createOrderItems = async (userId) => {
   try {
-    const cartItems = await findMatched(userId);
-    const orderItems = cartItems.map((cartItem) => {
-      return {
-        userId: cartItem.user_id,
-        orderId: cartItem.order_id,
-        productId: cartItem.product_id,
-        quantity: cartItem.quantity,
-        price: cartItem.price,
-      };
-    });
+    const cartItems = await appDataSource.query(
+      `
+      SELECT cart.user_id, cart.product_id, cart.quantity, product.price 
+      FROM cart
+      JOIN product ON cart.product_id = product.id
+      WHERE cart.user_id = ?
+    `,
+      [userId]
+    ); //row 결과가 하나일 경우 쿼리문은 배열이 아니라 단독 객체로 반환함
+    // 항상 배열 형태로 반환
+    const cartItemArray = Array.isArray(cartItems) ? cartItems : [cartItems];
 
-    for (let i = 0; i < orderItems.length; i++) {
-      const orderItem = orderItems[i];
-      await appDataSource.query(
-        `INSERT INTO order_item(
-              user_id,
-              order_id,
-              product_id,
-              quantity,
-              price
-              ) VALUES (?, ?, ?, ?, ?);
-              `,
-        [
-          orderItem.userId,
-          orderItem.orderId,
-          orderItem.productId,
-          orderItem.quantity,
-          orderItem.price,
-        ]
-      );
-    }
-  } catch (err) {
-    const error = new Error('INVALID_DATA_INPUT');
-    console.log(err);
-    error.statusCode = 500;
-    throw error;
-  }
-};
-
-const updatedOrders = async (userId) => {
-  try {
-    const orders = await appDataSource.query(
-      `SELECT * FROM orders WHERE user_id = ?`,
+    const [orderTable] = await appDataSource.query(
+      `SELECT *FROM orders WHERE orders.user_id = ?`,
       [userId]
     );
+    const orderId = orderTable['id'];
 
-    for (const order of orders) {
-      const orderItems = await appDataSource.query(
-        `SELECT * FROM order_item WHERE order_id = ?`,
-        [order.id]
+    for (const cartItem of cartItemArray) {
+      const [existingOrderItem] = await appDataSource.query(
+        `SELECT * FROM order_item WHERE order_id = ? AND product_id = ?`,
+        [orderId, cartItem.product_id]
       );
 
-      let totalAmount = 0;
-
-      for (let i = 0; i < orderItems.length; i++) {
-        totalAmount += orderItems[i].price * orderItems[i].quantity;
+      if (existingOrderItem) {
+        await appDataSource.query(
+          `UPDATE order_item SET quantity = ? WHERE id = ?`,
+          [cartItem.quantity, existingOrderItem.id]
+        );
+      } else {
+        await appDataSource.query(
+          `INSERT INTO order_item (
+            user_id,
+            order_id,
+            product_id,
+            quantity,
+            price
+          ) VALUES (?, ?, ?, ?, ?)`,
+          [
+            cartItem.user_id,
+            orderId,
+            cartItem.product_id,
+            cartItem.quantity,
+            cartItem.price,
+          ]
+        );
       }
-
-      await appDataSource.query(
-        `UPDATE orders SET total_amount = ? WHERE id = ?`,
-        [totalAmount, order.id]
-      );
     }
+
+    return orderId;
+  } catch (err) {
+    throw new Error(
+      `Failed to create order items for userId ${userId}: ${err.message}`
+    );
+  }
+};
+
+const updatedOrders = async (orderId) => {
+  try {
+    const orderItems = await appDataSource.query(
+      `SELECT * FROM order_item WHERE order_id = ?`,
+      [orderId]
+    );
+
+    const orderItemArray = Array.isArray(orderItems)
+      ? orderItems
+      : [orderItems];
+
+    let totalAmount = 0;
+
+    for (let i = 0; i < orderItemArray.length; i++) {
+      totalAmount += orderItemArray[i].price * orderItemArray[i].quantity;
+    }
+
+    await appDataSource.query(
+      `UPDATE orders SET total_amount = ? WHERE id = ?`,
+      [totalAmount, orderId]
+    );
+
+    return totalAmount;
   } catch (err) {
     const error = new Error('INVALID_DATA_INPUT');
     console.log(err);
     error.statusCode = 500;
     throw error;
   }
+};
+
+const getImageUrlByProductId = async (orderId) => {
+  const orderItems = await appDataSource.query(
+    `SELECT * FROM order_item WHERE order_id = ?`,
+    [orderId]
+  );
+
+  const orderItemArray = Array.isArray(orderItems) ? orderItems : [orderItems];
+
+  const productIds = orderItemArray.map((orderItem) => orderItem.product_id);
+
+  const imageUrl = await appDataSource.query(
+    `SELECT image_url
+    FROM product_image
+    WHERE id IN (
+      SELECT MIN(id)
+      FROM product_image
+      WHERE product_id IN (?)
+      GROUP BY product_id
+    )
+      
+    `,
+    [productIds]
+  );
+ 
+  return imageUrl.map((result) => result['image_url']);
 };
 
 module.exports = {
   createOrders,
-  createOrderItem,
-  findMatched,
+  createOrderItems,
   findMatchedOrdersByUserId,
   updatedOrders,
+  getImageUrlByProductId,
 };
