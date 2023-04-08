@@ -59,7 +59,7 @@ const deleteReview = async (userId, productId) => {
       [userId, productId]
     );
   } catch (err) {
-    throw new baseError('INVALID_DATA');
+    throw new baseError('INVALID_DATA', 500);
   }
 };
 module.exports = {
