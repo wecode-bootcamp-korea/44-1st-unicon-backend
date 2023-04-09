@@ -2,6 +2,38 @@ const appDataSource = require('./appDataSource');
 const { baseError } = require('../middlewares/error');
 const conditionMake = require('./conditionMake');
 
+const getShowRoom = async () => {
+  try {
+    return await appDataSource.query(
+      `SELECT
+      show_room.id,
+      show_room.image_url,
+      po.products
+    FROM show_room
+    LEFT JOIN(
+      SELECT 
+      show_room_id,
+      JSON_ARRAYAGG(JSON_OBJECT(
+      "id", product.id,
+      "name",product.names,
+        "price",product.price,
+        "sub_description",product.sub_description,
+        "image_url",(SELECT
+      JSON_ARRAYAGG(image_url)
+      FROM product_image
+    WHERE product_image.product_id = product.id
+      )
+      ) )AS products
+      FROM product
+      GROUP BY show_room_id
+      )po ON show_room.id = po.show_room_id
+      `
+    );
+  } catch (err) {
+    throw new baseError('INVALID_DATA', 500);
+  }
+};
+
 const getProductList = async (
   mainCategory,
   subCategory,
@@ -49,7 +81,7 @@ const getProductList = async (
     return post;
   } catch (err) {
     console.log(err);
-    const error = new Error('INVAFAF');
+    const error = new Error('INVALD_DATA');
     error.statusCode = 500;
     throw error;
   }
@@ -88,4 +120,5 @@ const getProductById = async (productId) => {
 module.exports = {
   getProductById,
   getProductList,
+  getShowRoom,
 };
