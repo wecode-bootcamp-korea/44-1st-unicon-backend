@@ -1,6 +1,7 @@
 const appDataSource = require('./appDataSource');
-const { baseError } = require('../middlewares/error');
+
 const conditionMake = require('./conditionMake');
+const { DatabaseError } = require('../middlewares/error');
 
 const getShowRoom = async () => {
   try {
@@ -30,7 +31,7 @@ const getShowRoom = async () => {
       `
     );
   } catch (err) {
-    throw new baseError('INVALID_DATA', 500);
+    throw new DatabaseError('SHOWROOM_ERROR');
   }
 };
 
@@ -80,10 +81,7 @@ const getProductList = async (
     );
     return post;
   } catch (err) {
-    console.log(err);
-    const error = new Error('INVALD_DATA');
-    error.statusCode = 500;
-    throw error;
+    throw new DatabaseError('FILTER_ERROR');
   }
 };
 
@@ -113,7 +111,7 @@ const getProductById = async (productId) => {
     );
     return productDetail;
   } catch (err) {
-    throw new baseError('INVALID_DATA_INPUT', 500);
+    throw new DatabaseError('INVALID_DATA_INPUT');
   }
 };
 

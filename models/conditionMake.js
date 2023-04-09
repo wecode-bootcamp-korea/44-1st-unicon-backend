@@ -12,13 +12,16 @@ class conditionMake {
     if (this.mainCategory)
       this.condition.push(`main_category.id = ${this.mainCategory}`);
   }
+
   subCondition() {
     if (this.subCategory)
       this.condition.push(`sub_category.id = ${this.subCategory}`);
   }
+
   newCondition() {
     if (this.isnew) this.condition.push(`is_new IS NOT NULL`);
   }
+
   priceCondition() {
     let order = '';
     if (this.isnew) order = ` ORDER BY p.price ${this.pricefilter}`;
@@ -26,6 +29,7 @@ class conditionMake {
 
     this.filter += order;
   }
+
   mixCondition() {
     if (this.condition.length != 1) this.filter = this.condition.join(` AND `);
 
