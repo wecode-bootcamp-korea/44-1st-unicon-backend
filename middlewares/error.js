@@ -24,4 +24,12 @@ class DatabaseError extends baseError {
     this.statusCode = 500;
   }
 }
+
+class keyerror extends Error {
+  constructor() {
+    super();
+    this.message = 'keyerror';
+    this.statusCode = 400;
+  }
+}
 module.exports = { catchError, baseError, errorHandler, DatabaseError };
