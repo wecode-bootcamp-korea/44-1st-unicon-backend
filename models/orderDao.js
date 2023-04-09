@@ -121,7 +121,6 @@ const updatedOrders = async (orderId) => {
     return totalAmount;
   } catch (err) {
     const error = new Error('INVALID_DATA_INPUT');
-    console.log(err);
     error.statusCode = 500;
     throw error;
   }
@@ -154,10 +153,49 @@ const getImageUrlByProductId = async (orderId) => {
   return imageUrl.map((result) => result['image_url']);
 };
 
+const getUserInfoByUserId = async (userId) => {
+  return await appDataSource.query(
+    `SELECT 
+    addresses,
+    points AS currentPoints
+    FROM users
+    WHERE id =?`,
+    [userId]
+  )
+};
+
+const executedOrder = async(userId) => {
+  try{
+      const order = await findMatchedOrdersByUserId(userId);
+      console.log(order)
+      const totalAmount = await updatedOrders(order.id);
+
+      await appDataSource.query(
+        `UPDATE users SET points = points-? WHERE id = ?`,
+        [totalAmount, userId]
+      )
+
+      await appDataSource.query(
+        `DELETE FROM cart WHERE user_id =?`,
+        [userId]
+      )
+
+  } catch (err) {
+    const error = new Error('INVALID_DATA_INPUT');
+    error.statusCode = 500;
+    throw error;
+  }
+} 
+
+
+
+
 module.exports = {
   createOrders,
   createOrderItems,
   findMatchedOrdersByUserId,
   updatedOrders,
   getImageUrlByProductId,
+  getUserInfoByUserId,
+  executedOrder
 };
