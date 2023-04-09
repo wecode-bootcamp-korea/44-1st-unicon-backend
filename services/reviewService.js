@@ -1,12 +1,11 @@
 const reviewDao = require('../models/reviewDao.js');
+const { baseError } = require('../middlewares/error');
 
 const createReview = async (title, content, rating, productId, userId) => {
   const isOrder = await reviewDao.checkOrders(userId, productId);
 
   if (isOrder.length == 0) {
-    const err = new Error('NOT_IN_ORDER');
-    err.statusCode = 403;
-    throw err;
+    throw new baseError('NOT_IN_ORDER', 403);
   }
 
   return await reviewDao.createReview(
@@ -21,9 +20,7 @@ const createReview = async (title, content, rating, productId, userId) => {
 const reviewById = async (productId) => {
   const review = await reviewDao.reviewById(productId);
   if (review.length == 0) {
-    const err = new Error('NOT_REVIEW');
-    err.statusCode = 400;
-    throw err;
+    throw new baseError('NOT_REVIEW', 404);
   }
   return review;
 };
