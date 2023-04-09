@@ -7,6 +7,10 @@ const createOrders = async (userId) => {
     if (orders === undefined || orders === null) {
       await orderDao.createOrders(userId);
     }
+    
+    if(orders.order_status_id === 2){
+      await orderDao.createOrders(userId)
+    }
 
     //product_id에 대한 order_item이 존재하는 경우, createOrder을 안함
     const orderId = await orderDao.createOrderItems(userId);

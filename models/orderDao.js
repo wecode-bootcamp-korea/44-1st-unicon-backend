@@ -60,17 +60,7 @@ const createOrderItems = async (userId) => {
     const orderId = orderTable['id'];
 
     for (const cartItem of cartItemArray) {
-      const [existingOrderItem] = await appDataSource.query(
-        `SELECT * FROM order_item WHERE order_id = ? AND product_id = ?`,
-        [orderId, cartItem.product_id]
-      );
-
-      if (existingOrderItem) {
-        await appDataSource.query(
-          `UPDATE order_item SET quantity = ? WHERE id = ?`,
-          [cartItem.quantity, existingOrderItem.id]
-        );
-      } else {
+    
         await appDataSource.query(
           `INSERT INTO order_item (
             user_id,
@@ -87,7 +77,7 @@ const createOrderItems = async (userId) => {
             cartItem.price,
           ]
         );
-      }
+      
     }
 
     return orderId;
@@ -139,7 +129,8 @@ const getImageUrlByProductId = async (orderId) => {
   const productIds = orderItemArray.map((orderItem) => orderItem.product_id);
 
   const imageUrl = await appDataSource.query(
-    `SELECT image_url
+    `SELECT
+    'image_url', image_url
     FROM product_image
     WHERE id IN (
       SELECT MIN(id)
@@ -179,6 +170,11 @@ const executedOrder = async(userId) => {
 
       await appDataSource.query(
         `DELETE FROM cart WHERE user_id =?`,
+        [userId]
+      )
+
+      await appDataSource.query(
+        `UPDATE orders SET order_status_id =2 WHERE user_id =?`,
         [userId]
       )
 
