@@ -26,7 +26,9 @@ const findMatchedOrdersByUserId = async (userId) => {
     const [result] = await appDataSource.query(
       `SELECT *
       FROM orders 
-      WHERE orders.user_id =? `,
+      WHERE orders.user_id =? 
+      ORDER BY orders.id DESC 
+      LIMIT 1`,
       [userId]
     );
     return result;
@@ -187,8 +189,9 @@ const executedOrder = async(userId) => {
   }
 } 
 
+const createReceipt = async () =>{
 
-
+}
 
 module.exports = {
   createOrders,
