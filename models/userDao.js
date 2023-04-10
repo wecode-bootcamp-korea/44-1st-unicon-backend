@@ -10,7 +10,7 @@ const signUp = async (
   gender
 ) => {
   try {
-    const DEFAULT_POINTS = 9999;
+    const DEFAULT_POINTS = 99999;
     const user = await appDataSource.query(
       `INSERT INTO users(
 		      names,
