@@ -2,55 +2,28 @@ const orderService = require('../services/orderService.js');
 const { catchError } = require('../middlewares/error.js');
 
 const createOrders = catchError(async (req, res) => {
-  const { userId, orderNumber, totalAmount } = req.body;
+  const userId = req.user.id;
 
-  if (!userId || !orderNumber || !totalAmount) {
-    return res.status(400).json({ message: 'KEY_ERROR' });
+  if (!userId) {
+    return res.status(400).json({ message: 'INVALID_USER' });
   }
-  await orderService.createOrders(userId, orderNumber, totalAmount);
-  return res.status(201).json({ message: 'ORDER_SUCCESS' });
+
+  const result = await orderService.createOrders(userId);
+  return res.status(201).json({ message: result });
 });
 
-const createOrderItem = catchError(async (req, res) => {
-  const { userId, orderId, productId, quantity, price } = req.body;
+const executedOrder = catchError(async (req, res) => {
+  const userId = req.user.id;
 
-  if (!userId || !orderId || !productId || !quantity || !price) {
-    return res.status(400).json({ message: 'KEY_ERROR' });
+  if (!userId) {
+    return res.status(400).json({ message: 'INVALID_USER' });
   }
-  await orderService.createOrderItems(
-    userId,
-    orderId,
-    productId,
-    quantity,
-    price
-  );
 
-  return res.status(201).json({ message: 'CONFIRMED_ORDER_ITEMS' });
-});
-
-const createOrderStatus = catchError(async (req, res) => {
-  const { status, orderId } = req.body;
-
-  if (!status || !orderId) {
-    return res.status(400).json({ message: 'KEY_ERROR' });
-  }
-  await orderService.createOrderStatus(status, orderId);
-  return res.status(201).json({ message: 'CHECKED_ORDER_STATUS' });
-});
-
-const createOrderItemStatus = catchError(async (req, res) => {
-  const { status, orderItemId } = req.body;
-
-  if (!status || !orderItemId) {
-    return res.status(400).json({ message: 'KEY_ERROR' });
-  }
-  await orderSerivce.createOrderItemStatus(status, orderItemId);
-  return res.status(201).json({ message: 'CHECKED_ITEM_STATUS' });
+  const result = await orderService.executedOrder(userId);
+  return res.status(201).json({ message: result });
 });
 
 module.exports = {
   createOrders,
-  createOrderItem,
-  createOrderStatus,
-  createOrderItemStatus,
+  executedOrder,
 };

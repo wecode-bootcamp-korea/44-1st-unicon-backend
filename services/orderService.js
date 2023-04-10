@@ -1,35 +1,47 @@
 const orderDao = require('../models/orderDao');
-const uuid = require('uuid');
 
-// const { v4 } = require('uuid');
+const createOrders = async (userId) => {
+  try {
+    const orders = await orderDao.findMatchedOrdersByUserId(userId);
 
-// const uuid = () => {
-//   const tokens = v4().split('-');
-//   return tokens[2] + tokens[1] + tokens[0] + tokens[3] + tokens[4];
-// };
+    if (orders === undefined || orders === null) {
+      await orderDao.createOrders(userId);
+    }
 
-// uuid();
+    //product_id에 대한 order_item이 존재하는 경우, createOrder을 안함
+    const orderId = await orderDao.createOrderItems(userId);
+    const totalAmount = await orderDao.updatedOrders(orderId);
+    const imageUrl = await orderDao.getImageUrlByProductId(orderId);
+    const userInfo = await orderDao.getUserInfoByUserId(userId);
 
-const createOrders = async (userId, orderNumber, totalAmount) => {
-  const uuIdorderNumber = await uuid;
-  return await orderDao.createOrders(userId, orderNumber, totalAmount);
+    return { totalAmount, imageUrl, userInfo };
+  } catch (err) {
+    throw new Error(
+      `Failed to create orders for userId ${userId}: ${err.message}`
+    );
+  }
 };
 
-const createOrderItem = async (userId, orderId, productId, quantity) => {
-  return await orderDao.createOrderItem(userId, orderId, productId, quantity);
-};
+const executedOrder = async (userId) => {
+  try {
+    const currentPoints = (await orderDao.getUserInfoByUserId(userId)).map(
+      (result) => result['currentPoints']
+    );
 
-const createOrderStatus = async (status, orderId) => {
-  return await orderDao.createOrderStatus(status, orderId);
-};
+    await orderDao.executedOrder(userId);
+    const remainingPoints = (await orderDao.getUserInfoByUserId(userId)).map(
+      (result) => result['currentPoints']
+    );
 
-const createOrderItemStatus = async (status, orderItemId) => {
-  return await orderDao.createOrderItemstatus(status, orderItemId);
+    return { currentPoints, remainingPoints };
+  } catch (err) {
+    throw new Error(
+      `Failed to create orders for userId ${userId}: ${err.message}`
+    );
+  }
 };
 
 module.exports = {
   createOrders,
-  createOrderItem,
-  createOrderStatus,
-  createOrderItemStatus,
+  executedOrder,
 };
