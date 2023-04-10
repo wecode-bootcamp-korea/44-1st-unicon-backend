@@ -1,3 +1,6 @@
+const jwt = require('jsonwebtoken');
+const userService = require("../services/userService")
+
 const loginRequired = async (req, res, next) => {
   // 1) Getting token and check of It's there
   const accessToken = req.headers.authorization;
@@ -8,7 +11,7 @@ const loginRequired = async (req, res, next) => {
     return res.status(error.statusCode).json({ message: error.message });
   }
   // 2) Verification token
-  const decoded = await jwt.verify(accessToken, process.env.JWT_SECRET);
+  const decoded = await jwt.verify(accessToken, process.env.SECRET_KEY);
 
   // 3) Check if user still exists
   const user = await userService.getUserById(decoded.id);
