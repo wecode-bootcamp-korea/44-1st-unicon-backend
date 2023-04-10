@@ -13,7 +13,6 @@ const loginRequired = async (req, res, next) => {
     }
     // 2) Verification token
     const decoded = await jwt.verify(accessToken, process.env.SECRET_KEY);
-
     // 3) Check if user still exists
     const user = await userService.getUserById(decoded.id);
     if (!user) {
