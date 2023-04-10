@@ -26,7 +26,7 @@ const findMatchedOrdersByUserId = async (userId) => {
     const [result] = await appDataSource.query(
       `SELECT *
       FROM orders 
-      WHERE orders.user_id =? 
+      WHERE orders.user_id =? AND order_items.product_id = ? AND orders.status_id = 
       ORDER BY orders.id DESC 
       LIMIT 1`,
       [userId]
@@ -59,7 +59,7 @@ const createOrderItems = async (userId) => {
     );
     const orderId = orderTable['id'];
 
-    for (const cartItem of cartItemArray) {
+    for (const cartItem of cartItemArray) { //장바구니 내에서 주문 호출 하게 되면 여기부터 트랜잭션 적용 
     
         await appDataSource.query(
           `INSERT INTO order_item (
