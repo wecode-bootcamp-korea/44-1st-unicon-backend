@@ -1,7 +1,7 @@
 const appDataSource = require('./appDataSource');
 const { v4 } = require('uuid');
 
-const createPayment = async (orderId) => {
+const createPayment = async (orderNumber) => {
   const orderNumber = v4();
   try {
     await appDataSource.query(
@@ -9,10 +9,10 @@ const createPayment = async (orderId) => {
          order_id,
          order_num,
          user_id,
-         total_price
+         total_amount
       ) VALUES (?, ?, ?, ?);
       `,
-      [orderId, orderNumber, userId, totalPrice]
+      [orderId, orderNumber, userId, totalAmount]
     );
   } catch (err) {
     const error = new Error('INVALID_DATA_INPUT');
@@ -22,22 +22,22 @@ const createPayment = async (orderId) => {
   }
 };
 
-const findOrdersByOrderId = async (orderId) => {
+const findOrdersByOrderNumber = async (orderNumber) => {
   try {
     const [payment] = await appDataSource.query(
       `SELECT 
          orders.id as orderId,
-         orders.user_id  AS UserId,
          orders.order_number AS orderNumber,
-         orders.total_amount AS totalPrice
+         orders.user_id  AS UserId,
+         orders.total_amount AS totalAmount
       FROM
         orders
       ON
-        orders.id = payment.order_id
+        orders.order_number = receipt.order_number
       WHERE
-        orders.id = ?
+        orders.order_number= ?
       `,
-      [orderId, UserId, orderNumber, totalPrice]
+      [orderId, orderNumber, UserId, totalAmount]
     );
     return payment;
   } catch (err) {
@@ -50,5 +50,5 @@ const findOrdersByOrderId = async (orderId) => {
 
 module.exports = {
   createPayment,
-  findOrdersByOrderId,
+  findOrdersByOrderNumber,
 };
