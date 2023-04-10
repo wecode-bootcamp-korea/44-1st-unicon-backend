@@ -4,16 +4,19 @@ require('dotenv').config();
 
 const cors = require('cors');
 const morgan = require('morgan');
-const appDataSource = require('./models/appDataSource');
+
 const routes = require('./routes');
 
 const app = express();
 
 const { errorHandler } = require('./middlewares/error');
+const appDataSource = require('./models/appDataSource');
 
 app.use(cors());
-app.use(morgan('tiny'));
+app.use(morgan('combined'));
 app.use(express.json());
+app.use(routes);
+app.use(errorHandler);
 
 appDataSource
   .initialize()
@@ -25,14 +28,11 @@ appDataSource
     appDataSource.destroy();
   });
 
-app.use(routes);
-app.use(errorHandler);
-
-const PORT = process.env.PORT;
-
 app.get('/ping', (req, res) => {
   res.json({ message: 'pong' });
 });
+
+const PORT = process.env.PORT;
 
 const start = async () => {
   try {
