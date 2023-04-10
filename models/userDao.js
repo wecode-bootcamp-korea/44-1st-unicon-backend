@@ -27,7 +27,7 @@ const signUp = async (
   } catch (err) {
     const error = new Error('INVALID_DATA_INPUT');
 
-    error.statusCode = 500;
+    error.statusCode = 400;
     throw error;
   }
 };
@@ -51,7 +51,7 @@ const getUserbyEmail = async (email) => {
   } catch (err) {
     const error = new Error('NOT_FOUND_EMAIL');
     console.log(err);
-    error.statusCode = 500;
+    error.statusCode = 400;
     throw error;
   }
 };

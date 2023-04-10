@@ -9,6 +9,8 @@ const getShowRoom = async () => {
       `SELECT
       show_room.id,
       show_room.image_url,
+      show_room.descriptions,
+      show_room.header,
       po.products
     FROM show_room
     LEFT JOIN(
@@ -19,6 +21,7 @@ const getShowRoom = async () => {
       "name",product.names,
         "price",product.price,
         "sub_description",product.sub_description,
+        "product_size",product_size,
         "image_url",(SELECT
       JSON_ARRAYAGG(image_url)
       FROM product_image
