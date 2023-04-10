@@ -23,7 +23,7 @@ const createOrders = async (userId) => {
 
 const findMatchedOrdersByUserId = async (userId) => {
   try {
-    const [result] = await appDataSource.query(
+    const result = await appDataSource.query(
       `SELECT *
       FROM orders 
       WHERE orders.user_id =? AND order_items.product_id = ? AND orders.status_id = 
@@ -31,7 +31,10 @@ const findMatchedOrdersByUserId = async (userId) => {
       LIMIT 1`,
       [userId]
     );
-    return result;
+    const resultArray = Array.isArray(result) ? result : [result];
+    console.log(resultArray)
+    
+    return resultArray
   } catch (err) {
     throw new Error(
       `Failed to find matched orders for userId ${userId}: ${err.message}`
