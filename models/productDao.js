@@ -18,7 +18,10 @@ const searchProduct = async () => {
         ON p.sub_category_id = sub_category.id
         JOIN main_category
         ON sub_category.main_category_id = main_category.id
-        JOIN  (SELECT product_id, JSON_ARRAYAGG(image_url) AS image_url FROM product_image GROUP BY product_id) AS image
+        JOIN  (SELECT product_id,
+          JSON_ARRAYAGG(image_url) AS image_url
+          FROM product_image 
+          GROUP BY product_id) AS image
         ON image.product_id = p.id`
     );
   } catch (err) {
