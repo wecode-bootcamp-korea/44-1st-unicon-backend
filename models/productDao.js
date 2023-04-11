@@ -77,10 +77,11 @@ const getProductList = async (
     let versity = filter.build();
     if (pricefilter && !mainCategory && !subCategory && !isnew) {
       condition = versity;
+    } else if (!pricefilter && !mainCategory && !subCategory && !isnew) {
+      versity = ``;
     } else {
       versity ? (condition = `WHERE ` + versity) : (versity = ``);
     }
-    console.log(versity);
 
     const post = await appDataSource.query(
       `SELECT
