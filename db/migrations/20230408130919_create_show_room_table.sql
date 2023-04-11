@@ -4,5 +4,6 @@ CREATE TABLE show_room(
   image_url VARCHAR(2000),
   descriptions VARCHAR(1000)
 )
+
 -- migrate:down
 DROP TABLE show_room;
