@@ -44,24 +44,14 @@ const findMatched = async (userId) => {
   }
 };
 
-const createOrdersAndItems = async (userId, orderStatus) => {
+const createOrderAndItems = async (userId, orderId) => {
   const queryRunner = appDataSource.createQueryRunner();
   await queryRunner.connect();
 
   await queryRunner.startTransaction();
 
-  const orderNumber = v4();
   try {
-    const { insertId } = await queryRunner.query(
-      `INSERT INTO orders(
-                user_id,
-                order_number,
-                order_status_id
-                ) VALUES ( ?, ?, ?);
-              `,
-      [userId, orderNumber, orderStatus]
-    );
-
+    
     // cart 테이블에서 주문 상품 정보 가져오기
     const cartItems = await queryRunner.query(
       `
@@ -75,7 +65,6 @@ const createOrdersAndItems = async (userId, orderStatus) => {
     // 항상 배열 형태로 반환
     const cartItemArray = Array.isArray(cartItems) ? cartItems : [cartItems];
 
-    // order_item 테이블에 주문 상품 정보 삽입
     for (const cartItem of cartItemArray) {
       await queryRunner.query(
         `INSERT INTO order_item (
@@ -87,7 +76,7 @@ const createOrdersAndItems = async (userId, orderStatus) => {
                 ) VALUES (?, ?, ?, ?, ?)`,
         [
           cartItem.user_id,
-          insertId,
+          orderId,
           cartItem.product_id,
           cartItem.quantity,
           cartItem.price,
@@ -98,11 +87,12 @@ const createOrdersAndItems = async (userId, orderStatus) => {
     // orders 테이블에서 주문 상품의 총 가격 정보 업데이트
     const orderItems = await queryRunner.query(
       `SELECT * FROM order_item WHERE order_id = ?`,
-      [insertId]
+      [orderId]
     );
     const orderItemArray = Array.isArray(orderItems)
       ? orderItems
       : [orderItems];
+
     let totalAmount = 0;
     for (let i = 0; i < orderItemArray.length; i++) {
       totalAmount += orderItemArray[i].price * orderItemArray[i].quantity;
@@ -110,7 +100,7 @@ const createOrdersAndItems = async (userId, orderStatus) => {
 
     await queryRunner.query(`UPDATE orders SET total_amount = ? WHERE id = ?`, [
       totalAmount,
-      insertId,
+      orderId,
     ]);
 
     // cart 테이블에서 해당 사용자의 장바구니 비우기
@@ -121,7 +111,9 @@ const createOrdersAndItems = async (userId, orderStatus) => {
       `UPDATE orders SET order_status_id =2 WHERE user_id =?`,
       [userId]
     );
+
     await queryRunner.commitTransaction();
+    return totalAmount;
   } catch (err) {
     await queryRunner.rollbackTransaction();
     throw new Error('failed to update cart item quantity'); 
@@ -131,77 +123,77 @@ const createOrdersAndItems = async (userId, orderStatus) => {
 
 };
 
-const createOrderItems = async (userId, orderId) => {
-  try {
-    const cartItems = await appDataSource.query(
-      `
-      SELECT cart.user_id, cart.product_id, cart.quantity, product.price 
-      FROM cart
-      JOIN product ON cart.product_id = product.id
-      WHERE cart.user_id = ?
-    `,
-      [userId]
-    );
-    const cartItemArray = Array.isArray(cartItems) ? cartItems : [cartItems];
+// const createOrderItems = async (userId, orderId) => {
+//   try {
+//     const cartItems = await appDataSource.query(
+//       `
+//       SELECT cart.user_id, cart.product_id, cart.quantity, product.price 
+//       FROM cart
+//       JOIN product ON cart.product_id = product.id
+//       WHERE cart.user_id = ?
+//     `,
+//       [userId]
+//     );
+//     const cartItemArray = Array.isArray(cartItems) ? cartItems : [cartItems];
 
-    for (const cartItem of cartItemArray) {
-      await appDataSource.query(
-        `INSERT INTO order_item (
-            user_id,
-            order_id,
-            product_id,
-            quantity,
-            price
-          ) VALUES (?, ?, ?, ?, ?)`,
-        [
-          cartItem.user_id,
-          orderId,
-          cartItem.product_id,
-          cartItem.quantity,
-          cartItem.price,
-        ]
-      );
-    }
-  } catch (err) {
-    throw new Error(
-      `Failed to create order items for userId ${userId}: ${err.message}`
-    );
-  }
-};
+//     for (const cartItem of cartItemArray) {
+//       await appDataSource.query(
+//         `INSERT INTO order_item (
+//             user_id,
+//             order_id,
+//             product_id,
+//             quantity,
+//             price
+//           ) VALUES (?, ?, ?, ?, ?)`,
+//         [
+//           cartItem.user_id,
+//           orderId,
+//           cartItem.product_id,
+//           cartItem.quantity,
+//           cartItem.price,
+//         ]
+//       );
+//     }
+//   } catch (err) {
+//     throw new Error(
+//       `Failed to create order items for userId ${userId}: ${err.message}`
+//     );
+//   }
+// };
 
-const updatedOrders = async (orderId) => {
-  try {
-    const orderItems = await appDataSource.query(
-      `SELECT * FROM order_item WHERE order_id = ?`,
-      [orderId]
-    );
+// const updatedOrders = async (orderId) => {
+//   try {
+//     const orderItems = await appDataSource.query(
+//       `SELECT * FROM order_item WHERE order_id = ?`,
+//       [orderId]
+//     );
 
-    const orderItemArray = Array.isArray(orderItems)
-      ? orderItems
-      : [orderItems];
+//     const orderItemArray = Array.isArray(orderItems)
+//       ? orderItems
+//       : [orderItems];
 
-    let totalAmount = 0;
+//     let totalAmount = 0;
 
-    for (let i = 0; i < orderItemArray.length; i++) {
-      totalAmount += orderItemArray[i].price * orderItemArray[i].quantity;
-    }
+//     for (let i = 0; i < orderItemArray.length; i++) {
+//       totalAmount += orderItemArray[i].price * orderItemArray[i].quantity;
+//     }
 
-    if (orderItemArray.length === 0) {
-      `DELETE FROM orders WHERE orders.id =?`, [orderId];
-    }
+//     if (orderItemArray.length === 0) {
+//       `DELETE FROM orders WHERE orders.id =?`, [orderId];
+//     }
 
-    await appDataSource.query(
-      `UPDATE orders SET total_amount = ? WHERE id = ?`,
-      [totalAmount, orderId]
-    );
+//     await appDataSource.query(
+//       `UPDATE orders SET total_amount = ? WHERE id = ?`,
+//       [totalAmount, orderId]
+//     );
 
-    return totalAmount;
-  } catch (err) {
-    const error = new Error('INVALID_DATA_INPUT');
-    error.statusCode = 500;
-    throw error;
-  }
-};
+//     return totalAmount;
+//   } catch (err) {
+//     const error = new Error('INVALID_DATA_INPUT');
+//     error.statusCode = 500;
+//     throw error;
+//   }
+// };
 
 const getImageUrlByProductId = async (orderId) => {
   const orderItems = await appDataSource.query(
@@ -268,11 +260,9 @@ const executedOrder = async (userId) => {
 
 module.exports = {
   createOrders,
-  createOrderItems,
   findMatched,
-  updatedOrders,
   getImageUrlByProductId,
   getUserInfoByUserId,
   executedOrder,
-  createOrdersAndItems
+  createOrderAndItems
 };

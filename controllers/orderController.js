@@ -10,7 +10,7 @@ const createOrders = catchError(async (req, res) => {
     return res.status(400).json({ message: 'INVALID_USER' });
   }
  
-  const result = await orderService.createOrders(userId);
+  const result = await orderService.createOrderAndItems(userId);
   return res.status(201).json({ message: result });
 });
 
