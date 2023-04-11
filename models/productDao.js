@@ -21,7 +21,9 @@ const searchProduct = async () => {
         JOIN  (SELECT product_id, JSON_ARRAYAGG(image_url) AS image_url FROM product_image GROUP BY product_id) AS image
         ON image.product_id = p.id`
     );
-  } catch (err) {}
+  } catch (err) {
+    throw new DatabaseError('SEARCH_ERROR');
+  }
 };
 
 const getShowRoom = async () => {
