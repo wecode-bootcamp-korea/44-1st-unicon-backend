@@ -18,7 +18,7 @@ const createCartItem = catchError(async (req, res) => {
 const getCartList = async (req, res) => {
     const userId = req.user.id;
     const cartList = await cartService.getCartList(userId);
-    res.status(200).json({ cartList });
+    res.status(200).json( cartList );
 };
 
 const updateCart = catchError(async (req, res) => {

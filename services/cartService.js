@@ -9,7 +9,7 @@ const createCartItem = async ({ userId, productId, quantity }) => {
   }
 
   const cart = await cartDao.findMatched(productId);
-  if(cart.length==0){
+  if(cart[0].length==0){
     const error = new Error(`product with ID ${productId} not found`);
     error.statusCode = 400;
 

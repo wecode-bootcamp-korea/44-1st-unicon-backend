@@ -80,7 +80,7 @@ const getCartList = async (userId) => {
     0
   );
 
-  return { updatedLists, totalItemPrice };
+  return  updatedLists ;
 };
 
 const updateCartItemQuantity = async ({ userId, productId, quantity }) => {
