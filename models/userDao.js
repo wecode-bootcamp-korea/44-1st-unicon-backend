@@ -26,11 +26,34 @@ const signUp = async (
     );
   } catch (err) {
     const error = new Error('INVALID_DATA_INPUT');
-    console.log(err);
     error.statusCode = 500;
     throw error;
   }
 };
+
+const getUserById = async (id) => {
+    try {
+     const [result] = await appDataSource.query(
+      `SELECT
+       id,
+       names,
+       email,
+       passwords
+      FROM
+       users
+      WHERE
+        users.id = ?;
+       `,
+      [id]
+     );
+     return result;
+    } catch (err) {
+     const error = new Error('dataSource Error');
+     error.statusCode = 400;
+     throw error;
+    }
+   };
+
 
 const getUserbyEmail = async (email) => {
   try {
@@ -55,30 +78,10 @@ const getUserbyEmail = async (email) => {
     throw error;
   }
 };
-const getUserById = async (id) => {
-  try {
-    const [result] = await appDataSource.query(
-      `SELECT
-     id,
-     names,
-     email,
-     passwords
-    FROM
-     users
-    WHERE
-      users.id = ?;
-     `,
-      [id]
-    );
-    return result;
-  } catch (err) {
-    const error = new Error('dataSource Error');
-    error.statusCode = 400;
-    throw error;
-  }
-};
+
 module.exports = {
   signUp,
+  getUserById,
   getUserbyEmail,
   getUserById,
 };
