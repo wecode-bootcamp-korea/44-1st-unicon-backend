@@ -1,7 +1,7 @@
 const productDao = require('../models/productDao');
 
-const searchProduct = async () => {
-  return await productDao.searchProduct();
+const searchProduct = async (word) => {
+  return await productDao.searchProduct(word);
 };
 const getShowRoom = async () => {
   return await productDao.getShowRoom();

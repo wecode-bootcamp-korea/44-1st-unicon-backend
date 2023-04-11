@@ -2,7 +2,8 @@ const productService = require('../services/productService');
 const { catchError, baseError } = require('../middlewares/error');
 
 const searchProduct = catchError(async (req, res) => {
-  const serchProduct = await productService.searchProduct();
+  const word = req.params;
+  const serchProduct = await productService.searchProduct(word);
   return res.status(200).json(serchProduct);
 });
 
