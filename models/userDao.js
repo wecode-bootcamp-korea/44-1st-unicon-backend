@@ -83,4 +83,5 @@ module.exports = {
   signUp,
   getUserById,
   getUserbyEmail,
+  getUserById,
 };
