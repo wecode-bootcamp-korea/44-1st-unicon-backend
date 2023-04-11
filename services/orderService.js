@@ -2,26 +2,29 @@ const orderDao = require('../models/orderDao');
 
 const createOrders = async (userId) => {
   try {
-    const orders = await orderDao.findMatchedOrdersByUserId(userId);
+    const orders = await orderDao.findMatched(userId);
+    console.log("orders: "+JSON.stringify( orders) )
+    let orderId;
+    if (orders.length ===0 || orders[0].order_status_id === 2) {
+      await orderDao.createOrders(userId,1);
+      const newOrders = await orderDao.findMatched(userId,1);
+      orderId = newOrders[0].id
 
-    if (orders === undefined || orders === null) {
-      await orderDao.createOrders(userId);
+      await orderDao.createOrderItems(userId);
+    } else {
+        console.log(orders)
+        orderId = orders[0].id;
     }
-    
-    if(orders.order_status_id === 2){
-      await orderDao.createOrders(userId)
-    }
-
-    //product_id에 대한 order_item이 존재하는 경우, createOrder을 안함
-    const orderId = await orderDao.createOrderItems(userId);
-
+    console.log(orderId)
     const totalAmount = await orderDao.updatedOrders(orderId);
 
-    const imageUrl = await orderDao.getImageUrlByProductId(orderId);
+    // const imageUrl = await orderDao.getImageUrlByProductId(orderId);
 
-    const userInfo = await orderDao.getUserInfoByUserId(userId);
+    // const userInfo = await orderDao.getUserInfoByUserId(userId);
 
-    return { totalAmount, imageUrl, userInfo };
+    // return { totalAmount, imageUrl, userInfo };
+    return totalAmount;
+
   } catch (err) {
     throw new Error(
       `Failed to create orders for userId ${userId}: ${err.message}`
@@ -31,6 +34,8 @@ const createOrders = async (userId) => {
 
 const executedOrder = async (userId) => {
   try {
+    // status_id가 1일 경우에만 결제 
+
     const currentPoints = (await orderDao.getUserInfoByUserId(userId)).map(
       (result) => result['currentPoints']
     );

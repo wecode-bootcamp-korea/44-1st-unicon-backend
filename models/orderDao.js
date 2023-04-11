@@ -2,16 +2,18 @@ const appDataSource = require('./appDataSource');
 
 const { v4 } = require('uuid');
 
-const createOrders = async (userId) => {
+const createOrders = async (userId, orderStatus) => {
+  console.log("orderStatus: " + orderStatus)  
   const orderNumber = v4();
   try {
     await appDataSource.query(
       `INSERT INTO orders(
           user_id,
-          order_number
-          ) VALUES ( ?, ?);
+          order_number,
+          order_status_id
+          ) VALUES ( ?, ?, ?);
       `,
-      [userId, orderNumber]
+      [userId, orderNumber, orderStatus]
     );
   } catch (err) {
     const error = new Error('INVALID_DATA_INPUT');
@@ -21,12 +23,12 @@ const createOrders = async (userId) => {
   }
 };
 
-const findMatchedOrdersByUserId = async (userId) => {
+const findMatched = async (userId) => {
   try {
     const result = await appDataSource.query(
       `SELECT *
       FROM orders 
-      WHERE orders.user_id =? AND order_items.product_id = ? AND orders.status_id = 
+      WHERE orders.user_id =?
       ORDER BY orders.id DESC 
       LIMIT 1`,
       [userId]
@@ -83,7 +85,6 @@ const createOrderItems = async (userId) => {
       
     }
 
-    return orderId;
   } catch (err) {
     throw new Error(
       `Failed to create order items for userId ${userId}: ${err.message}`
@@ -162,9 +163,9 @@ const getUserInfoByUserId = async (userId) => {
 
 const executedOrder = async(userId) => {
   try{
-      const order = await findMatchedOrdersByUserId(userId);
-      console.log(order)
-      const totalAmount = await updatedOrders(order.id);
+      const order = await findMatched(userId);
+      console.log("11111order :" + order)
+      const totalAmount = await updatedOrders(order[0].id);
 
       await appDataSource.query(
         `UPDATE users SET points = points-? WHERE id = ?`,
@@ -188,14 +189,10 @@ const executedOrder = async(userId) => {
   }
 } 
 
-const createReceipt = async () =>{
-
-}
-
 module.exports = {
   createOrders,
   createOrderItems,
-  findMatchedOrdersByUserId,
+  findMatched,
   updatedOrders,
   getImageUrlByProductId,
   getUserInfoByUserId,
