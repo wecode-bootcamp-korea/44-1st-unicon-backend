@@ -1,5 +1,8 @@
 const productDao = require('../models/productDao');
 
+const searchProduct = async () => {
+  return await productDao.searchProduct();
+};
 const getShowRoom = async () => {
   return await productDao.getShowRoom();
 };
@@ -30,4 +33,5 @@ module.exports = {
   getProductById,
   getProductList,
   getShowRoom,
+  searchProduct,
 };

@@ -1,6 +1,11 @@
 const productService = require('../services/productService');
 const { catchError, baseError } = require('../middlewares/error');
 
+const searchProduct = catchError(async (req, res) => {
+  const serchProduct = await productService.searchProduct();
+  return res.status(200).json(serchProduct);
+});
+
 const getShowRoom = catchError(async (req, res) => {
   const showRoomProduct = await productService.getShowRoom();
   return res.status(200).json(showRoomProduct);
@@ -47,4 +52,5 @@ module.exports = {
   getProductById,
   getProductList,
   getShowRoom,
+  searchProduct,
 };
