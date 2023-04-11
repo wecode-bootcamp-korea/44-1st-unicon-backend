@@ -78,11 +78,11 @@ const getProductList = async (
     if (pricefilter && !mainCategory && !subCategory && !isnew) {
       condition = versity;
     } else if (!pricefilter && !mainCategory && !subCategory && !isnew) {
-      versity = ``;
+      condition = versity;
     } else {
       versity ? (condition = `WHERE ` + versity) : (versity = ``);
     }
-
+    console.log(versity);
     const post = await appDataSource.query(
       `SELECT
       p.id,
