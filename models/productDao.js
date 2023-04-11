@@ -82,6 +82,7 @@ const getProductList = async (
     } else {
       versity ? (condition = `WHERE ` + versity) : (versity = ``);
     }
+
     console.log(versity);
     const post = await appDataSource.query(
       `SELECT

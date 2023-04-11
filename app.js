@@ -14,6 +14,8 @@ const { errorHandler } = require('./middlewares/error');
 app.use(cors());
 app.use(morgan('tiny'));
 app.use(express.json());
+app.use(routes);
+app.use(errorHandler);
 
 appDataSource
   .initialize()
@@ -24,10 +26,6 @@ appDataSource
     console.log('Error occurred during Data Source initialization', err);
     appDataSource.destroy();
   });
-
-app.use(routes);
-app.use(errorHandler);
-
 const PORT = process.env.PORT;
 
 app.get('/ping', (req, res) => {

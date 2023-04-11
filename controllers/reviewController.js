@@ -7,6 +7,7 @@ const createReview = catchError(async (req, res) => {
   if (!userId) {
     return res.status(403).json({ message: 'INVALID_DATA_ID' });
   }
+
   const { title, content, rating, productId } = req.body;
 
   if (!title || !content || !rating || !productId) {
@@ -25,12 +26,14 @@ const createReview = catchError(async (req, res) => {
 });
 
 const reviewById = catchError(async (req, res) => {
-  const productId = req.params;
+  const { productId } = req.params;
 
   if (!productId) {
     return res.status(400).json({ message: 'KEY_ERROR' });
   }
+
   const review = await reviewService.reviewById(productId);
+
   return res.status(200).json(review);
 });
 
@@ -44,7 +47,7 @@ const deleteReview = catchError(async (req, res) => {
 
   const deleteReview = await reviewService.deleteReview(userId, productId);
 
-  return res.status(204);
+  return res.status(204).send(deleteReview);
 });
 module.exports = {
   createReview,

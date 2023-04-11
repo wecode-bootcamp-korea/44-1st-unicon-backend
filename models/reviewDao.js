@@ -4,7 +4,7 @@ const { baseError } = require('../middlewares/error.js');
 const createReview = async (title, content, rating, productId, userId) => {
   try {
     return await appDataSource.query(
-      `INSERT INTO
+      `INSERT INTO review
       (title,
       content,
       rating,
@@ -20,14 +20,14 @@ const createReview = async (title, content, rating, productId, userId) => {
 
 const isOrder = async (userId, productId) => {
   try {
-    const [isOrder] = await appDataSource.query(
+    const [{ lists }] = await appDataSource.query(
       `SELECT
       lists
     FROM receipt
     WHERE user_id = ?`,
       [userId]
     );
-    const result = isOrder.filter((order) => order.productId == productId);
+    const result = lists.filter((order) => order.productId == productId);
     return result;
   } catch (err) {
     throw new baseError('INVALID_DATA', 400);
@@ -36,6 +36,7 @@ const isOrder = async (userId, productId) => {
 
 const reviewById = async (productId) => {
   try {
+    console.log(productId);
     return await appDataSource.query(
       `SELECT
     title,
@@ -47,6 +48,7 @@ const reviewById = async (productId) => {
       [productId]
     );
   } catch (err) {
+    console.log(err);
     throw new baseError('INVALID_DATA', 400);
   }
 };
