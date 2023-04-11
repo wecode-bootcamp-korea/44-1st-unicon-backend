@@ -74,15 +74,13 @@ const getProductList = async (
       isnew,
       pricefilter
     );
-
-    let condition = ``;
-
-    filter.mainCondition();
-    filter.subCondition();
-    filter.newCondition();
-    filter.priceCondition();
-    const versity = filter.mixCondition();
-    if (versity) condition = `WHERE ` + versity;
+    let versity = filter.build();
+    if (pricefilter && !mainCategory && !subCategory && !isnew) {
+      condition = versity;
+    } else {
+      versity ? (condition = `WHERE ` + versity) : (versity = ``);
+    }
+    console.log(versity);
 
     const post = await appDataSource.query(
       `SELECT
@@ -105,6 +103,7 @@ const getProductList = async (
     );
     return post;
   } catch (err) {
+    console.log(err);
     throw new DatabaseError('FILTER_ERROR');
   }
 };

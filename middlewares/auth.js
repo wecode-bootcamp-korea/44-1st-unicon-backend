@@ -23,6 +23,7 @@ const loginRequired = async (req, res, next) => {
   }
   // 4) Grant Access
   req.user = user;
+  console.log(req.user);
   next();
 };
 

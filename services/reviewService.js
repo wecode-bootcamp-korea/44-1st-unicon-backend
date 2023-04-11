@@ -24,4 +24,13 @@ const reviewById = async (productId) => {
   }
   return review;
 };
-module.exports = { createReview, reviewById };
+
+const deleteReview = async (userId, productId) => {
+  const review = await reviewDao.deleteReview(userId, productId);
+  if (deleteReview.affectedRows == 0)
+    throw new baseError('NOT_YOUR_POST_CAN_NOT_DELETE', 401);
+
+  return review;
+};
+
+module.exports = { createReview, reviewById, deleteReview };

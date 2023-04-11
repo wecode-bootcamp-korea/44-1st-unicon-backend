@@ -24,8 +24,8 @@ class conditionMake {
 
   priceCondition() {
     let order = '';
-    if (this.isnew) order = ` ORDER BY p.price ${this.pricefilter}`;
-    if (!this.isnew) order = ` ORDER BY p.id`;
+    if (this.pricefilter) order = ` ORDER BY p.price ${this.pricefilter}`;
+    if (!this.pricefilter) order = ` ORDER BY p.id`;
 
     this.filter += order;
   }
@@ -34,6 +34,14 @@ class conditionMake {
     if (this.condition.length != 1) this.filter = this.condition.join(` AND `);
 
     if (this.condition.length == 1) this.filter = this.condition;
+    return this.filter;
+  }
+  build() {
+    this.mainCondition();
+    this.subCondition();
+    this.newCondition();
+    this.mixCondition();
+    this.priceCondition();
     return this.filter;
   }
 }

@@ -35,16 +35,14 @@ const reviewById = catchError(async (req, res) => {
 });
 
 const deleteReview = catchError(async (req, res) => {
-  const { userId, productId } = req.params;
+  const { productId } = req.params;
+  const userId = req.user;
 
   if (!userId || !productId) {
     return res.status(400).json({ message: 'KEY_ERROR' });
   }
 
-  const deleteReview = await reviewDao.deleteReview(userId, productId);
-
-  if (deleteReview.affectedRows == 0)
-    throw new BaseError('NOT_YOUR_POST_CAN_NOT_DELETE', 401);
+  const deleteReview = await reviewService.deleteReview(userId, productId);
 
   return res.status(204);
 });
