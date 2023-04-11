@@ -5,7 +5,7 @@ require('dotenv').config();
 const cors = require('cors');
 const morgan = require('morgan');
 
-const routes = require('./routes');
+const router = require('./routes');
 
 const app = express();
 
@@ -15,9 +15,6 @@ const appDataSource = require('./models/appDataSource');
 app.use(cors());
 app.use(morgan('tiny'));
 app.use(express.json());
-app.use(routes);
-app.use(errorHandler);
-
 appDataSource
   .initialize()
   .then(() => {
@@ -27,6 +24,9 @@ appDataSource
     console.error('Error during Data Source initialization', err);
     appDataSource.destroy();
   });
+
+app.use(router);
+app.use(errorHandler);
 
 app.get('/ping', (req, res) => {
   res.status(200).json({ message: 'pong' });
