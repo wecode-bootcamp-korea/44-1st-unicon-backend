@@ -10,20 +10,20 @@ const createOrders = async (userId) => {
       const newOrders = await orderDao.findMatched(userId,1);
       orderId = newOrders[0].id
 
-      await orderDao.createOrderItems(userId);
+      await orderDao.createOrderItems(userId, orderId);
     } else {
         console.log(orders)
         orderId = orders[0].id;
+        await orderDao.createOrderItems(userId, orderId);
     }
     console.log(orderId)
     const totalAmount = await orderDao.updatedOrders(orderId);
 
-    // const imageUrl = await orderDao.getImageUrlByProductId(orderId);
+    const imageUrl = await orderDao.getImageUrlByProductId(orderId);
 
-    // const userInfo = await orderDao.getUserInfoByUserId(userId);
+    const userInfo = await orderDao.getUserInfoByUserId(userId);
 
-    // return { totalAmount, imageUrl, userInfo };
-    return totalAmount;
+    return { totalAmount, imageUrl, userInfo };
 
   } catch (err) {
     throw new Error(

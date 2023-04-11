@@ -44,7 +44,7 @@ const findMatched = async (userId) => {
   }
 };
 
-const createOrderItems = async (userId) => {
+const createOrderItems = async (userId, orderId) => {
   try {
     const cartItems = await appDataSource.query(
       `
@@ -58,11 +58,11 @@ const createOrderItems = async (userId) => {
     // 항상 배열 형태로 반환
     const cartItemArray = Array.isArray(cartItems) ? cartItems : [cartItems];
 
-    const [orderTable] = await appDataSource.query(
-      `SELECT *FROM orders WHERE orders.user_id = ?`,
-      [userId]
-    );
-    const orderId = orderTable['id'];
+    // const [orderTable] = await appDataSource.query(
+    //   `SELECT *FROM orders WHERE orders.user_id = ?`,
+    //   [userId]
+    // );
+    // const orderId = orderTable['id'];
 
     for (const cartItem of cartItemArray) { //장바구니 내에서 주문 호출 하게 되면 여기부터 트랜잭션 적용 
     
@@ -76,7 +76,7 @@ const createOrderItems = async (userId) => {
           ) VALUES (?, ?, ?, ?, ?)`,
           [
             cartItem.user_id,
-            orderId,
+            orderId, 
             cartItem.product_id,
             cartItem.quantity,
             cartItem.price,
