@@ -55,8 +55,30 @@ const getUserbyEmail = async (email) => {
     throw error;
   }
 };
-
+const getUserById = async (id) => {
+  try {
+    const [result] = await appDataSource.query(
+      `SELECT
+     id,
+     names,
+     email,
+     passwords
+    FROM
+     users
+    WHERE
+      users.id = ?;
+     `,
+      [id]
+    );
+    return result;
+  } catch (err) {
+    const error = new Error('dataSource Error');
+    error.statusCode = 400;
+    throw error;
+  }
+};
 module.exports = {
   signUp,
   getUserbyEmail,
+  getUserById,
 };
