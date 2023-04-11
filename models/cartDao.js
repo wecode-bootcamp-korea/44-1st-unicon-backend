@@ -35,38 +35,41 @@ const findMatched = async (productId) => {
 };
 
 const getCartList = async (userId) => {
-  const [lists] = await appDataSource.query(
+  const result = await appDataSource.query(
     `SELECT 
-    u.id AS userId,
     JSON_ARRAYAGG(
-         JSON_OBJECT(
-             'id', p.id,
-             'names', p.names,
-             'descriptions', p.descriptions,
-             'sub_description', p.sub_description,
-             'sub_category_id', p.sub_category_id,
-             'product_size', p.product_size,
-             'is_new', p.is_new,
-             'price', p.price,
-             'quantity', c.quantity
-         )
+      JSON_OBJECT(
+        'cart_id', c.id,
+        'id', p.id,
+        'names', p.names,
+        'descriptions', p.descriptions,
+        'sub_description', p.sub_description,
+        'sub_category_id', p.sub_category_id,
+        'product_size', p.product_size,
+        'is_new', p.is_new,
+        'price', p.price,
+        'quantity', c.quantity
+      )
     ) AS Lists
-    FROM 
-        users AS u            
-        JOIN cart AS c
-        ON  c.user_id = u.id 
-        JOIN product AS p
-        ON c.product_id = p.id
-    WHERE 
-        u.id = ?
-    GROUP BY 
-        u.id
-    ORDER BY id DESC
+  FROM 
+    cart AS c 
+    JOIN product AS p           
+    ON c.product_id = p.id
+  WHERE 
+    c.user_id = ?
+  ORDER BY c.id DESC
+  
     `,
     [userId]
   );
+  const lists = result[0].Lists;
+  console.log(lists);
 
-  const updatedLists = lists.Lists.map((item) => {
+  if (!lists ||lists.length === 0) {
+    return [];
+  }
+
+  const updatedLists = lists.reverse().map((item) => {
     const { price, quantity } = item;
     const totalPrice = price * quantity;
     return { ...item, totalPrice };
@@ -77,7 +80,7 @@ const getCartList = async (userId) => {
     0
   );
 
-  return {updatedLists, totalItemPrice };
+  return { updatedLists, totalItemPrice };
 };
 
 const updateCartItemQuantity = async ({ userId, productId, quantity }) => {

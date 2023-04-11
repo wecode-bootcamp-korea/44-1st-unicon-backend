@@ -35,7 +35,7 @@ const deleteCart = catchError(async (req, res) => {
     const userId = req.user.id;
     const { productId } = req.params;
 
-    const deleteCart = await cartService.deleteCart({ userId, productId });
+    await cartService.deleteCart({ userId, productId });
 
     res.status(204).send();
 });

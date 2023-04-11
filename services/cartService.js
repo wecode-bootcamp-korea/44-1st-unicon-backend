@@ -37,7 +37,7 @@ const getCartList = async (userId) => {
 
 const updatedCart = async ({ userId, productId, quantity }) => {
   if (quantity === 0) {
-    await cartDao.deleteCart(userId, productId);
+    await cartDao.deleteCart({userId, productId});
 
     return 'cartDeleted';
   }
@@ -48,7 +48,7 @@ const updatedCart = async ({ userId, productId, quantity }) => {
 const deleteCart = async ({ userId, productId }) => {
 
   const cart = await cartDao.findMatchedProductId(productId)
-  if(cart.length==0){
+  if(cart.length===0){
     const error = new Error(`cart with ID ${productId} not found`);
     error.statusCode = 400;
 
