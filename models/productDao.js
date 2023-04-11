@@ -5,6 +5,11 @@ const { DatabaseError } = require('../middlewares/error');
 
 const searchProduct = async (word) => {
   try {
+    let condition = '';
+    let filter = new conditionMake('', '', '', '', word).build();
+    console.log(filter);
+    if (filter) condition = `WHERE ` + filter;
+
     return await appDataSource.query(
       `SELECT
       p.id,
@@ -23,8 +28,7 @@ const searchProduct = async (word) => {
         FROM product_image 
         GROUP BY product_id) AS image
       ON image.product_id = p.id   
-     WHERE p.names LIKE "%${word}%" or sub_category.title LIKE "%${word}%" or
-    main_category.title LIKE "%${word}%"`
+     ${condition}`
     );
   } catch (err) {
     throw new DatabaseError('SEARCH_ERROR');
@@ -67,7 +71,7 @@ const getProductList = async (
   mainCategory,
   subCategory,
   pricefilter,
-  start,
+  offset,
   limit,
   isnew
 ) => {
@@ -81,12 +85,14 @@ const getProductList = async (
 
     let condition = ``;
 
-    filter.mainCondition();
-    filter.subCondition();
-    filter.newCondition();
-    filter.priceCondition();
-    const versity = filter.mixCondition();
-    if (versity) condition = `WHERE ` + versity;
+    let versity = filter.build();
+    if (pricefilter && !mainCategory && !subCategory && !isnew) {
+      condition = versity;
+    } else if (!pricefilter && !mainCategory && !subCategory && !isnew) {
+      condition = versity;
+    } else {
+      versity ? (condition = `WHERE ` + versity) : (versity = ``);
+    }
 
     const post = await appDataSource.query(
       `SELECT
@@ -105,7 +111,7 @@ const getProductList = async (
       ${condition}
       LIMIT ? OFFSET ?
       ;`,
-      [limit, start]
+      [limit, offset]
     );
     return post;
   } catch (err) {

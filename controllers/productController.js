@@ -28,13 +28,13 @@ const getProductById = catchError(async (req, res) => {
 
 const getProductList = catchError(async (req, res) => {
   const DEFAULT_LIMIT = 15;
-  const DEFAULT_START = 0;
+  const DEFAULT_OFFSET = 0;
 
   const {
     mainCategory,
     subCategory,
     pricefilter,
-    start = DEFAULT_START,
+    offset = DEFAULT_OFFSET,
     limit = DEFAULT_LIMIT,
     isnew,
   } = req.query;
@@ -43,7 +43,7 @@ const getProductList = catchError(async (req, res) => {
     parseInt(mainCategory),
     parseInt(subCategory),
     pricefilter,
-    start,
+    offset,
     limit,
     isnew
   );

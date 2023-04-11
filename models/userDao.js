@@ -26,14 +26,14 @@ const signUp = async (
     );
   } catch (err) {
     const error = new Error('INVALID_DATA_INPUT');
-    error.statusCode = 500;
+    error.statusCode = 400;
     throw error;
   }
 };
 
 const getUserById = async (id) => {
-    try {
-     const [result] = await appDataSource.query(
+  try {
+    const [result] = await appDataSource.query(
       `SELECT
        id,
        names,
@@ -45,15 +45,14 @@ const getUserById = async (id) => {
         users.id = ?;
        `,
       [id]
-     );
-     return result;
-    } catch (err) {
-     const error = new Error('dataSource Error');
-     error.statusCode = 400;
-     throw error;
-    }
-   };
-
+    );
+    return result;
+  } catch (err) {
+    const error = new Error('dataSource Error');
+    error.statusCode = 400;
+    throw error;
+  }
+};
 
 const getUserbyEmail = async (email) => {
   try {
@@ -74,7 +73,7 @@ const getUserbyEmail = async (email) => {
   } catch (err) {
     const error = new Error('NOT_FOUND_EMAIL');
     console.log(err);
-    error.statusCode = 500;
+    error.statusCode = 400;
     throw error;
   }
 };
