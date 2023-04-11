@@ -34,7 +34,7 @@ const signIn = async (email, password) => {
   }
 
   const payLoad = { id: users.id };
-  const jwtToken = jwt.sign(payLoad, process.env.SECRETKEY, {
+  const jwtToken = jwt.sign(payLoad, process.env.SECRET_KEY, {
     expiresIn: '1d',
   });
 
