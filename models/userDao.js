@@ -10,8 +10,8 @@ const signUp = async (
   gender
 ) => {
   try {
-    const DEFAULT_POINTS = 9999;
-    await appDataSource.query(
+    const DEFAULT_POINTS = 99999;
+    const user = await appDataSource.query(
       `INSERT INTO users(
 		      names,
           email,
@@ -26,7 +26,6 @@ const signUp = async (
     );
   } catch (err) {
     const error = new Error('INVALID_DATA_INPUT');
-    console.log(err);
     error.statusCode = 500;
     throw error;
   }
@@ -81,6 +80,6 @@ const getUserById = async (id) => {
 
 module.exports = {
   signUp,
-  getUserbyEmail,
   getUserById,
+  getUserbyEmail,
 };

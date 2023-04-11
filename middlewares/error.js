@@ -17,5 +17,12 @@ class baseError extends Error {
     this.statusCode = statusCode;
   }
 }
+class DatabaseError extends baseError {
+  constructor(message) {
+    super(message);
+    this.code = 'DATABASE_ERROR';
+    this.statusCode = 500;
+  }
+}
 
-module.exports = { catchError, baseError, errorHandler };
+module.exports = { catchError, baseError, errorHandler, DatabaseError };

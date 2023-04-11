@@ -40,6 +40,9 @@ const signIn = async (email, password) => {
 
   return { jwtToken: jwtToken, name: users.names };
 };
+const getUserById = async (id) => {
+  return await userDao.getUserById(id);
+};
 
 const getUserById = async (id) => {
   return await userDao.getUserById(id);
