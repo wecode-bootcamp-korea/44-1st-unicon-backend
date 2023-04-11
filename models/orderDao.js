@@ -103,15 +103,6 @@ const createOrderAndItems = async (userId, orderId) => {
       orderId,
     ]);
 
-    // cart 테이블에서 해당 사용자의 장바구니 비우기
-    await queryRunner.query(`DELETE FROM cart WHERE user_id =?`, [userId]);
-
-    // orders 테이블에서 해당 사용자의 주문 상태 정보 업데이트
-    await queryRunner.query(
-      `UPDATE orders SET order_status_id =2 WHERE user_id =?`,
-      [userId]
-    );
-
     await queryRunner.commitTransaction();
     return totalAmount;
   } catch (err) {

@@ -11,11 +11,11 @@ const createOrders = async (userId) => {
       const newOrders = await orderDao.findMatched(userId, 1);
       orderId = newOrders[0].id;
 
-      await orderDao.createOrderItems(userId, orderId);
+      await orderDao.createOrderAndItems(userId, orderId);
     } else {
       console.log(orders);
       orderId = orders[0].id;
-      await orderDao.createOrderItems(userId, orderId);
+      await orderDao.createOrderAndItems(userId, orderId);
     }
 
     const totalAmount = await orderDao.updatedOrders(orderId);
@@ -57,7 +57,6 @@ const createOrderAndItems = async (userId) => {
       totalAmount = await orderDao.createOrderAndItems(userId, orderId);
     }
 
-    // totalAmount = await orderDao.updatedOrders(orderId, connection);
     imageUrl = await orderDao.getImageUrlByProductId(orderId);
     userInfo = await orderDao.getUserInfoByUserId(userId);
 

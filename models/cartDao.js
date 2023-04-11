@@ -72,7 +72,7 @@ const getCartList = async (userId) => {
   const updatedLists = lists.reverse().map((item) => {
     const { price, quantity } = item;
     const totalPrice = price * quantity;
-    return { ...item, totalPrice }; //모든 객체의 속성을 새로운 객체에 복사 
+    return { ...item, totalPrice }; 
   });
 
   const totalItemPrice = updatedLists.reduce(
