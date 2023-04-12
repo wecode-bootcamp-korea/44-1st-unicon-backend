@@ -9,12 +9,13 @@ const createCartItem = async ({ userId, productId, quantity }) => {
   }
 
   const cart = await cartDao.findMatched(productId);
-  if(cart[0].length==0){
+  if (cart[0].length == 0) {
     const error = new Error(`product with ID ${productId} not found`);
     error.statusCode = 400;
 
     throw error;
   }
+
   
   const cartItem = await cartDao.findMatchedProductId(productId);
 
@@ -35,37 +36,37 @@ const getCartList = async (userId) => {
   return await cartDao.getCartList(userId);
 };
 
-const updatedCart = async ({userId, productList}) => {
-   
-  console.log(userId)
-  
-  console.log(productList)
+const updatedCart = async ({ userId, productList }) => {
 
-  await Promise.all(productList.map(async (element) => {
-    await cartDao.updateCartItemQuantity(userId,element.productId,element.quantity);
-  }));
-   
-  if (quantity === 0) {
-    await cartDao.deleteCart({userId, productId});
+  const updatedCartItems = await Promise.all(
+    productList.map(async (element) => {
+      if (element.quantity === 0) {
+        await cartDao.deleteCart(userId, element.productId);
+        return null;
+      } else {
+        const { updatedCartItem } = await cartDao.updateCartItemQuantity(
+          element.quantity,
+          userId,
+          element.productId
+        );
+        return updatedCartItem;
+      }
+    })
+  );
 
-    return 'cartDeleted';
-  }
-
-  return await cartDao.updateCartItemQuantity({userId, productId, quantity});
+  return updatedCartItems.filter((item) => item !== null);
 };
 
 const deleteCart = async ({ userId, productId }) => {
-
-  const cart = await cartDao.findMatchedProductId(productId)
-  if(cart.length===0){
+  const cart = await cartDao.findMatchedProductId(productId);
+  if (cart.length === 0) {
     const error = new Error(`cart with ID ${productId} not found`);
     error.statusCode = 400;
 
     throw error;
   }
-  return await cartDao.deleteCart({userId, productId});
+  return await cartDao.deleteCart({ userId, productId });
 };
-
 
 module.exports = {
   createCartItem,

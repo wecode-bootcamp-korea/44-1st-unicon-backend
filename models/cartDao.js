@@ -83,7 +83,7 @@ const getCartList = async (userId) => {
   return  updatedLists ;
 };
 
-const updateCartItemQuantity = async ( userId, productId, quantity ) => {
+const updateCartItemQuantity = async ( quantity,userId, productId ) => {
   const queryRunner = appDataSource.createQueryRunner();
   await queryRunner.connect();
 
@@ -114,7 +114,7 @@ const updateCartItemQuantity = async ( userId, productId, quantity ) => {
   }
 };
 
-const deleteCart = async ({ userId, productId }) => {
+const deleteCart = async ( userId, productId ) => {
   await appDataSource.query(
     `
         DELETE
