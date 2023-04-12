@@ -24,6 +24,9 @@ const getCartList = async (req, res) => {
 const updateCart = catchError(async (req, res) => {
   const userId = req.user.id;
 
+  //productId = [ ]
+  //quantity = [ ]
+
   const { productId, quantity } = req.body;
 
   const update = await cartService.updatedCart({ userId, productId, quantity });
