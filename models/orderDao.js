@@ -15,7 +15,7 @@ const createOrders = async (userId, orderStatus) => {
       [userId, orderNumber, orderStatus]
     );
   } catch (err) {
-    const error = new DatabaseError('INVALID_DATA_INPUT');
+    throw new DatabaseError('INVALID_DATA_INPUT');
   }
 };
 
@@ -178,9 +178,7 @@ const executedOrder = async (userId) => {
       [orderStatusEnum.COMPLETED_PAYMENT, userId]
     );
   } catch (err) {
-    const error = new DatabaseError('INVALID_DATA_INPUT');
-    error.statusCode = 500;
-    throw error;
+    throw new DatabaseError('INVALID_DATA_INPUT');
   }
 };
 

@@ -8,7 +8,7 @@ const searchProduct = async (word) => {
     let condition = '';
     let filter = new conditionMake('', '', '', '', word).build();
     if (filter) condition = `WHERE ` + filter;
-    console.log(condition);
+
     let products = await appDataSource.query(
       `SELECT
       p.id,
