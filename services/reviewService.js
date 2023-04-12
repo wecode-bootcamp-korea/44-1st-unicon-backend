@@ -23,11 +23,12 @@ const reviewById = async (productId) => {
   if (review.length == 0) {
     throw new baseError('NOT_REVIEW', 404);
   }
+
   return review;
 };
 
-const deleteReview = async (userId, productId) => {
-  const review = await reviewDao.deleteReview(userId, productId);
+const deleteReview = async (userId, productId, reviewId) => {
+  const review = await reviewDao.deleteReview(userId, productId, reviewId);
 
   if (deleteReview.affectedRows == 0)
     throw new baseError('NOT_YOUR_POST_CAN_NOT_DELETE', 401);

@@ -38,14 +38,18 @@ const reviewById = catchError(async (req, res) => {
 });
 
 const deleteReview = catchError(async (req, res) => {
-  const { productId } = req.params;
+  const { productId, reviewId } = req.params;
   const userId = req.user.id;
 
   if (!userId || !productId) {
     return res.status(400).json({ message: 'KEY_ERROR' });
   }
 
-  const deleteReview = await reviewService.deleteReview(userId, productId);
+  const deleteReview = await reviewService.deleteReview(
+    userId,
+    productId,
+    reviewId
+  );
 
   return res.status(204).send(deleteReview);
 });

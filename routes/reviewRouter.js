@@ -4,7 +4,11 @@ const { loginRequired } = require('../middlewares/auth');
 const router = express.Router();
 
 router.post('', loginRequired, reviewController.createReview);
-router.delete('/:productId', loginRequired, reviewController.deleteReview);
+router.delete(
+  '/:productId/:reviewId',
+  loginRequired,
+  reviewController.deleteReview
+);
 router.get('/:productId', reviewController.reviewById);
 
 module.exports = {
