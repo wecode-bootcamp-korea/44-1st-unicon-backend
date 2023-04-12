@@ -105,7 +105,6 @@ const getProductList = async (
     );
     return post;
   } catch (err) {
-    console.log(err);
     throw new DatabaseError('FILTER_ERROR');
   }
 };
