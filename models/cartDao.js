@@ -71,10 +71,7 @@ const getCartList = async (userId) => {
     const totalPrice = price * quantity;
     return { ...item, totalPrice };
   });
-  const totalItemPrice = updatedLists.reduce(
-    (accumulator, currentValue) => accumulator + currentValue.totalPrice,
-    0
-  );
+
   return updatedLists;
 };
 
