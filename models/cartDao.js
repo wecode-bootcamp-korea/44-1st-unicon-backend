@@ -2,13 +2,7 @@ const appDataSource = require('./appDataSource');
 
 const createCartItem = async ({ userId, productId, quantity }) => {
   try {
-    if (quantity <= 0) {
-      const error = new Error('quantity must be more than 0');
-      error.statusCode = 400;
-
-      throw error;
-    }
-
+   
     const product = await appDataSource.query(
       'SELECT * FROM product where product.id = ?',
       [productId]
@@ -37,9 +31,13 @@ const createCartItem = async ({ userId, productId, quantity }) => {
 };
 
 const findMatchedProductId = async (productId) => {
-  return await appDataSource.query(`SELECT * FROM cart WHERE product_id = ?`, [
+  const cart= await appDataSource.query(`SELECT * FROM cart WHERE product_id = ?`, [
     productId,
   ]);
+
+  const cartArray = Array.isArray(cart) ? cart: [cart];
+
+  return cartArray;
 };
 
 const findMatched = async (productId) => {
