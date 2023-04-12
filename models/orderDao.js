@@ -57,15 +57,19 @@ const createOrderAndItems = async (userId, orderId) => {
     );
 
     const cartItemArray = Array.isArray(cartItems) ? cartItems : [cartItems];
-
+    console.log(cartItemArray);
     for (const cartItem of cartItemArray) {
       const existingOrderItem = await queryRunner.query(
         `SELECT * FROM order_item WHERE order_id = ? AND product_id = ?`,
-        [orderId, cartItem.product_id]
+        [orderId, cartItem.product_items]
       );
+      console.log(existingOrderItem);
+     
       const existingOrderItemArray = Array.isArray(existingOrderItem)
         ? existingOrderItem
         : [existingOrderItem];
+      console.log(existingOrderItemArray)
+      
 
       if (existingOrderItemArray.length > 0) {
         existingOrderItemArray.forEach(async (existingOrderItem) => {

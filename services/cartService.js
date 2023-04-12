@@ -35,18 +35,19 @@ const getCartList = async (userId) => {
   return await cartDao.getCartList(userId);
 };
 
-const updatedCart = async ({ userId, productList }) => {
+const updatedCart = async (userId, productList) => {
+
   const updatedCartItems = await Promise.all(
     productList.map(async (element) => {
       if (element.quantity === 0) {
         await cartDao.deleteCart(userId, element.id);
         return null;
       } else {
-        const { updatedCartItem } = await cartDao.updateCartItemQuantity(
-          element.quantity,
-          userId,
-          element.id
-        );
+        const { updatedCartItem } = await cartDao.updateCartItemQuantity({
+          quantity: element.quantity,
+          userId: userId,
+          productId: element.productId,
+        });
         return updatedCartItem;
       }
     })
