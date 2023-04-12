@@ -4,7 +4,7 @@ const { catchError } = require('../middlewares/error.js');
 
 const createOrders = catchError(async (req, res) => {
 
-  const userId= req.user.id 
+  const userId = req.user.id 
 
   if (!userId) {
     return res.status(400).json({ message: 'INVALID_USER' });
@@ -14,7 +14,7 @@ const createOrders = catchError(async (req, res) => {
   return res.status(201).json(result );
 });
 
-const executedOrder = catchError(async (req, res) => {
+const executeOrder = catchError(async (req, res) => {
 
   const userId= req.user.id 
 
@@ -30,5 +30,5 @@ const executedOrder = catchError(async (req, res) => {
 
 module.exports = {
   createOrders,
-  executedOrder
+  executeOrder
 };

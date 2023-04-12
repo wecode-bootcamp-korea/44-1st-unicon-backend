@@ -13,7 +13,6 @@ const createOrders = async (userId) => {
 
       await orderDao.createOrderAndItems(userId, orderId);
     } else {
-      console.log(orders);
       orderId = orders[0].id;
       await orderDao.createOrderAndItems(userId, orderId);
     }

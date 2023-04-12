@@ -1,9 +1,9 @@
 const appDataSource = require('./appDataSource');
+const orderStatusEnum = require('../middlewares/enums')
 
 const { v4 } = require('uuid');
 
 const createOrders = async (userId, orderStatus) => {
-  console.log('orderStatus: ' + orderStatus);
   const orderNumber = v4();
   try {
     await appDataSource.query(
@@ -34,8 +34,7 @@ const findMatched = async (userId) => {
       [userId]
     );
     const resultArray = Array.isArray(result) ? result : [result];
-    console.log(resultArray);
-
+   
     return resultArray;
   } catch (err) {
     throw new Error(
@@ -92,9 +91,9 @@ const createOrderAndItems = async (userId, orderId) => {
       : [orderItems];
 
     let totalAmount = 0;
-    for (let i = 0; i < orderItemArray.length; i++) {
-      totalAmount += orderItemArray[i].price * orderItemArray[i].quantity;
-    }
+    orderItemArray.forEach((item) => {
+      totalAmount += item.price * item.quantity;
+    });
 
     await queryRunner.query(`UPDATE orders SET total_amount = ? WHERE id = ?`, [
       totalAmount,
@@ -154,7 +153,6 @@ const getUserInfoByUserId = async (userId) => {
 const executedOrder = async (userId) => {
   try {
     const order = await findMatched(userId);
-    console.log('11111order :' + order);
     const totalAmount = await updatedOrders(order[0].id);
 
     await appDataSource.query(
@@ -163,10 +161,10 @@ const executedOrder = async (userId) => {
     );
 
     await appDataSource.query(`DELETE FROM cart WHERE user_id =?`, [userId]);
-
+    
     await appDataSource.query(
-      `UPDATE orders SET order_status_id =2 WHERE user_id =?`,
-      [userId]
+      `UPDATE orders SET order_status_id =? WHERE user_id =?`,
+      [orderStatusEnum.COMPLETED_PAYMENT, userId]
     );
   } catch (err) {
     const error = new Error('INVALID_DATA_INPUT');
