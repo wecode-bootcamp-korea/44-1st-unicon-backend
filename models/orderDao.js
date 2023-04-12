@@ -1,5 +1,6 @@
 const appDataSource = require('./appDataSource');
 const { DatabaseError } = require('../middlewares/error');
+const { orderStatusEnum } = require('../middlewares/enums');
 const { v4 } = require('uuid');
 
 const createOrders = async (userId, orderStatus) => {
@@ -15,7 +16,9 @@ const createOrders = async (userId, orderStatus) => {
       [userId, orderNumber, orderStatus]
     );
   } catch (err) {
-    const error = new DatabaseError('INVALID_DATA_INPUT');
+    throw new DatabaseError(
+      `Failed to find matched orders for userId ${userId}: ${err.message}`
+    );
   }
 };
 
@@ -57,19 +60,16 @@ const createOrderAndItems = async (userId, orderId) => {
     );
 
     const cartItemArray = Array.isArray(cartItems) ? cartItems : [cartItems];
-    console.log(cartItemArray);
+
     for (const cartItem of cartItemArray) {
       const existingOrderItem = await queryRunner.query(
         `SELECT * FROM order_item WHERE order_id = ? AND product_id = ?`,
         [orderId, cartItem.product_items]
       );
-      console.log(existingOrderItem);
-     
+
       const existingOrderItemArray = Array.isArray(existingOrderItem)
         ? existingOrderItem
         : [existingOrderItem];
-      console.log(existingOrderItemArray)
-      
 
       if (existingOrderItemArray.length > 0) {
         existingOrderItemArray.forEach(async (existingOrderItem) => {
