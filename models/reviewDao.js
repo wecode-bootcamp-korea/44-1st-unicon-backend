@@ -14,7 +14,6 @@ const createReview = async (title, content, rating, productId, userId) => {
       [title, content, rating, productId, userId]
     );
   } catch (err) {
-    console.log(err);
     throw new DatabaseError('INVALID_DATA_INPUT');
   }
 };
