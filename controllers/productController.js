@@ -3,7 +3,6 @@ const { catchError, baseError } = require('../middlewares/error');
 
 const searchProduct = catchError(async (req, res) => {
   const { word } = req.body;
-  console.log(word);
   const serchProduct = await productService.searchProduct(word);
 
   return res.status(200).json(serchProduct);

@@ -23,26 +23,12 @@ const loginRequired = async (req, res, next) => {
       return res.status(error.statusCode).json({ message: error.message });
     }
     // 4) Grant Access
-    req.user = user;
+    req.user = { id: user.id, names: user.names };
     next();
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal Server Error' });
   }
-  // 2) Verification token
-  const decoded = await jwt.verify(accessToken, process.env.SECRET_KEY);
-
-  // 3) Check if user still exists
-  const user = await userService.getUserById(decoded.id);
-  if (!user) {
-    const error = new Error('USER_DOES_NOT_EXIST');
-    error.statusCode = 404;
-
-    return res.status(error.statusCode).json({ message: error.message });
-  }
-  // 4) Grant Access
-  req.user = user;
-  next();
 };
 
 module.exports = {
