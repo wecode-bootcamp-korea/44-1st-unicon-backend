@@ -2,23 +2,37 @@ const appDataSource = require('./appDataSource');
 
 const createCartItem = async ({ userId, productId, quantity }) => {
   try {
+    if (quantity <= 0) {
+      const error = new Error('quantity must be more than 0');
+      error.statusCode = 400;
+
+      throw error;
+    }
+
     const product = await appDataSource.query(
-      'SELECT * FROM product where product.id =?',
+      'SELECT * FROM product where product.id = ?',
       [productId]
     );
-    if (product <= 0) {
-      throw new Error('Invalid product ');
-    }
-    await appDataSource.query(
-      `INSERT INTO cart(user_id, product_id, quantity)
-         VALUES (?, ?, ?)`,
-      [userId, productId, quantity]
-    );
+    const productArray = Array.isArray(product) ? product : [product];
 
-    return { message: 'cartItem added to your cart' };
-  } catch (error) {
-    console.error(error);
-    throw new Error('failed to create cart item');
+    if (productArray.length === 0) {
+      const error = new Error(`product with ID ${productId} not found`);
+      error.statusCode = 400;
+
+      throw error;
+    }
+
+    const existingCartItem = await cartDao.findMatchedProductId(productId);
+    if (existingCartItem.length === 0) {
+      await cartDao.createCartItem({ userId, productId, quantity });
+    } else {
+      await cartDao.addCartItemQuantity({ userId, productId, quantity });
+    }
+
+    return 'cartItem created';
+  } catch (err) {
+    console.error(err);
+    throw new Error('failed to create cart');
   }
 };
 
@@ -65,7 +79,7 @@ const getCartList = async (userId) => {
   const lists = result[0].Lists;
   console.log(lists);
 
-  if (!lists ||lists.length === 0) {
+  if (!lists || lists.length === 0) {
     return [];
   }
 
@@ -80,10 +94,10 @@ const getCartList = async (userId) => {
     0
   );
 
-  return  updatedLists ;
+  return updatedLists;
 };
 
-const updateCartItemQuantity = async ( quantity,userId, productId ) => {
+const updateCartItemQuantity = async (quantity, userId, productId) => {
   const queryRunner = appDataSource.createQueryRunner();
   await queryRunner.connect();
 
@@ -114,7 +128,7 @@ const updateCartItemQuantity = async ( quantity,userId, productId ) => {
   }
 };
 
-const deleteCart = async ( userId, productId ) => {
+const deleteCart = async (userId, productId) => {
   await appDataSource.query(
     `
         DELETE

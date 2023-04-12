@@ -1,35 +1,7 @@
 const cartDao = require('../models/cartDao');
 
 const createCartItem = async ({ userId, productId, quantity }) => {
-  if (quantity <= 0) {
-    const error = new Error('quantity must be more than 0');
-    error.statusCode = 400;
-
-    throw error;
-  }
-
-  const cart = await cartDao.findMatched(productId);
-  if (cart[0].length == 0) {
-    const error = new Error(`product with ID ${productId} not found`);
-    error.statusCode = 400;
-
-    throw error;
-  }
-
-  
-  const cartItem = await cartDao.findMatchedProductId(productId);
-
-  if (cartItem.length === 0) {
-    await cartDao.createCartItem({
-      userId,
-      productId,
-      quantity,
-    });
-
-    return 'cart created';
-  } else {
-    return await cartDao.addCartItemQuantity({ userId, productId, quantity });
-  }
+  return await cartDao.createCartItem({userId, productId, quantity});
 };
 
 const getCartList = async (userId) => {
