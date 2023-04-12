@@ -1,4 +1,5 @@
 const appDataSource = require('./appDataSource');
+const { DatabaseError } = require('../middlewares/error');
 
 const createCartItem = async ({ userId, productId, quantity }) => {
   try {
@@ -7,7 +8,7 @@ const createCartItem = async ({ userId, productId, quantity }) => {
       [productId]
     );
     if (product <= 0) {
-      throw new Error('Invalid product ');
+      throw new DatabaseError('Invalid product');
     }
     await appDataSource.query(
       `INSERT INTO cart(user_id, product_items, quantity)
@@ -17,8 +18,7 @@ const createCartItem = async ({ userId, productId, quantity }) => {
 
     return { message: 'cartItem added to your cart' };
   } catch (error) {
-    console.error(error);
-    throw new Error('failed to create cart item');
+    throw new DatabaseError('failed to create cart item');
   }
 };
 const findMatchedProductId = async (productId) => {
@@ -103,7 +103,7 @@ const updateCartItemQuantity = async (quantity, userId, productId) => {
     return { message: 'cartItem quantity updated', updatedCartItem };
   } catch (error) {
     await queryRunner.rollbackTransaction();
-    throw new Error('failed to update cart item quantity');
+    throw new DatabaseError('failed to update cart item quantity');
   } finally {
     await queryRunner.release();
   }
@@ -120,8 +120,10 @@ const deleteCart = async (userId, productId) => {
   );
   return 'cartDeleted';
 };
+
 const addCartItemQuantity = async ({ userId, productId, quantity }) => {
   const queryRunner = appDataSource.createQueryRunner();
+
   await queryRunner.connect();
   await queryRunner.startTransaction();
 
@@ -142,11 +144,11 @@ const addCartItemQuantity = async ({ userId, productId, quantity }) => {
     );
 
     await queryRunner.commitTransaction();
+
     return { message: 'cartItem quantity updated', updatedCartItem };
   } catch (error) {
-    console.error(error);
     await queryRunner.rollbackTransaction();
-    throw new Error('failed to update cart item quantity');
+    throw new DatabaseError('failed to update cart item quantity');
   } finally {
     await queryRunner.release();
   }

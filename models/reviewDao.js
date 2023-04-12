@@ -1,5 +1,5 @@
 const appDataSource = require('./appDataSource.js');
-const { baseError } = require('../middlewares/error.js');
+const { DatabaseError } = require('../middlewares/error.js');
 
 const createReview = async (title, content, rating, productId, userId) => {
   try {
@@ -14,7 +14,7 @@ const createReview = async (title, content, rating, productId, userId) => {
       [title, content, rating, productId, userId]
     );
   } catch (err) {
-    throw new baseError('INVALID_DATA_INPUT', 400);
+    throw new DatabaseError('INVALID_DATA_INPUT');
   }
 };
 
@@ -30,7 +30,7 @@ const isOrder = async (userId, productId) => {
     const result = lists.filter((order) => order.productId == productId);
     return result;
   } catch (err) {
-    throw new baseError('INVALID_DATA', 400);
+    throw new DatabaseError('INVALID_DATA');
   }
 };
 
@@ -48,7 +48,7 @@ const reviewById = async (productId) => {
     );
   } catch (err) {
     console.log(err);
-    throw new baseError('INVALID_DATA', 400);
+    throw new DatabaseError('INVALID_DATA');
   }
 };
 
@@ -61,7 +61,7 @@ const deleteReview = async (userId, productId) => {
       [userId, productId]
     );
   } catch (err) {
-    throw new baseError('INVALID_DATA', 400);
+    throw new DatabaseError('INVALID_DATA');
   }
 };
 module.exports = {

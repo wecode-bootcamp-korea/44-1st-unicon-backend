@@ -21,7 +21,7 @@ class DatabaseError extends baseError {
   constructor(message) {
     super(message);
     this.code = 'DATABASE_ERROR';
-    this.statusCode = 400;
+    this.statusCode = 500;
   }
 }
 

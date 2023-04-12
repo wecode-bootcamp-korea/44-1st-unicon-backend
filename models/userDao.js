@@ -1,4 +1,5 @@
 const appDataSource = require('./appDataSource');
+const { DatabaseError } = require('../middlewares/error');
 
 const signUp = async (
   name,
@@ -25,9 +26,7 @@ const signUp = async (
       [name, email, hashedPassword, phone, address, birth, DEFAULT_POINTS]
     );
   } catch (err) {
-    const error = new Error('INVALID_DATA_INPUT');
-    error.statusCode = 400;
-    throw error;
+    const error = new DatabaseError('INVALID_DATA_INPUT');
   }
 };
 
@@ -48,9 +47,7 @@ const getUserById = async (id) => {
     );
     return result;
   } catch (err) {
-    const error = new Error('dataSource Error');
-    error.statusCode = 400;
-    throw error;
+    const error = new DatabaseError('dataSource Error');
   }
 };
 
@@ -71,10 +68,7 @@ const getUserbyEmail = async (email) => {
     );
     return user;
   } catch (err) {
-    const error = new Error('NOT_FOUND_EMAIL');
-    console.log(err);
-    error.statusCode = 400;
-    throw error;
+    const error = new DatabaseError('NOT_FOUND_EMAIL');
   }
 };
 
