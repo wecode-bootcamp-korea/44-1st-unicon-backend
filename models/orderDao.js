@@ -1,5 +1,5 @@
 const appDataSource = require('./appDataSource');
-const orderStatusEnum = require('../middlewares/enums')
+const orderStatusEnum = require('../middlewares/enums');
 
 const { v4 } = require('uuid');
 
@@ -34,7 +34,7 @@ const findMatched = async (userId) => {
       [userId]
     );
     const resultArray = Array.isArray(result) ? result : [result];
-   
+
     return resultArray;
   } catch (err) {
     throw new Error(
@@ -50,7 +50,6 @@ const createOrderAndItems = async (userId, orderId) => {
   await queryRunner.startTransaction();
 
   try {
-    
     const cartItems = await queryRunner.query(
       `
         SELECT cart.user_id, cart.product_id, cart.quantity, product.price 
@@ -60,7 +59,7 @@ const createOrderAndItems = async (userId, orderId) => {
             `,
       [userId]
     );
-  
+
     const cartItemArray = Array.isArray(cartItems) ? cartItems : [cartItems];
 
     for (const cartItem of cartItemArray) {
@@ -104,11 +103,10 @@ const createOrderAndItems = async (userId, orderId) => {
     return totalAmount;
   } catch (err) {
     await queryRunner.rollbackTransaction();
-    throw new Error('failed to update cart item quantity'); 
+    throw new Error('failed to update cart item quantity');
   } finally {
     await queryRunner.release();
   }
-
 };
 
 const getImageUrlByProductId = async (orderId) => {
@@ -140,14 +138,14 @@ const getImageUrlByProductId = async (orderId) => {
 };
 
 const getUserInfoByUserId = async (userId) => {
-  const [{addresses}]= await appDataSource.query(
+  const [{ addresses }] = await appDataSource.query(
     `SELECT 
     addresses
     FROM users
     WHERE id =?`,
     [userId]
   );
-  return addresses
+  return addresses;
 };
 
 const executedOrder = async (userId) => {
@@ -161,7 +159,7 @@ const executedOrder = async (userId) => {
     );
 
     await appDataSource.query(`DELETE FROM cart WHERE user_id =?`, [userId]);
-    
+
     await appDataSource.query(
       `UPDATE orders SET order_status_id =? WHERE user_id =?`,
       [orderStatusEnum.COMPLETED_PAYMENT, userId]
@@ -179,5 +177,5 @@ module.exports = {
   getImageUrlByProductId,
   getUserInfoByUserId,
   executedOrder,
-  createOrderAndItems
+  createOrderAndItems,
 };
