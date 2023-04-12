@@ -11,7 +11,7 @@ const createOrders = catchError(async (req, res) => {
   }
  
   const result = await orderService.createOrderAndItems(userId);
-  return res.status(201).json({ message: result });
+  return res.status(201).json(result );
 });
 
 const executedOrder = catchError(async (req, res) => {

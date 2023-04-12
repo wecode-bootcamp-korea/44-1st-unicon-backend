@@ -141,14 +141,14 @@ const getImageUrlByProductId = async (orderId) => {
 };
 
 const getUserInfoByUserId = async (userId) => {
-  return await appDataSource.query(
+  const [{addresses}]= await appDataSource.query(
     `SELECT 
-    addresses,
-    points AS currentPoints
+    addresses
     FROM users
     WHERE id =?`,
     [userId]
   );
+  return addresses
 };
 
 const executedOrder = async (userId) => {

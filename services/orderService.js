@@ -24,7 +24,7 @@ const createOrders = async (userId) => {
 
     const userInfo = await orderDao.getUserInfoByUserId(userId);
 
-    return { totalAmount, imageUrl, userInfo };
+    return  totalAmount, imageUrl, userInfo ;
   } catch (err) {
     throw new Error(
       `Failed to create orders for userId ${userId}: ${err.message}`
