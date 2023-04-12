@@ -36,7 +36,6 @@ const isOrder = async (userId, productId) => {
 
 const reviewById = async (productId) => {
   try {
-    console.log(productId);
     return await appDataSource.query(
       `SELECT
     title,

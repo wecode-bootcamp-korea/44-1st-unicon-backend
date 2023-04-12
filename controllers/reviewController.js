@@ -2,7 +2,7 @@ const reviewService = require('../services/reviewService.js');
 const { catchError } = require('../middlewares/error.js');
 
 const createReview = catchError(async (req, res) => {
-  const userId = req.user;
+  const userId = req.user.id;
 
   if (!userId) {
     return res.status(403).json({ message: 'INVALID_DATA_ID' });
@@ -39,7 +39,7 @@ const reviewById = catchError(async (req, res) => {
 
 const deleteReview = catchError(async (req, res) => {
   const { productId } = req.params;
-  const userId = req.user;
+  const userId = req.user.id;
 
   if (!userId || !productId) {
     return res.status(400).json({ message: 'KEY_ERROR' });

@@ -3,25 +3,37 @@ const appDataSource = require('./appDataSource');
 const conditionMake = require('./conditionMake');
 const { DatabaseError } = require('../middlewares/error');
 
-const serchProduct = async () => {
+const searchProduct = async (word) => {
   try {
-    return await appDataSource.query(
+    let condition = '';
+    let filter = new conditionMake('', '', '', '', word).build();
+    if (filter) condition = `WHERE ` + filter;
+    console.log(condition);
+    let products = await appDataSource.query(
       `SELECT
-        p.id,
-        p.names AS name,
-        p.sub_description,
-        sub_category.title AS subCategory,
-        main_category.title AS mainCategory,
-        image.image_url
-        FROM product p
-        JOIN sub_category
-        ON p.sub_category_id = sub_category.id
-        JOIN main_category
-        ON sub_category.main_category_id = main_category.id
-        JOIN  (SELECT product_id, JSON_ARRAYAGG(image_url) AS image_url FROM product_image GROUP BY product_id) AS image
-        ON image.product_id = p.id`
+      p.id,
+      p.names AS name,
+      p.sub_description,
+      sub_category.title AS subCategory,
+      main_category.title AS mainCategory,
+      image.image_url
+      FROM product p
+      JOIN sub_category
+      ON p.sub_category_id = sub_category.id
+      JOIN main_category
+      ON sub_category.main_category_id = main_category.id
+      JOIN  (SELECT product_id,
+        JSON_ARRAYAGG(image_url) AS image_url
+        FROM product_image 
+        GROUP BY product_id) AS image
+      ON image.product_id = p.id   
+     ${condition}`
     );
-  } catch (err) {}
+    products ? products : (products = '');
+    return products;
+  } catch (err) {
+    throw new DatabaseError('SEARCH_ERROR');
+  }
 };
 
 const getShowRoom = async () => {
@@ -83,7 +95,6 @@ const getProductList = async (
       versity ? (condition = `WHERE ` + versity) : (versity = ``);
     }
 
-    console.log(versity);
     const post = await appDataSource.query(
       `SELECT
       p.id,
@@ -143,4 +154,5 @@ module.exports = {
   getProductById,
   getProductList,
   getShowRoom,
+  searchProduct,
 };

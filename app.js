@@ -13,7 +13,7 @@ const { errorHandler } = require('./middlewares/error');
 const appDataSource = require('./models/appDataSource');
 
 app.use(cors());
-app.use(morgan('tiny'));
+app.use(morgan('combined'));
 app.use(express.json());
 appDataSource
   .initialize()

@@ -33,7 +33,7 @@ const signUp = async (
 
 const getUserById = async (id) => {
   try {
-    const [result] = await appDataSource.query(
+    const result = await appDataSource.query(
       `SELECT
        id,
        names,

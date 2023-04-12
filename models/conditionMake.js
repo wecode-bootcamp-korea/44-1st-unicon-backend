@@ -1,9 +1,10 @@
 class conditionMake {
-  constructor(mainCategory, subCategory, isnew, pricefilter) {
+  constructor(mainCategory, subCategory, isnew, pricefilter, word) {
     this.mainCategory = mainCategory;
     this.subCategory = subCategory;
     this.isnew = isnew;
     this.pricefilter = pricefilter;
+    this.word = word;
     this.condition = [];
     this.filter = ``;
   }
@@ -29,17 +30,22 @@ class conditionMake {
 
     this.filter += order;
   }
+  wordCondition() {
+    if (this.word)
+      this.condition
+        .push(`p.names LIKE "%${this.word}%" or sub_category.title LIKE "%${this.word}%" or
+    main_category.title LIKE "%${this.word}%"`);
+  }
 
   mixCondition() {
     if (this.condition.length != 1) this.filter = this.condition.join(` AND `);
-
     if (this.condition.length == 1) this.filter = this.condition;
-    return this.filter;
   }
   build() {
     this.mainCondition();
     this.subCondition();
     this.newCondition();
+    this.wordCondition();
     this.mixCondition();
     this.priceCondition();
     return this.filter;
