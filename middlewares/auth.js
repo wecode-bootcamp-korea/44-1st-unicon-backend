@@ -13,7 +13,6 @@ const loginRequired = async (req, res, next) => {
     }
     // 2) Verification token
     const decoded = await jwt.verify(accessToken, process.env.SECRET_KEY);
-
     // 3) Check if user still exists
     const user = await userService.getUserById(decoded.id);
     if (!user) {
@@ -23,13 +22,13 @@ const loginRequired = async (req, res, next) => {
       return res.status(error.statusCode).json({ message: error.message });
     }
     // 4) Grant Access
-    req.user = user;
+    req.user = decoded.id;
     next();
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal Server Error' });
   }
-}
+};
 
 module.exports = {
   loginRequired,

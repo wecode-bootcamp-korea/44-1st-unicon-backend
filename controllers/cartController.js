@@ -22,14 +22,12 @@ const getCartList = async (req, res) => {
 };
 
 const updateCart = catchError(async (req, res) => {
-  const userId = req.user.id;
+  const userId = req.user;
 
-  //productId = [ ]
-  //quantity = [ ]
+ 
+  const productList = req.body;
 
-  const { productId, quantity } = req.body;
-
-  const update = await cartService.updatedCart({ userId, productId, quantity });
+  const update = await cartService.updatedCart( {userId ,productList});
 
   res.status(200).json({ message: update });
 });
@@ -42,6 +40,7 @@ const deleteCart = catchError(async (req, res) => {
 
     res.status(204).send();
 });
+
 
 module.exports = {
   createCartItem,

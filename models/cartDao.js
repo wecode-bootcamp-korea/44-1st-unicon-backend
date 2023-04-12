@@ -83,7 +83,7 @@ const getCartList = async (userId) => {
   return  updatedLists ;
 };
 
-const updateCartItemQuantity = async ({ userId, productId, quantity }) => {
+const updateCartItemQuantity = async ( userId, productId, quantity ) => {
   const queryRunner = appDataSource.createQueryRunner();
   await queryRunner.connect();
 
