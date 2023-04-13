@@ -23,7 +23,7 @@ const loginRequired = async (req, res, next) => {
       return res.status(error.statusCode).json({ message: error.message });
     }
     // 4) Grant Access
-    req.user = { id: decoded.id };
+    req.user = { id: decoded.id, names: user.names };
     next();
   } catch (error) {
     console.error(error);
