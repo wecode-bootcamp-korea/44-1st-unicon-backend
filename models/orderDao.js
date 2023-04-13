@@ -195,14 +195,29 @@ const getImageUrlByProductId = async (orderId) => {
 };
 
 const getUserInfoByUserId = async (userId) => {
-  const [{ addresses }] = await appDataSource.query(
+  const addresses = await appDataSource.query(
     `SELECT 
     addresses
     FROM users
     WHERE id =?`,
     [userId]
   );
-  return addresses;
+
+  const orderNumber = await appDataSource.query(
+    `SELECT 
+      order_number
+    FROM 
+      orders
+    WHERE
+      user_id =?
+      ORDER BY orders.id DESC 
+      LIMIT 1      
+      `
+    ,
+    [userId]    
+  )
+  
+  return {addresses: addresses[0].addresses, orderNumber: orderNumber[0].order_number};
 };
 
 const executedOrder = async (userId) => {
