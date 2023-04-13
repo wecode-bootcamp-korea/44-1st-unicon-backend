@@ -9,15 +9,16 @@ const purchaseditems = async (userId) => {
       `SELECT
       lists
     FROM receipt
-    WHERE user_id = ?`[userId]
+    WHERE user_id = ${userId}`
     );
 
     let productIdList = [];
     await lists.forEach((i) => {
       productIdList.push(i.productId);
     });
+
     let productIdstr = productIdList.join();
-    console.log(productIdstr);
+
     const items = await appDataSource.query(
       `SELECT
       p.id,

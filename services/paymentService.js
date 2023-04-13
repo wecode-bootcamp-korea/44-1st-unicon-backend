@@ -11,14 +11,6 @@ const createPayment = async (orderNumber) => {
   const Names = Array.isArray(Name) ? Name : [Name];
   const names = Names[0];
 
-  console.log([
-    {
-      totalAmount: totalAmount,
-      updatePoint: updatePoint,
-      productName: names,
-    },
-  ]);
-
   return {
     totalAmount: totalAmount,
     updatePoint: updatePoint,
