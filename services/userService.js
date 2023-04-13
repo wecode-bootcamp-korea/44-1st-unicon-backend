@@ -44,9 +44,6 @@ const getUserById = async (id) => {
   return await userDao.getUserById(id);
 };
 
-const getUserById = async (id) => {
-  return await userDao.getUserById(id);
-};
 module.exports = {
   signUp,
   signIn,
