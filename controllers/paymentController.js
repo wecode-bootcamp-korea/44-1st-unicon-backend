@@ -5,8 +5,8 @@ const createPayment = catchError(async (req, res) => {
   const { orderNumber } = req.body;
   console.log(orderNumber);
 
-  await paymentService.createPayment(orderNumber);
-  return res.status(201).json({ message: 'PAYMENT_SUCCESS' });
+  const payment = await paymentService.createPayment(orderNumber);
+  return res.status(201).json(payment);
 });
 
 module.exports = {
