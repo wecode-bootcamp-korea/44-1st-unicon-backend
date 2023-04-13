@@ -30,8 +30,6 @@ const createOrderAndItems = async (userId) => {
     imageUrl = await orderDao.getImageUrlByProductId(orderId);
     userInfo = await orderDao.getUserInfoByUserId(userId);
 
-    console.log(userInfo)
-
     await queryRunner.commitTransaction();
 
     return {
