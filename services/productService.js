@@ -15,7 +15,7 @@ const getProductList = async (
   mainCategory,
   subCategory,
   pricefilter,
-  start,
+  offset,
   limit,
   isnew
 ) => {
@@ -23,7 +23,7 @@ const getProductList = async (
     mainCategory,
     subCategory,
     pricefilter,
-    start,
+    offset,
     limit,
     isnew
   );

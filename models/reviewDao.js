@@ -34,10 +34,11 @@ const isOrder = async (userId, productId) => {
   }
 };
 
-const reviewById = async (productId) => {
+const getReviewByProductId = async (productId) => {
   try {
     return await appDataSource.query(
       `SELECT
+      id,
     title,
     content,
     rating
@@ -47,18 +48,17 @@ const reviewById = async (productId) => {
       [productId]
     );
   } catch (err) {
-    console.log(err);
     throw new DatabaseError('INVALID_DATA');
   }
 };
 
-const deleteReview = async (userId, productId) => {
+const deleteReview = async (userId, productId, reviewId) => {
   try {
     return await appDataSource.query(
       `DELETE FROM review
-      WHERE user_id = ? AND product_id = ?
+      WHERE user_id = ? AND product_id = ? AND id =?
       `,
-      [userId, productId]
+      [userId, productId, reviewId]
     );
   } catch (err) {
     throw new DatabaseError('INVALID_DATA');
@@ -67,6 +67,6 @@ const deleteReview = async (userId, productId) => {
 module.exports = {
   createReview,
   isOrder,
-  reviewById,
+  getReviewByProductId,
   deleteReview,
 };

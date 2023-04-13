@@ -25,32 +25,36 @@ const createReview = catchError(async (req, res) => {
   return res.status(201).json(review);
 });
 
-const reviewById = catchError(async (req, res) => {
+const getReviewByProductId = catchError(async (req, res) => {
   const { productId } = req.params;
 
   if (!productId) {
     return res.status(400).json({ message: 'KEY_ERROR' });
   }
 
-  const review = await reviewService.reviewById(productId);
+  const review = await reviewService.getReviewByProductId(productId);
 
   return res.status(200).json(review);
 });
 
 const deleteReview = catchError(async (req, res) => {
-  const { productId } = req.params;
+  const { productId, reviewId } = req.params;
   const userId = req.user.id;
 
   if (!userId || !productId) {
     return res.status(400).json({ message: 'KEY_ERROR' });
   }
 
-  const deleteReview = await reviewService.deleteReview(userId, productId);
+  const deleteReview = await reviewService.deleteReview(
+    userId,
+    productId,
+    reviewId
+  );
 
   return res.status(204).send(deleteReview);
 });
 module.exports = {
   createReview,
-  reviewById,
+  getReviewByProductId,
   deleteReview,
 };
