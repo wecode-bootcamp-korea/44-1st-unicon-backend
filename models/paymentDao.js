@@ -22,12 +22,12 @@ const createPayment = async (orderNumber) => {
       [totalAmount, userId]
     );
 
-    const updatePoint = await queryRunner.query(
+    const [{ points }] = await queryRunner.query(
       `SELECT points FROM users WHERE users.id = ?`,
       [userId]
     );
 
-    const [getProductName] = await queryRunner.query(
+    const [{ getProductName }] = await queryRunner.query(
       `  SELECT product.names AS getProductName FROM product 
       JOIN cart ON product.id = cart.product_items WHERE cart.user_id= ?`,
       [userId]
@@ -37,7 +37,7 @@ const createPayment = async (orderNumber) => {
 
     await queryRunner.query(
       `UPDATE orders SET order_status_id =? WHERE user_id =?`,
-      [orderStatusEnum.COMPLETED_PAYMENT, userId]
+      [orderStatusEnum.COMPLETE_PAYMENT, userId]
     );
 
     const [{ lists }] = await queryRunner.query(
@@ -71,17 +71,23 @@ const createPayment = async (orderNumber) => {
       [orderId, orderNumber, userId, stringifyList, totalAmount]
     );
 
-    await queryRunner.commitTransaction(); // End transaction.
+    await queryRunner.commitTransaction();
 
-    return [totalAmount, updatePoint, getProductName]; //결제시 프론트가 원하는 값!!
+    return [
+      {
+        totalAmount: totalAmount,
+        updatePoint: points,
+        productName: getProductName,
+      },
+    ];
   } catch (err) {
-    await queryRunner.rollbackTransaction(); //  excute transaction rollback when detecting Error
+    await queryRunner.rollbackTransaction();
     const error = new Error('INVALID_DATA_INPUT');
     console.log(err);
     error.statusCode = 500;
     throw error;
   } finally {
-    queryRunner.release(); // return db connection object.
+    queryRunner.release();
   }
 };
 
