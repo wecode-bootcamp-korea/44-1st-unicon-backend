@@ -40,7 +40,7 @@ const updatedCart = async (userId, productList) => {
   const updatedCartItems = await Promise.all(
     productList.map(async (element) => {
       if (element.quantity <= 0) {
-        await cartDao.deleteCart(userId, element.id);
+        await cartDao.deleteCart(userId, element.productId);
         return null;
       } else {
         const { updatedCartItem } = await cartDao.updateCartItemQuantity({
