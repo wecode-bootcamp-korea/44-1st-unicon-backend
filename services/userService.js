@@ -37,8 +37,8 @@ const signIn = async (email, password) => {
   const jwtToken = jwt.sign(payLoad, process.env.SECRET_KEY, {
     expiresIn: '1d',
   });
-
-  return jwtToken;
+  console.log(users.names);
+  return { names: users.names, Token: jwtToken };
 };
 const getUserById = async (id) => {
   return await userDao.getUserById(id);

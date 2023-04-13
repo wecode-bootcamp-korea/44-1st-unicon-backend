@@ -27,8 +27,8 @@ const signIn = catchError(async (req, res) => {
     return res.status(400).json({ message: 'KEY_ERROR' });
   }
 
-  const Token = await userService.signIn(email, password);
-  return res.status(200).json({ accesstoken: Token });
+  const { names, Token } = await userService.signIn(email, password);
+  return res.status(200).json({ accesstoken: Token, names: names });
 });
 
 module.exports = {
