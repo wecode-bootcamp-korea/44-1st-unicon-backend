@@ -8,17 +8,17 @@ const createCartItem = async ({ userId, productId, quantity }) => {
     throw error;
   }
 
-  const cart = await cartDao.findMatched(productId);
-  if (cart.length == 0) {
+  const existProduct = await cartDao.findMatched(productId);
+  if (existProduct.length == 0) {
     const error = new Error(`product with ID ${productId} not found`);
     error.statusCode = 400;
 
     throw error;
   }
 
-  const cartItem = await cartDao.findMatchedProductId(productId);
+  const existCartItem = await cartDao.findMatchedProductId(productId);
 
-  if (cartItem.length === 0) {
+  if (existCartItem.length === 0) {
     await cartDao.createCartItem({
       userId,
       productId,

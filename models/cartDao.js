@@ -21,17 +21,27 @@ const createCartItem = async ({ userId, productId, quantity }) => {
     throw new DatabaseError('failed to create cart item');
   }
 };
+
 const findMatchedProductId = async (productId) => {
-  return await appDataSource.query(
+  const cart = await appDataSource.query(
     `SELECT * FROM cart WHERE product_items = ?`,
     [productId]
   );
+  const cartArray = Array.isArray(cart) ? cart : [cart];
+
+  return cartArray;
 };
+
 const findMatched = async (productId) => {
-  return await appDataSource.query(`SELECT * FROM product WHERE id = ?`, [
-    productId,
-  ]);
+  const product = await appDataSource.query(
+    `SELECT * FROM product WHERE id = ?`,
+    [productId]
+  );
+  const productArray = Array.isArray(product) ? product : [product];
+
+  return productArray;
 };
+
 const getCartList = async (userId) => {
   const result = await appDataSource.query(
     `SELECT
@@ -66,6 +76,7 @@ const getCartList = async (userId) => {
   if (!lists || lists.length === 0) {
     return [];
   }
+
   const updatedLists = lists.reverse().map((item) => {
     const { price, quantity } = item;
     const totalPrice = price * quantity;
@@ -75,7 +86,7 @@ const getCartList = async (userId) => {
   return updatedLists;
 };
 
-const updateCartItemQuantity = async ({quantity, userId, productId}) => {
+const updateCartItemQuantity = async ({ quantity, userId, productId }) => {
   const queryRunner = appDataSource.createQueryRunner();
   await queryRunner.connect();
   await queryRunner.startTransaction();
@@ -150,6 +161,7 @@ const addCartItemQuantity = async ({ userId, productId, quantity }) => {
     await queryRunner.release();
   }
 };
+
 module.exports = {
   createCartItem,
   findMatched,
