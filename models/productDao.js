@@ -130,6 +130,7 @@ const getProductById = async (productId) => {
       p.price,
       p.sub_description,
       image.image_url,
+      p.product_size,
       pd.descriptions AS detail,
       p.descriptions
       FROM product p

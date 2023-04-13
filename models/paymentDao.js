@@ -22,7 +22,7 @@ const createPayment = async (orderNumber) => {
     const orderInfoArray = Array.isArray(orderInfo) ? orderInfo : [orderInfo];
 
     const userId = orderInfoArray[0].userId;
-    const totalAmount = orderInfoArray[0].orderId;
+    const totalAmount = orderInfoArray[0].totalAmount;
     const orderId = orderInfoArray[0].orderId;
 
     await queryRunner.query(
@@ -55,7 +55,6 @@ const createPayment = async (orderNumber) => {
 
     const completePayMent = orderStatusEnum.COMPLETE_PAYMENT;
 
-    console.log('complete: ' + completePayMent);
     await queryRunner.query(
       `UPDATE orders SET order_status_id =? WHERE id =?`,
       [completePayMent, orderId]

@@ -1,20 +1,29 @@
 const paymentDao = require('../models/paymentDao');
 
 const createPayment = async (orderNumber) => {
-  const payment = paymentDao.createPayment(orderNumber);
+  const payment = await paymentDao.createPayment(orderNumber);
   const orderInfoArray = Array.isArray(payment) ? payment : [payment];
   const totalAmount = orderInfoArray[0];
-  const [{ updatePoint }] = orderInfoArray[1];
-  const getProductName = orderInfoArray[2];
-  let names = [];
-  getProductName.forEach((i) => names.push(i.names));
-  return [
+  const point = orderInfoArray[1];
+  const Points = Array.isArray(point) ? point : [point];
+  const updatePoint = Points[0];
+  const Name = orderInfoArray[2];
+  const Names = Array.isArray(Name) ? Name : [Name];
+  const names = Names[0];
+
+  console.log([
     {
       totalAmount: totalAmount,
       updatePoint: updatePoint,
       productName: names,
     },
-  ];
+  ]);
+
+  return {
+    totalAmount: totalAmount,
+    updatePoint: updatePoint,
+    productName: names,
+  };
 };
 
 module.exports = {

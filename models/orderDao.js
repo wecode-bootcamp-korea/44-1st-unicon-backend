@@ -9,7 +9,9 @@ const purchaseditems = async (userId) => {
       `SELECT
       lists
     FROM receipt
-    WHERE user_id = ?`,
+    WHERE user_id = ?
+    ORDER BY id
+    LIMIT 1`,
       [userId]
     );
 
@@ -18,7 +20,7 @@ const purchaseditems = async (userId) => {
       productIdList.push(i.productId);
     });
     let productIdstr = productIdList.join();
-
+    console.log(productIdstr);
     const items = await appDataSource.query(
       `SELECT
       p.id,
@@ -212,12 +214,14 @@ const getUserInfoByUserId = async (userId) => {
       user_id =?
       ORDER BY orders.id DESC 
       LIMIT 1      
-      `
-    ,
-    [userId]    
-  )
-  
-  return {addresses: addresses[0].addresses, orderNumber: orderNumber[0].order_number};
+      `,
+    [userId]
+  );
+
+  return {
+    addresses: addresses[0].addresses,
+    orderNumber: orderNumber[0].order_number,
+  };
 };
 
 const executedOrder = async (userId) => {

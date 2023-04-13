@@ -37,7 +37,7 @@ const updatedCart = async (userId, productList) => {
         const { updatedCartItem } = await cartDao.updateCartItemQuantity({
           quantity: element.quantity,
           userId: userId,
-          productId: element.productId,
+          productId: element.id,
         });
         return updatedCartItem;
       }
