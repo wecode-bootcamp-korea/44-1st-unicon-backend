@@ -101,6 +101,7 @@ const getProductList = async (
       p.names,
       p.price,
       p.sub_description,
+      p.is_new,
       image.image_url
       FROM product p
       JOIN sub_category
