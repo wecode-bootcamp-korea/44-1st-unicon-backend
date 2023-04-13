@@ -117,7 +117,7 @@ const updateCartItemQuantity = async ({ quantity, userId, productId }) => {
   }
 };
 
-const deleteCart = async (userId, productId) => {
+const deleteCart = async ({userId, productId}) => {
   await appDataSource.query(
     `
         DELETE
