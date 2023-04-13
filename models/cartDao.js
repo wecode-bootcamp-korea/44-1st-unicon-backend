@@ -82,7 +82,7 @@ const getCartList = async (userId) => {
     const totalPrice = price * quantity;
     return { ...item, totalPrice };
   });
-
+  
   return updatedLists;
 };
 
