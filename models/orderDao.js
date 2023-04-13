@@ -2,6 +2,48 @@ const appDataSource = require('./appDataSource');
 const { DatabaseError } = require('../middlewares/error');
 const { v4 } = require('uuid');
 
+const purchaseditems = async (userId) => {
+  try {
+    const [{ lists }] = await appDataSource.query(
+      `SELECT
+      lists
+    FROM receipt
+    WHERE user_id = ?`,
+      [userId]
+    );
+
+    let productIdList = [];
+    await lists.forEach((i) => {
+      productIdList.push(i.productId);
+    });
+    let productIdstr = productIdList.join();
+
+    const items = await appDataSource.query(
+      `SELECT
+      p.id,
+      p.names,
+      p.price,
+      p.sub_description,
+      order_item.quantity,
+      image.image_url
+      FROM product p
+      JOIN sub_category
+      ON p.sub_category_id = sub_category.id
+      JOIN main_category
+      ON sub_category.main_category_id = main_category.id
+      JOIN  (SELECT product_id, JSON_ARRAYAGG(image_url) AS image_url FROM product_image GROUP BY product_id) AS image
+      ON image.product_id = p.id
+      JOIN order_item
+      ON order_item.product_id = p.id
+      WHERE p.id IN (${productIdstr})`
+    );
+    return items;
+  } catch (err) {
+    console.log(err);
+    throw new DatabaseError('INVALID_DATA');
+  }
+};
+
 const createOrders = async (userId, orderStatus) => {
   const orderNumber = v4();
   try {
@@ -189,4 +231,5 @@ module.exports = {
   getUserInfoByUserId,
   executedOrder,
   createOrderAndItems,
+  purchaseditems,
 };

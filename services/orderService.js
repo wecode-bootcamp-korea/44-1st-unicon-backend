@@ -95,9 +95,18 @@ const executedOrder = async (userId) => {
     );
   }
 };
-
+const purchaseditems = async (userId) => {
+  try {
+    const items = await orderDao.purchaseditems(userId);
+    return items;
+  } catch (err) {
+    console.log(err);
+    throw new Error('NO_ITEM');
+  }
+};
 module.exports = {
   createOrders,
   executedOrder,
   createOrderAndItems,
+  purchaseditems,
 };
