@@ -34,7 +34,7 @@ const isOrder = async (userId, productId) => {
   }
 };
 
-const reviewById = async (productId) => {
+const getReviewByProductId = async (productId) => {
   try {
     return await appDataSource.query(
       `SELECT
@@ -48,7 +48,6 @@ const reviewById = async (productId) => {
       [productId]
     );
   } catch (err) {
-    console.log(err);
     throw new DatabaseError('INVALID_DATA');
   }
 };
@@ -68,6 +67,6 @@ const deleteReview = async (userId, productId, reviewId) => {
 module.exports = {
   createReview,
   isOrder,
-  reviewById,
+  getReviewByProductId,
   deleteReview,
 };

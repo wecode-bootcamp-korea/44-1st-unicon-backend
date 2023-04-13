@@ -17,8 +17,8 @@ const createReview = async (title, content, rating, productId, userId) => {
   );
 };
 
-const reviewById = async (productId) => {
-  const review = await reviewDao.reviewById(productId);
+const getReviewByProductId = async (productId) => {
+  const review = await reviewDao.getReviewByProductId(productId);
 
   if (review.length == 0) {
     throw new baseError('NOT_REVIEW', 404);
@@ -36,4 +36,4 @@ const deleteReview = async (userId, productId, reviewId) => {
   return review;
 };
 
-module.exports = { createReview, reviewById, deleteReview };
+module.exports = { createReview, getReviewByProductId, deleteReview };

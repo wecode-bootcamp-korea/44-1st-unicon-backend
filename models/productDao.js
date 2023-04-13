@@ -75,7 +75,7 @@ const getProductList = async (
   mainCategory,
   subCategory,
   pricefilter,
-  start,
+  offset,
   limit,
   isnew
 ) => {
@@ -112,7 +112,7 @@ const getProductList = async (
       ${condition}
       LIMIT ? OFFSET ?
       ;`,
-      [limit, start]
+      [limit, offset]
     );
     return post;
   } catch (err) {

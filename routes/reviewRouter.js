@@ -9,7 +9,7 @@ router.delete(
   loginRequired,
   reviewController.deleteReview
 );
-router.get('/:productId', reviewController.reviewById);
+router.get('/:productId', reviewController.getReviewByProductId);
 
 module.exports = {
   router,
