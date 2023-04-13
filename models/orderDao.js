@@ -1,5 +1,6 @@
 const appDataSource = require('./appDataSource');
 const { DatabaseError } = require('../middlewares/error');
+const { orderStatusEnum } = require('../middlewares/enums');
 const { v4 } = require('uuid');
 
 const purchaseditems = async (userId) => {
@@ -103,8 +104,9 @@ const createOrderAndItems = async (userId, orderId) => {
     for (const cartItem of cartItemArray) {
       const existingOrderItem = await queryRunner.query(
         `SELECT * FROM order_item WHERE order_id = ? AND product_id = ?`,
-        [orderId, cartItem.product_id]
+        [orderId, cartItem.product_items]
       );
+
       const existingOrderItemArray = Array.isArray(existingOrderItem)
         ? existingOrderItem
         : [existingOrderItem];

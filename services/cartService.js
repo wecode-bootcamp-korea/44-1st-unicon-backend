@@ -8,17 +8,17 @@ const createCartItem = async ({ userId, productId, quantity }) => {
     throw error;
   }
 
-  const cart = await cartDao.findMatched(productId);
-  if (cart.length == 0) {
+  const existProduct = await cartDao.findMatched(productId);
+  if (existProduct.length == 0) {
     const error = new Error(`product with ID ${productId} not found`);
     error.statusCode = 400;
 
     throw error;
   }
 
-  const cartItem = await cartDao.findMatchedProductId(productId);
+  const existCartItem = await cartDao.findMatchedProductId(productId);
 
-  if (cartItem.length === 0) {
+  if (existCartItem.length === 0) {
     await cartDao.createCartItem({
       userId,
       productId,
@@ -35,18 +35,19 @@ const getCartList = async (userId) => {
   return await cartDao.getCartList(userId);
 };
 
-const updatedCart = async ({ userId, productList }) => {
+const updatedCart = async (userId, productList) => {
+
   const updatedCartItems = await Promise.all(
     productList.map(async (element) => {
-      if (element.quantity === 0) {
+      if (element.quantity <= 0) {
         await cartDao.deleteCart(userId, element.id);
         return null;
       } else {
-        const { updatedCartItem } = await cartDao.updateCartItemQuantity(
-          element.quantity,
-          userId,
-          element.id
-        );
+        const { updatedCartItem } = await cartDao.updateCartItemQuantity({
+          quantity: element.quantity,
+          userId: userId,
+          productId: element.productId,
+        });
         return updatedCartItem;
       }
     })
@@ -55,9 +56,9 @@ const updatedCart = async ({ userId, productList }) => {
 };
 
 const deleteCart = async ({ userId, productId }) => {
-  const cart = await cartDao.findMatchedProductId(productId);
-  if (cart.length === 0) {
-    const error = new Error(`cart with ID ${productId} not found`);
+  const existCartItem = await cartDao.findMatchedProductId(productId);
+  if (existCartItem.length === 0) {
+    const error = new Error(`cart with ID ${productId} not found in cartList`);
     error.statusCode = 400;
 
     throw error;
