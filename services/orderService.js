@@ -12,8 +12,10 @@ const createOrderAndItems = async (userId) => {
   let totalAmount;
   let imageUrl;
   let userInfo;
-
+  
   try {
+    await orderDao.priceErrorHandle(userId);
+
     const orders = await orderDao.findMatched(userId);
 
     if (orders.length === 0 || orders[0].order_status_id === orderStatusEnum.COMPLETE_PAYMENT) {
@@ -39,35 +41,12 @@ const createOrderAndItems = async (userId) => {
     };
   } catch (err) {
     await queryRunner.rollbackTransaction();
-    throw new Error(
-      `Failed to create orders for userId ${userId}: ${err.message}`
-    );
+    throw new DatabaseError('INVALID_DATA_INPUT');
   } finally {
     await queryRunner.release();
   }
 };
 
-const executedOrder = async (userId) => {
-  try {
-    const currentPoints = (await orderDao.getUserInfoByUserId(userId)).map(
-      (result) => result['currentPoints']
-    );
-
-    await orderDao.executedOrder(userId);
-
-    const remainingPoints = (await orderDao.getUserInfoByUserId(userId)).map(
-      (result) => result['currentPoints']
-    );
-
-    return { currentPoints, remainingPoints };
-  } catch (err) {
-    throw new Error(
-      `Failed to create orders for userId ${userId}: ${err.message}`
-    );
-  }
-};
-
 module.exports = {
-  executedOrder,
   createOrderAndItems,
 };

@@ -163,32 +163,50 @@ const getUserInfoByUserId = async (userId) => {
   return addresses;
 };
 
-const executedOrder = async (userId) => {
-  try {
-    const order = await findMatched(userId);
-    const totalAmount = await updatedOrders(order[0].id);
+const priceErrorHandle = async (userId) => {
+  try{
+    
+    const cart = await appDataSource.query(
+      ` SELECT
+      c.quantity,
+      p.price
+      FROM
+       cart AS c
+       JOIN product AS p 
+       ON c.product_items = p.id
+     WHERE c.user_id = ?;  `,
+      [userId]
+    );   
+    
+    const cartArray = Array.isArray(cart) ? cart : [cart];
+    
+    let totalAmount =0;
+    for(let i=0; i <cartArray.length; i++){
+      totalAmount += cartArray[i].quantity * cartArray[i].price;
+    }
 
-    await appDataSource.query(
-      `UPDATE users SET points = points-? WHERE id = ?`,
-      [totalAmount, userId]
-    );
+    const userPoints = await appDataSource.query(
+      `SELECT
+        points
+      FROM users
+      WHERE id =?`,
+      [userId]
+    )
+    
+    if((userPoints - totalAmount) <0 ){
+      throw new DatabaseError('INVALID_DATA_INPUT');
+    }
 
-    await appDataSource.query(`DELETE FROM cart WHERE user_id =?`, [userId]);
-
-    await appDataSource.query(
-      `UPDATE orders SET order_status_id =? WHERE user_id =?`,
-      [orderStatusEnum.COMPLETED_PAYMENT, userId]
-    );
   } catch (err) {
     throw new DatabaseError('INVALID_DATA_INPUT');
   }
-};
+}
 
 module.exports = {
   createOrders,
   findMatched,
   getImageUrlByProductId,
   getUserInfoByUserId,
-  executedOrder,
   createOrderAndItems,
+  priceErrorHandle
 };
