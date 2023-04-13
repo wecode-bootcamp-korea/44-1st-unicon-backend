@@ -9,10 +9,7 @@ const purchaseditems = async (userId) => {
       `SELECT
       lists
     FROM receipt
-    WHERE user_id = ?
-    ORDER BY id
-    LIMIT 1`,
-      [userId]
+    WHERE user_id = ?`[userId]
     );
 
     let productIdList = [];
