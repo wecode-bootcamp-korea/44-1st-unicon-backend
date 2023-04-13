@@ -194,7 +194,7 @@ const priceErrorHandle = async (userId) => {
     )
     
     if((userPoints - totalAmount) <0 ){
-      throw new DatabaseError('INVALID_DATA_INPUT');
+      return err;
     }
 
   } catch (err) {
