@@ -71,7 +71,7 @@ const createPayment = async (orderNumber) => {
       [orderId, orderNumber, userId, stringifyList, totalAmount]
     );
 
-    await queryRunner.commitTransaction(); // End transaction.
+    await queryRunner.commitTransaction();
 
     return [
       {
@@ -79,15 +79,15 @@ const createPayment = async (orderNumber) => {
         updatePoint: points,
         productName: getProductName,
       },
-    ]; //결제시 프론트가 원하는 값!!
+    ];
   } catch (err) {
-    await queryRunner.rollbackTransaction(); //  excute transaction rollback when detecting Error
+    await queryRunner.rollbackTransaction();
     const error = new Error('INVALID_DATA_INPUT');
     console.log(err);
     error.statusCode = 500;
     throw error;
   } finally {
-    queryRunner.release(); // return db connection object.
+    queryRunner.release();
   }
 };
 
