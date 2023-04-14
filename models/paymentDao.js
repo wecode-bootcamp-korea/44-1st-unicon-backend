@@ -7,7 +7,7 @@ const createPayment = async (orderNumber) => {
 
   await queryRunner.startTransaction();
   try {
-    const [{ orderId, userId, totalAmount }] = await queryRunner.query(
+    const re = await queryRunner.query(
       `SELECT
           orders.id AS orderId,
           user_id AS userId,
@@ -16,7 +16,7 @@ const createPayment = async (orderNumber) => {
        WHERE order_number = ?`,
       [orderNumber]
     );
-
+  
     await queryRunner.query(
       `UPDATE users SET points = points - ? WHERE id = ?`,
       [totalAmount, userId]
