@@ -30,7 +30,7 @@ const getReviewByProductId = async (productId) => {
 const deleteReview = async (userId, productId, reviewId) => {
   const review = await reviewDao.deleteReview(userId, productId, reviewId);
 
-  if (deleteReview.affectedRows == 0)
+  if (review.affectedRows == 0)
     throw new baseError('NOT_YOUR_POST_CAN_NOT_DELETE', 401);
 
   return review;
