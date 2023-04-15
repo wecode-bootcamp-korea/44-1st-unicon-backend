@@ -14,8 +14,6 @@ const createOrderAndItems = async (userId) => {
   let userInfo;
   
   try {
-    await orderDao.priceErrorHandle(userId);
-
     const orders = await orderDao.findMatched(userId);
 
     if (orders.length === 0 || orders[0].order_status_id === orderStatusEnum.COMPLETE_PAYMENT) {

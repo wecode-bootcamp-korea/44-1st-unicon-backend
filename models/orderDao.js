@@ -163,44 +163,6 @@ const getUserInfoByUserId = async (userId) => {
   return addresses;
 };
 
-const priceErrorHandle = async (userId) => {
-  try{
-    
-    const cart = await appDataSource.query(
-      ` SELECT
-      c.quantity,
-      p.price
-      FROM
-       cart AS c
-       JOIN product AS p 
-       ON c.product_items = p.id
-     WHERE c.user_id = ?;  `,
-      [userId]
-    );   
-    
-    const cartArray = Array.isArray(cart) ? cart : [cart];
-    
-    let totalAmount =0;
-    for(let i=0; i <cartArray.length; i++){
-      totalAmount += cartArray[i].quantity * cartArray[i].price;
-    }
-
-    const userPoints = await appDataSource.query(
-      `SELECT
-        points
-      FROM users
-      WHERE id =?`,
-      [userId]
-    )
-    
-    if((userPoints - totalAmount) <0 ){
-      return err;
-    }
-
-  } catch (err) {
-    throw new DatabaseError('INVALID_DATA_INPUT');
-  }
-}
 
 module.exports = {
   createOrders,
@@ -208,5 +170,4 @@ module.exports = {
   getImageUrlByProductId,
   getUserInfoByUserId,
   createOrderAndItems,
-  priceErrorHandle
 };
