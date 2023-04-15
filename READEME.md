@@ -35,16 +35,18 @@
 
 ### Front-End
 
-|                                             JavaScript                                             |                                                 React                                                 | Prettier |
-| :------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------: | :------: | :------------------------------------------------------------------------------------------------------: |
-| <img src="https://techstack-generator.vercel.app/js-icon.svg" alt="icon" width="65" height="65" /> | <img src="https://techstack-generator.vercel.app/react-icon.svg" alt="icon" width="65" height="65" /> |          | <img src="https://techstack-generator.vercel.app/prettier-icon.svg" alt="icon" width="65" height="65" /> |
+- JavaScript | React | Prettier <br>
+  <img src="https://techstack-generator.vercel.app/js-icon.svg" alt="icon" width="65" height="65" />
+  <img src="https://techstack-generator.vercel.app/react-icon.svg" alt="icon" width="65" height="65"/>
+  <img src="https://techstack-generator.vercel.app/prettier-icon.svg" alt="icon" width="65" height="65" />
 
 ### Back-End
 
-| JavaScript | Nodejs | MySql |
-Prettier |
-| :------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------: |
-| <img src="https://techstack-generator.vercel.app/js-icon.svg" alt="icon" width="65" height="65" /> | <img src="https://techstack-generator.vercel.app/nginx-icon.svg" alt="icon" width="65" height="65" /> | <img src="https://techstack-generator.vercel.app/mysql-icon.svg" alt="icon" width="65" height="65" /> | <img src="https://techstack-generator.vercel.app/prettier-icon.svg" alt="icon" width="65" height="65" /> |
+- JavaScript | Nodejs | MySql | Prettier <br>
+  <img src="https://techstack-generator.vercel.app/js-icon.svg" alt="icon" width="65" height="65" />
+  <img src="https://techstack-generator.vercel.app/nginx-icon.svg" alt="icon" width="65" height="65" />
+  <img src="https://techstack-generator.vercel.app/mysql-icon.svg" alt="icon" width="65" height="65" />
+  <img src="https://techstack-generator.vercel.app/prettier-icon.svg" alt="icon" width="65" height="65" />
 
 ## 협업 툴
 
@@ -55,38 +57,43 @@ Prettier |
 <img src="https://img.shields.io/badge/VSCode-007ACC?style=flat&logo=Visual Studio Code&logoColor=white"/>
 </div>
 
-## 데모 영상
-
 ## 주요 기능 및 이미지
 
-| 컴포넌트 | 담당 개발자| ----------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
-| 로그인 | - 프론트엔드 : 김정환 <br> - 백엔드 : 임성근 |
-| 회원가입 | - 프론트엔드 : 김정환 <br> - 백엔드 : 임성근 |
-<img src = "./데모 영상 캡쳐/회원가입.png"/><img src = "./데모 영상 캡쳐/ 회원가입 내용기입.png"/> <img src = "./데모 영상 캡쳐/ 회원가입 내용기입2.png"/> <img src = "./데모 영상 캡쳐/회원가입 내용기입3.png"/><img src = "./데모 영상 캡쳐/로그인 성공시.png"/>
+- 컴포넌트 | 담당 개발자
+- 로그인 | - 프론트엔드 : 김정환 - 백엔드 : 임성근
+- 회원가입 | - 프론트엔드 : 김정환 - 백엔드 : 임성근
 
-| 메인 페이지 | - 프론트엔드 : 최선영 <br> - 백엔드 : |
-<img src = "./데모 영상 캡쳐/메인.png"/>
+  - 회원가입시<br><img src = "./데모 영상 캡쳐/회원가입.png"/> <br> - 회원가입 내용기입<br><img src = "./데모 영상 캡쳐/ 회원가입 내용기입.png"/> <br> <img src = "./데모 영상 캡쳐/ 회원가입 내용기입2.png"/> <br> <img src = "./데모 영상 캡쳐/회원가입 내용기입3.png"/> <br> - 로그인 성공시<br><img src = "./데모 영상 캡쳐/로그인 성공시.png"/>
 
-| 상품 리스트 | - 프론트엔드 : 최선영 <br> - 백엔드 : 김민서 |ㅎㅎ
-| 제품 페이지 | - 프론트엔드 : 최선영 <br> - 백엔드 : 김민서 |
+- 메인 페이지 | - 프론트엔드 : 최선영
+  <img src = "./데모 영상 캡쳐/메인.png"/>
 
-| 별점 & 리뷰 | - 프론트엔드 : 김정환 <br> - 백엔드 : 김민서 |
-<img src = "./데모 영상 캡쳐/구매 상품 리뷰.png"/><img src = "./데모 영상 캡쳐/구매 상품 리뷰2.png"/><img src = "./데모 영상 캡쳐/구매 상품 리뷰3.png"/><img src = "./데모 영상 캡쳐/구매 상품 리뷰 삭제.png"/><img src = "./데모 영상 캡쳐/구매 상품 리뷰 삭제 적용.png"/>
+- 상품 리스트 | - 프론트엔드 : 최선영 - 백엔드 : 김민서
+- 제품 페이지 | - 프론트엔드 : 최선영 - 백엔드 : 김민서
 
-| 쇼룸 페이지 | - 프론트엔드 : 김정환 <br> - 백엔드 : 김민서 |
-<img src = "./데모 영상 캡쳐/쇼룸.png"/><img src = "./데모 영상 캡쳐/쇼룸2.png"/><img src = "./데모 영상 캡쳐/쇼룸3.png"/>
+  - 별도의 상품 리스트, 제품 페이지 사진은 없음.
 
-| 검색 및 필터| - 프론트엔드 : 김정환 <br> - 백엔드 : 김민서 |
-<img src = "./데모 영상 캡쳐/메뉴바.png"/><img src = "./데모 영상 캡쳐/낮은가격순 정렬.png"/><img src = "./데모 영상 캡쳐/낮은 가격순 제품 리스트.png"/><img src = "./데모 영상 캡쳐/높은 가격순 정렬.png"/><img src = "./데모 영상 캡쳐/높은 가격순 제품 리스트.png"/>
+- 별점 & 리뷰 | - 프론트엔드 : 김정환 - 백엔드 : 김민서
 
-| 장바구니| - 프론트엔드 : 김정환 <br> - 백엔드: 최상현 |
-<img src = "./데모 영상 캡쳐/장바구니 담기 성공.png"/><img src = "./데모 영상 캡쳐/장바구니 리스트.png"/><img src = "./데모 영상 캡쳐/장바구니 내역 수정.png"/><img src = "./데모 영상 캡쳐/장바구니 내역 수정 적용.png"/>
+  - 구매 상품 리뷰<br><img src = "./데모 영상 캡쳐/구매 상품 리뷰.png"/><br><img src = "./데모 영상 캡쳐/구매 상품 리뷰2.png"/><br><img src = "./데모 영상 캡쳐/구매 상품 리뷰3.png"/><br> - 구매상품 리뷰 삭제<br>img src = "./데모 영상 캡쳐/구매 상품 리뷰 삭제.png"/><br> -구매상품 리뷰 삭제 적용<br><img src = "./데모 영상 캡쳐/구매 상품 리뷰 삭제 적용.png"/>
 
-| 주문 페이지 | - 프론트엔드 : <br> - 백엔드: 최상현 |
-<img src = "./데모 영상 캡쳐/주문하기.png"/>
+- 쇼룸 페이지 | - 프론트엔드 : 김정환 - 백엔드 : 김민서
 
-| 결제 페이지 | - 프론트엔드 : <br> - 백엔드: 임성근|
-<img src = "./데모 영상 캡쳐/결제.png"/><img src = "./데모 영상 캡쳐/결제 완료.png"/>
+  - 쇼룸 이미지 <img src = "./데모 영상 캡쳐/쇼룸.png"/><br><img src = "./데모 영상 캡쳐/쇼룸2.png"/><br><img src = "./데모 영상 캡쳐/쇼룸3.png"/>
+
+- 검색 및 필터 | - 프론트엔드 : 김정환 - 백엔드 : 김민서
+
+  - 메뉴바 이미지 <img src = "./데모 영상 캡쳐/메뉴바.png"/><br> - 낮은 가격순 정렬<img src = "./데모 영상 캡쳐/낮은가격순 정렬.png"/><br> \_ 낮은 가격순 제품 리스트<img src = "./데모 영상 캡쳐/낮은 가격순 제품 리스트.png"/><br> - 높은 가격순 정렬<img src = "./데모 영상 캡쳐/높은 가격순 정렬.png"/><br> - 높은 가격순 제품 리스트<img src = "./데모 영상 캡쳐/높은 가격순 제품 리스트.png"/>
+
+- 장바구니| - 프론트엔드 : 김정환 - 백엔드: 최상현
+
+  - 장바구니 담기 성공<br><img src = "./데모 영상 캡쳐/장바구니 담기 성공.png"/><br> - 장바구니 리스트 <br><img src = "./데모 영상 캡쳐/장바구니 리스트.png"/><br> - 장바구니 내역 수정<br> <img src = "./데모 영상 캡쳐/장바구니 내역 수정.png"/><br> - 장바구니 내역 수정 적용<br><img src = "./데모 영상 캡쳐/장바구니 내역 수정 적용.png"/>
+
+- 주문 페이지 | - 프론트엔드 : 김정환 - 백엔드: 최상현
+  <img src = "./데모 영상 캡쳐/주문하기.png"/>
+
+- 결제 페이지 | - 프론트엔드 : 김정환 - 백엔드: 임성근
+  - 결제 화면 <img src = "./데모 영상 캡쳐/결제.png"/><br> -결제 완료 <br> <img src = "./데모 영상 캡쳐/결제 완료.png"/>
 
 ## 주요 기능 설명
 
@@ -191,8 +198,6 @@ Prettier |
 #### 8. 쇼룸
 
 - 쇼룸과 함께 안에 있는 관련상품을 쇼룸넘버로 그룹화하여 리스트로 보여주면서 사용자의 구매를 유도하였음
-
--
 
 #### Reference
 
