@@ -48,5 +48,4 @@ const createOrderAndItems = async (userId) => {
 
 module.exports = {
   createOrderAndItems,
-  purchaseditems,
 };
