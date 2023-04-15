@@ -10,6 +10,6 @@
   PRIMARY KEY(id),
   CONSTRAINT user_id_FK FOREIGN KEY (user_id) REFERENCES users(id),
   CONSTRAINT order_id_FK FOREIGN KEY (order_id) REFERENCES orders(id)
-)
+);
 -- migrate:down
 DROP TABLE receipt;

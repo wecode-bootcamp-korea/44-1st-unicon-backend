@@ -1,8 +1,13 @@
 const orderService = require('../services/orderService.js');
 const { catchError } = require('../middlewares/error.js');
+const orderError = require('../middlewares/orderError.js');
 
 const createOrders = catchError(async (req, res) => {
   const userId = req.user.id;
+
+  await orderError.emptyCartErrorHandle(userId)
+
+  await orderError.priceErrorHandle(userId);
 
   if (!userId) {
     return res.status(400).json({ message: 'INVALID_USER' });
