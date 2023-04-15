@@ -3,6 +3,48 @@ const { DatabaseError } = require('../middlewares/error');
 const { orderStatusEnum } = require('../middlewares/enums');
 const { v4 } = require('uuid');
 
+const purchaseditems = async (userId) => {
+  try {
+    const [{ lists }] = await appDataSource.query(
+      `SELECT
+      lists
+    FROM receipt
+    WHERE user_id = ?`,
+      [userId]
+    );
+
+    let productIdList = [];
+    await lists.forEach((i) => {
+      productIdList.push(i.productId);
+    });
+    let productIdstr = productIdList.join();
+
+    const items = await appDataSource.query(
+      `SELECT
+      p.id,
+      p.names,
+      p.price,
+      p.sub_description,
+      order_item.quantity,
+      image.image_url
+      FROM product p
+      JOIN sub_category
+      ON p.sub_category_id = sub_category.id
+      JOIN main_category
+      ON sub_category.main_category_id = main_category.id
+      JOIN  (SELECT product_id, JSON_ARRAYAGG(image_url) AS image_url FROM product_image GROUP BY product_id) AS image
+      ON image.product_id = p.id
+      JOIN order_item
+      ON order_item.product_id = p.id
+      WHERE p.id IN (${productIdstr})`
+    );
+    return items;
+  } catch (err) {
+    console.log(err);
+    throw new DatabaseError('INVALID_DATA');
+  }
+};
+
 const createOrders = async (userId, orderStatus) => {
   const orderNumber = v4();
   try {
@@ -153,14 +195,29 @@ const getImageUrlByProductId = async (orderId) => {
 };
 
 const getUserInfoByUserId = async (userId) => {
-  const [{ addresses }] = await appDataSource.query(
+  const addresses = await appDataSource.query(
     `SELECT 
     addresses
     FROM users
     WHERE id =?`,
     [userId]
   );
-  return addresses;
+
+  const orderNumber = await appDataSource.query(
+    `SELECT 
+      order_number
+    FROM 
+      orders
+    WHERE
+      user_id =?
+      ORDER BY orders.id DESC 
+      LIMIT 1      
+      `
+    ,
+    [userId]    
+  )
+  
+  return {addresses: addresses[0].addresses, orderNumber: orderNumber[0].order_number};
 };
 
 
@@ -170,4 +227,5 @@ module.exports = {
   getImageUrlByProductId,
   getUserInfoByUserId,
   createOrderAndItems,
+  purchaseditems,
 };

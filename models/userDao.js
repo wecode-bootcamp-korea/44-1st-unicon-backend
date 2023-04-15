@@ -74,7 +74,6 @@ const getUserbyEmail = async (email) => {
 
 module.exports = {
   signUp,
-  getUserById,
   getUserbyEmail,
   getUserById,
 };

@@ -1,5 +1,6 @@
 const appDataSource = require('./appDataSource');
 const { DatabaseError } = require('../middlewares/error');
+const { orderStatusEnum } = require('../middlewares/enums');
 
 const createCartItem = async ({ userId, productId, quantity }) => {
   try {
@@ -82,7 +83,7 @@ const getCartList = async (userId) => {
     const totalPrice = price * quantity;
     return { ...item, totalPrice };
   });
-  
+
   return updatedLists;
 };
 
@@ -117,7 +118,7 @@ const updateCartItemQuantity = async ({ quantity, userId, productId }) => {
   }
 };
 
-const deleteCart = async (userId, productId) => {
+const deleteCart = async ({ userId, productId }) => {
   await appDataSource.query(
     `
         DELETE
@@ -126,6 +127,26 @@ const deleteCart = async (userId, productId) => {
       `,
     [userId, productId]
   );
+
+  const pendingPayment = orderStatusEnum.PENDING_PAYMENT;
+  
+  const order = await appDataSource.query(
+    `SELECT
+      id
+    FROM
+      orders
+    WHERE
+      user_id =? AND order_status_id =?
+    `,
+    [userId, pendingPayment]
+  );
+  const orderId = order[0].id;
+ 
+  await appDataSource.query(
+    `DELETE FROM order_item WHERE order_id = ? AND product_id = ?`,
+    [orderId, productId]
+  );
+
   return 'cartDeleted';
 };
 

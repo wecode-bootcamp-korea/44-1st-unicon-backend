@@ -35,7 +35,8 @@ const createOrderAndItems = async (userId) => {
     return {
       totalAmount: totalAmount,
       imageUrl: imageUrl,
-      userInfo: userInfo,
+      userInfo: userInfo.addresses,
+      orderNumber: userInfo.orderNumber
     };
   } catch (err) {
     await queryRunner.rollbackTransaction();
@@ -47,4 +48,5 @@ const createOrderAndItems = async (userId) => {
 
 module.exports = {
   createOrderAndItems,
+  purchaseditems,
 };

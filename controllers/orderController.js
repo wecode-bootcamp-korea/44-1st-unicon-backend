@@ -26,7 +26,17 @@ const executeOrder = catchError(async (req, res) => {
   return res.status(201).json({ message: result });
 });
 
+const purchaseditems = catchError(async (req, res) => {
+  const userId = req.user.id;
+  if (!userId) {
+    return res.status(400).json({ message: 'INVALID_USER' });
+  }
+  const items = await orderService.purchaseditems(userId);
+  return res.status(200).json(items);
+});
+
 module.exports = {
   createOrders,
   executeOrder,
+  purchaseditems,
 };
