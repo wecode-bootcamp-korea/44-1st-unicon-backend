@@ -25,4 +25,5 @@ class DatabaseError extends baseError {
   }
 }
 
-module.exports = { catchError, baseError, errorHandler, DatabaseError };
+
+module.exports = { catchError, baseError, errorHandler, DatabaseError  };
