@@ -7,7 +7,7 @@ const createPayment = async (orderNumber) => {
 
   await queryRunner.startTransaction();
   try {
-    const re = await queryRunner.query(
+    const orderInfo = await queryRunner.query(
       `SELECT
           orders.id AS orderId,
           user_id AS userId,
@@ -16,7 +16,17 @@ const createPayment = async (orderNumber) => {
        WHERE order_number = ?`,
       [orderNumber]
     );
-  
+
+    const orderInfoArray = Array.isArray(orderInfo) ? orderInfo : [orderInfo];
+
+    console.log(orderInfoArray)
+
+    const userId = orderInfoArray[0].userId;
+    const totalAmount = orderInfoArray[0].totalAmount;
+    const orderId = orderInfoArray[0].orderId;  
+
+    console.log(totalAmount)
+
     await queryRunner.query(
       `UPDATE users SET points = points - ? WHERE id = ?`,
       [totalAmount, userId]
