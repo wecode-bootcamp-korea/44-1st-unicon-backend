@@ -45,9 +45,11 @@ const createPayment = async (orderNumber) => {
 
     await queryRunner.query(`DELETE FROM cart WHERE user_id = ?`, [userId]);
 
+    const completePayment = orderStatusEnum.COMPLETE_PAYMENT
+
     await queryRunner.query(
       `UPDATE orders SET order_status_id =? WHERE user_id =?`,
-      [orderStatusEnum.COMPLETED_PAYMENT, userId]
+      [completePayment, userId]
     );
 
     const [{ lists }] = await queryRunner.query(
