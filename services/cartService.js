@@ -16,15 +16,15 @@ const createCartItem = async ({ userId, productId, quantity }) => {
     throw error;
   }
 
-  const existCartItem = await cartDao.findMatchedProductId(productId);
-
+  const existCartItem = await cartDao.existCartItem(userId, productId);
+  console.log(existCartItem)
   if (existCartItem.length === 0) {
     await cartDao.createCartItem({
       userId,
       productId,
       quantity,
     });
-
+   
     return 'cart created';
   } else {
     return await cartDao.addCartItemQuantity({ userId, productId, quantity });

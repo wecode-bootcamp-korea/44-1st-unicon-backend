@@ -7,8 +7,7 @@ const createPayment = async (orderNumber) => {
 
   await queryRunner.startTransaction();
   try {
-    console.log(orderNumber);
-
+  
     const orderInfo = await queryRunner.query(
       `SELECT
           orders.id AS orderId,
@@ -44,12 +43,6 @@ const createPayment = async (orderNumber) => {
       `,
       [userId, orderId]
     );
-
-    const productNameArray = Array.isArray(getProductName)
-      ? getProductName
-      : [getProductName];
-
-    console.log(productNameArray);
 
     await queryRunner.query(`DELETE FROM cart WHERE user_id = ?`, [userId]);
 
