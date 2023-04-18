@@ -17,17 +17,6 @@ const createOrders = catchError(async (req, res) => {
   return res.status(201).json(result);
 });
 
-const executeOrder = catchError(async (req, res) => {
-  const userId = req.user.id;
-
-  if (!userId) {
-    return res.status(400).json({ message: 'INVALID_USER' });
-  }
-
-  const result = await orderService.executedOrder(userId);
-  return res.status(201).json({ message: result });
-});
-
 const purchaseditems = catchError(async (req, res) => {
   const userId = req.user.id;
   if (!userId) {
@@ -39,6 +28,5 @@ const purchaseditems = catchError(async (req, res) => {
 
 module.exports = {
   createOrders,
-  executeOrder,
   purchaseditems,
 };
