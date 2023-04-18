@@ -8,7 +8,8 @@ const createCartItem = async ({ userId, productId, quantity }) => {
       'SELECT * FROM product where product.id =?',
       [productId]
     );
-    if (product <= 0) {
+    const productArray = Array.isArray ? product: [product];
+    if (productArray.length <= 0) {
       throw new DatabaseError('Invalid product');
     }
     await appDataSource.query(
@@ -16,11 +17,18 @@ const createCartItem = async ({ userId, productId, quantity }) => {
           VALUES (?, ?, ?)`,
       [userId, productId, quantity]
     );
-
     return { message: 'cartItem added to your cart' };
   } catch (error) {
     throw new DatabaseError('failed to create cart item');
   }
+};
+const existCartItem = async (userId, productId) => {
+  const cart = await appDataSource.query(
+    `SELECT * FROM cart WHERE product_items = ? AND user_id =?`,
+    [productId, userId]
+  );
+  const cartArray = Array.isArray(cart) ? cart : [cart];
+  return cartArray;
 };
 
 const findMatchedProductId = async (productId) => {
@@ -29,9 +37,10 @@ const findMatchedProductId = async (productId) => {
     [productId]
   );
   const cartArray = Array.isArray(cart) ? cart : [cart];
-
   return cartArray;
 };
+
+
 
 const findMatched = async (productId) => {
   const product = await appDataSource.query(
@@ -39,10 +48,8 @@ const findMatched = async (productId) => {
     [productId]
   );
   const productArray = Array.isArray(product) ? product : [product];
-
   return productArray;
 };
-
 const getCartList = async (userId) => {
   const result = await appDataSource.query(
     `SELECT
@@ -72,12 +79,12 @@ const getCartList = async (userId) => {
     `,
     [userId]
   );
+
   const lists = result[0].Lists;
 
   if (!lists || lists.length === 0) {
     return [];
   }
-
   const updatedLists = lists.reverse().map((item) => {
     const { price, quantity } = item;
     const totalPrice = price * quantity;
@@ -86,8 +93,7 @@ const getCartList = async (userId) => {
 
   return updatedLists;
 };
-
-const updateCartItemQuantity = async ({userId, productId, quantity }) => {
+const updateCartItemQuantity = async ({ quantity, userId, productId }) => {
   const queryRunner = appDataSource.createQueryRunner();
   await queryRunner.connect();
   await queryRunner.startTransaction();
@@ -98,7 +104,6 @@ const updateCartItemQuantity = async ({userId, productId, quantity }) => {
        WHERE cart.user_id = ? AND cart.product_items = ? `,
       [quantity, userId, productId]
     );
-
     const [updatedCartItem] = await queryRunner.query(
       `SELECT
          id, user_id, product_items, quantity
@@ -106,9 +111,7 @@ const updateCartItemQuantity = async ({userId, productId, quantity }) => {
        WHERE cart.user_id = ? AND cart.product_items = ?`,
       [userId, productId]
     );
-
     await queryRunner.commitTransaction();
-
     return { message: 'cartItem quantity updated', updatedCartItem };
   } catch (error) {
     await queryRunner.rollbackTransaction();
@@ -117,7 +120,6 @@ const updateCartItemQuantity = async ({userId, productId, quantity }) => {
     await queryRunner.release();
   }
 };
-
 const deleteCart = async ({ userId, productId }) => {
   await appDataSource.query(
     `
@@ -128,34 +130,45 @@ const deleteCart = async ({ userId, productId }) => {
     [userId, productId]
   );
 
-  const pendingPayment = orderStatusEnum.PENDING_PAYMENT;
-  
-  const order = await appDataSource.query(
+  const existingOrder = await appDataSource.query(
     `SELECT
+     *
+    FROM
+      orders
+    WHERE
+      user_id =?`,
+    [userId]
+  );
+
+  const existingOrderArray = Array.isArray ? existingOrder : [existingOrder];
+
+  if (existingOrderArray.length > 0) {
+    const pendingPayment = orderStatusEnum.PENDING_PAYMENT;
+
+    const order = await appDataSource.query(
+      `SELECT
       id
     FROM
       orders
     WHERE
       user_id =? AND order_status_id =?
     `,
-    [userId, pendingPayment]
-  );
-  const orderId = order[0].id;
- 
-  await appDataSource.query(
-    `DELETE FROM order_item WHERE order_id = ? AND product_id = ?`,
-    [orderId, productId]
-  );
+      [userId, pendingPayment]
+    );
+    const orderId = order[0].id;
+
+    await appDataSource.query(
+      `DELETE FROM order_item WHERE order_id = ? AND product_id = ?`,
+      [orderId, productId]
+    );
+  }
 
   return 'cartDeleted';
 };
-
 const addCartItemQuantity = async ({ userId, productId, quantity }) => {
   const queryRunner = appDataSource.createQueryRunner();
-
   await queryRunner.connect();
   await queryRunner.startTransaction();
-
   try {
     await queryRunner.query(
       `UPDATE cart
@@ -163,7 +176,6 @@ const addCartItemQuantity = async ({ userId, productId, quantity }) => {
        WHERE cart.user_id = ? AND cart.product_items = ? `,
       [quantity, userId, productId]
     );
-
     const [updatedCartItem] = await queryRunner.query(
       `SELECT
          id, user_id, product_items, quantity
@@ -171,9 +183,7 @@ const addCartItemQuantity = async ({ userId, productId, quantity }) => {
        WHERE cart.user_id = ? AND cart.product_items = ?`,
       [userId, productId]
     );
-
     await queryRunner.commitTransaction();
-
     return { message: 'cartItem quantity updated', updatedCartItem };
   } catch (error) {
     await queryRunner.rollbackTransaction();
@@ -182,7 +192,6 @@ const addCartItemQuantity = async ({ userId, productId, quantity }) => {
     await queryRunner.release();
   }
 };
-
 module.exports = {
   createCartItem,
   findMatched,
@@ -191,4 +200,5 @@ module.exports = {
   deleteCart,
   findMatchedProductId,
   addCartItemQuantity,
+  existCartItem
 };

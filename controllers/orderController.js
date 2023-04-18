@@ -5,7 +5,7 @@ const orderError = require('../middlewares/orderError.js');
 const createOrders = catchError(async (req, res) => {
   const userId = req.user.id;
 
-  await orderError.emptyCartErrorHandle(userId)
+  await orderError.emptyCartErrorHandle(userId);
 
   await orderError.priceErrorHandle(userId);
 

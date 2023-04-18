@@ -7,8 +7,7 @@ const createPayment = async (orderNumber) => {
 
   await queryRunner.startTransaction();
   try {
-    console.log(orderNumber);
-
+    
     const orderInfo = await queryRunner.query(
       `SELECT
           orders.id AS orderId,
