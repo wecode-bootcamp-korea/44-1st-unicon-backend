@@ -68,7 +68,7 @@
 - 회원가입 | - 프론트엔드 : 김정환 - 백엔드 : 임성근
 
   - 회원가입시<br><img src = "./데모 영상 캡쳐/회원가입.png"/><br> - 회원가입 내용기입<br><img src = "./데모 영상 캡쳐/회원가입 내용 기입.png"/><br><img src = "./데모 영상 캡쳐/회원가입 내용기입 2.png"/><br><img src = "데모 영상 캡쳐/회원가입 내용기입 3.png"/> <br> - 로그인 성공시 <br><img src = "./데모 영상 캡쳐/로그인 성공시.png"/>
-<img src = "./데모 영상 캡처/https://github.com/wecode-bootcamp-korea/44-1st-unicon-backend/blob/d3fe7c2d481433a1c60a522ddea1b53b4407500c/%EB%8D%B0%EB%AA%A8%20%EC%98%81%EC%83%81%20%EC%BA%A1%EC%B3%90/signup.mov"/>
+<img src = "https://github.com/wecode-bootcamp-korea/44-1st-unicon-backend/blob/d3fe7c2d481433a1c60a522ddea1b53b4407500c/%EB%8D%B0%EB%AA%A8%20%EC%98%81%EC%83%81%20%EC%BA%A1%EC%B3%90/signup.mov"/>
 - 메인 페이지 | - 프론트엔드 : 최선영
   <img src = "./데모 영상 캡쳐/메인.png"/>
 
