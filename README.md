@@ -103,7 +103,7 @@
 
 
 
-<img src = "https://user-images.githubusercontent.com/119482288/233228992-329d4bc0-f8f2-4e16-b9ea-82647eabbb9b.mov"/>>
+<img src = "https://user-images.githubusercontent.com/119482288/233228992-329d4bc0-f8f2-4e16-b9ea-82647eabbb9b.mov"/>
 
 
 
