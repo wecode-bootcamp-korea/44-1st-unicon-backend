@@ -67,39 +67,80 @@
 - 로그인 | - 프론트엔드 : 김정환 - 백엔드 : 임성근
 - 회원가입 | - 프론트엔드 : 김정환 - 백엔드 : 임성근
 
-  - 회원가입시<br><img src = "./데모 영상 캡쳐/회원가입.png"/><br> - 회원가입 내용기입<br><img src = "./데모 영상 캡쳐/회원가입 내용 기입.png"/><br><img src = "./데모 영상 캡쳐/회원가입 내용기입 2.png"/><br><img src = "데모 영상 캡쳐/회원가입 내용기입 3.png"/> <br> - 로그인 성공시 <br><img src = "./데모 영상 캡쳐/로그인 성공시.png"/>
+
 <img src = "https://user-images.githubusercontent.com/119482288/233228105-da7b8b93-1e2b-48b8-87de-6c39ce68cda8.mov"/>
+
+
+
+
+<img src = "https://user-images.githubusercontent.com/119482288/233230201-a77531b5-521a-4bf6-b30c-6e01786ecee3.mov"/>
+
+
+
 - 메인 페이지 | - 프론트엔드 : 최선영
-  <img src = "./데모 영상 캡쳐/메인.png"/>
+
+<img src ="https://user-images.githubusercontent.com/119482288/233228246-1cd42c62-939e-427a-8140-c5738ae38896.mov"/>
+
+
 
 - 상품 리스트 | - 프론트엔드 : 최선영 - 백엔드 : 김민서
 - 제품 페이지 | - 프론트엔드 : 최선영 - 백엔드 : 김민서
 
-  - 상품리스트<br><img src = "./데모 영상 캡쳐/제품 리스트.png"/><br>
-  - 상품리스트 호버링 기능<br><img src="./데모 영상 캡쳐/제품 리스트 호버링 이미지 .png"/>
+
     - 제품 카테고리별(쇼파, 의자, 조명) 리스트 항목마다 사진 예시와 동일하게 제작.
+<img src = "https://user-images.githubusercontent.com/37966668/232383804-1432ed20-cad6-4cf0-b63b-40c0a642b446.mov"/>
+<img src="https://user-images.githubusercontent.com/37966668/232384212-2c71ce5b-e667-4e98-97e5-1034e97962fe.mov"/>
 
 - 별점 & 리뷰 | - 프론트엔드 : 김정환 - 백엔드 : 김민서
 
-  - 구매 상품 리뷰<br><img src = "./데모 영상 캡쳐/구매 상품 리뷰.png"/><br><img src = "./데모 영상 캡쳐/구매 상품 리뷰2.png"/> <br><img src = "./데모 영상 캡쳐/구매 상품 리뷰 3.png"/><br> - 구매상품 리뷰 삭제<br><img src = "./데모 영상 캡쳐/구매 상품 리뷰 삭제.png"/><br> - 구매상품 리뷰 삭제 적용<br><img src = "./데모 영상 캡쳐/구매 상품 리뷰 삭제 적용.png"/>
+
+
+<img src="https://user-images.githubusercontent.com/119482288/233230411-81a67737-9668-4751-bed4-2912a754397d.mov"/>
+
+
+
+<img src = "https://user-images.githubusercontent.com/119482288/233228939-86c12f85-8764-49fb-9065-313eb993c0be.mov"/>
+
+
+
+<img src = "https://user-images.githubusercontent.com/119482288/233228992-329d4bc0-f8f2-4e16-b9ea-82647eabbb9b.mov"/>>
+
+
 
 - 쇼룸 페이지 | - 프론트엔드 : 김정환 - 백엔드 : 김민서
 
-  - 쇼룸 이미지 <img src = "./데모 영상 캡쳐/쇼룸.png"/><br><img src = "./데모 영상 캡쳐/쇼룸2.png"/><br><img src = "./데모 영상 캡쳐/쇼룸3.png"/>
+
+<img src = "https://user-images.githubusercontent.com/119482288/233228619-48639ee6-581d-4d3a-befd-d9bb9842b34e.mov"/>
+
+
+ 
 
 - 검색 및 필터 | - 프론트엔드 : 김정환 - 백엔드 : 김민서
 
-  - 메뉴바 이미지<br><img src = "./데모 영상 캡쳐/메뉴바.png"/><br> - 낮은 가격순 정렬<br><img src = "./데모 영상 캡쳐/낮은 가격순 정렬.png"/><br> - 낮은 가격순 제품 리스트<br><img src = "./데모 영상 캡쳐/낮은 가격순 제품리스트.png"/><br> - 높은 가격순 정렬<br><img src = "./데모 영상 캡쳐/높은 가격순 정렬.png"/><br> - 높은 가격순 제품 리스트 <br><img src = "./데모 영상 캡쳐/높은 가격순 제품 리스트.png"/>
 
-- 장바구니| - 프론트엔드 : 김정환 - 백엔드: 최상현
+<img src="https://user-images.githubusercontent.com/119482288/233228387-6c172a2b-e80c-4b5c-bce6-e0c1ca37e322.mov"/>
 
-  - 장바구니 담기 성공 <br><img src = "./데모 영상 캡쳐/장바구니 담기 성공.png"/><br> - 장바구니 리스트 <br><img src = "./데모 영상 캡쳐/장바구니 리스트.png"/><br> - 장바구니 내역 수정<br> <img src = "./데모 영상 캡쳐/장바구니 내역 수정.png"/><br> - 장바구니 내역 수정 적용<br><img src = "./데모 영상 캡쳐/장바구니 내역 수정 적용.png"/>
+<img src="https://user-images.githubusercontent.com/119482288/233228434-40dd427f-cd12-4254-9670-e73eaf769521.mov"/>
+
+
+
+
+
+- 장바구니 | - 프론트엔드 : 김정환 - 백엔드: 최상현
 
 - 주문 페이지 | - 프론트엔드 : 김정환 - 백엔드: 최상현
-  <img src = "./데모 영상 캡쳐/주문하기.png"/>
 
 - 결제 페이지 | - 프론트엔드 : 김정환 - 백엔드: 임성근
-  - 결제 화면 <img src = "./데모 영상 캡쳐/결제.png"/><br> -결제 완료 <br> <img src = "./데모 영상 캡쳐/결제 완료.png"/>
+
+
+<img src = "https://user-images.githubusercontent.com/119482288/233228689-4d05f29f-515c-4c36-9708-8ff612acdc3c.mov"/>
+
+
+
+
+
+
+
 
 ## 주요 기능 설명
 
@@ -124,6 +165,7 @@
 - 필터기능를 통해 제품 정렬
 - 주력으로 밀고 있는 쇼룸 및 이벤트의 카테고리를 눈에 띄게 노출
 - 사용자의 특정제품을 단시간에 찾을 수 있도록 메인의 최상단에 위치시킴.
+
 
 #### 4. 상품 리스트 / 제품 페이지
 
