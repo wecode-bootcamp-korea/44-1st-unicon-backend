@@ -60,7 +60,8 @@
 
 ## ERD 구조
 
-<img src="데모 영상 캡쳐/구축 ERD.png"/>
+![Untitled (2)](https://github.com/minseoya/unicon-backend/assets/119482288/609f2625-145d-4b49-8e21-408b948145c7)
+
 
 
 
