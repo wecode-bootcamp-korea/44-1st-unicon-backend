@@ -1,15 +1,7 @@
 const appDataSource = require('./appDataSource');
 const { DatabaseError } = require('../middlewares/error');
 
-const signUp = async (
-  name,
-  email,
-  hashedPassword,
-  phone,
-  address,
-  birth,
-  gender
-) => {
+const signUp = async (name, email, hashedPassword, phone, address, birth) => {
   try {
     const DEFAULT_POINTS = 99999;
     const user = await appDataSource.query(
@@ -25,8 +17,24 @@ const signUp = async (
 		  `,
       [name, email, hashedPassword, phone, address, birth, DEFAULT_POINTS]
     );
+    return user;
   } catch (err) {
-    const error = new DatabaseError('INVALID_DATA_INPUT');
+    throw new DatabaseError('INVALID_DATA_INPUT');
+  }
+};
+
+const createGender = async (userId, gender) => {
+  try {
+    return await appDataSource.query(
+      `INSERT INTO gender(
+        user_id,
+        gender_type
+        )VALUES(?,?)
+      `,
+      [userId, gender]
+    );
+  } catch (err) {
+    throw new DatabaseError('dataSource Error');
   }
 };
 
@@ -47,7 +55,7 @@ const getUserById = async (id) => {
     );
     return result;
   } catch (err) {
-    const error = new DatabaseError('dataSource Error');
+    throw new DatabaseError('dataSource Error');
   }
 };
 
@@ -66,9 +74,12 @@ const getUserbyEmail = async (email) => {
       `,
       [email]
     );
+    // const user = await appDataSource.manager.findOneBy(users, {
+    //   email: email,
+    // });
     return user;
   } catch (err) {
-    const error = new DatabaseError('NOT_FOUND_EMAIL');
+    throw new DatabaseError('NOT_FOUND_EMAIL');
   }
 };
 
@@ -76,4 +87,5 @@ module.exports = {
   signUp,
   getUserbyEmail,
   getUserById,
+  createGender,
 };
