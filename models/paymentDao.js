@@ -7,7 +7,7 @@ const createPayment = async (orderNumber) => {
 
   await queryRunner.startTransaction();
   try {
-    const re = await queryRunner.query(
+    const orderInfo = await queryRunner.query(
       `SELECT
           orders.id AS orderId,
           user_id AS userId,
@@ -16,7 +16,13 @@ const createPayment = async (orderNumber) => {
        WHERE order_number = ?`,
       [orderNumber]
     );
-  
+
+    const orderInfoArray = Array.isArray(orderInfo) ? orderInfo : [orderInfo];
+
+    const userId = orderInfoArray[0].userId;
+    const totalAmount = orderInfoArray[0].totalAmount;
+    const orderId = orderInfoArray[0].orderId;
+
     await queryRunner.query(
       `UPDATE users SET points = points - ? WHERE id = ?`,
       [totalAmount, userId]
@@ -27,20 +33,26 @@ const createPayment = async (orderNumber) => {
       [userId]
     );
 
-    const [{ getProductName }] = await queryRunner.query(
-      `  SELECT product.names AS getProductName FROM product 
-      JOIN cart ON product.id = cart.product_items WHERE cart.user_id= ?`,
-      [userId]
+    const getProductName = await queryRunner.query(
+      `SELECT p.names
+      FROM product p
+      JOIN order_item oi ON p.id = oi.product_id
+      JOIN orders o ON oi.order_id = o.id
+      WHERE oi.user_id = ? AND o.id = ?;
+      `,
+      [userId, orderId]
     );
 
     await queryRunner.query(`DELETE FROM cart WHERE user_id = ?`, [userId]);
 
+    const completePayMent = orderStatusEnum.COMPLETE_PAYMENT;
+
     await queryRunner.query(
-      `UPDATE orders SET order_status_id =? WHERE user_id =?`,
-      [orderStatusEnum.COMPLETE_PAYMENT, userId]
+      `UPDATE orders SET order_status_id =? WHERE id =?`,
+      [completePayMent, orderId]
     );
 
-    const [{ lists }] = await queryRunner.query(
+    const lists = await queryRunner.query(
       `SELECT 
           order_item.user_id AS UserId,
           JSON_ARRAYAGG(
@@ -56,6 +68,8 @@ const createPayment = async (orderNumber) => {
       `,
       [orderId]
     );
+
+    const listsArray = Array.isArray(lists) ? lists : [lists];
 
     const stringifyList = JSON.stringify(lists);
 

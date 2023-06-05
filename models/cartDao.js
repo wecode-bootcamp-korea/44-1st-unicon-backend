@@ -8,7 +8,8 @@ const createCartItem = async ({ userId, productId, quantity }) => {
       'SELECT * FROM product where product.id =?',
       [productId]
     );
-    if (product <= 0) {
+    const productArray = Array.isArray ? product : [product];
+    if (productArray.length <= 0) {
       throw new DatabaseError('Invalid product');
     }
     await appDataSource.query(
@@ -21,6 +22,15 @@ const createCartItem = async ({ userId, productId, quantity }) => {
   } catch (error) {
     throw new DatabaseError('failed to create cart item');
   }
+};
+
+const existCartItem = async (userId, productId) => {
+  const cart = await appDataSource.query(
+    `SELECT * FROM cart WHERE product_items = ? AND user_id =?`,
+    [productId, userId]
+  );
+  const cartArray = Array.isArray(cart) ? cart : [cart];
+  return cartArray;
 };
 
 const findMatchedProductId = async (productId) => {
@@ -127,26 +137,38 @@ const deleteCart = async ({ userId, productId }) => {
       `,
     [userId, productId]
   );
-
-  const pendingPayment = orderStatusEnum.PENDING_PAYMENT;
-  
-  const order = await appDataSource.query(
+  const existingOrder = await appDataSource.query(
     `SELECT
+    *
+    FROM
+      orders
+    WHERE
+      user_id =?`,
+    [userId]
+  );
+
+  const existingOrderArray = Array.isArray ? existingOrder : [existingOrder];
+
+  if (existingOrderArray.length > 0) {
+    const pendingPayment = orderStatusEnum.PENDING_PAYMENT;
+
+    const order = await appDataSource.query(
+      `SELECT
       id
     FROM
       orders
     WHERE
       user_id =? AND order_status_id =?
     `,
-    [userId, pendingPayment]
-  );
-  const orderId = order[0].id;
- 
-  await appDataSource.query(
-    `DELETE FROM order_item WHERE order_id = ? AND product_id = ?`,
-    [orderId, productId]
-  );
+      [userId, pendingPayment]
+    );
+    const orderId = order[0].id;
 
+    await appDataSource.query(
+      `DELETE FROM order_item WHERE order_id = ? AND product_id = ?`,
+      [orderId, productId]
+    );
+  }
   return 'cartDeleted';
 };
 
@@ -191,4 +213,5 @@ module.exports = {
   deleteCart,
   findMatchedProductId,
   addCartItemQuantity,
+  existCartItem,
 };

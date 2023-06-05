@@ -16,7 +16,7 @@ const createCartItem = async ({ userId, productId, quantity }) => {
     throw error;
   }
 
-  const existCartItem = await cartDao.findMatchedProductId(productId);
+  const existCartItem = await cartDao.existCartItem(userId, productId);
 
   if (existCartItem.length === 0) {
     await cartDao.createCartItem({
@@ -36,7 +36,6 @@ const getCartList = async (userId) => {
 };
 
 const updatedCart = async (userId, productList) => {
-
   const updatedCartItems = await Promise.all(
     productList.map(async (element) => {
       if (element.quantity <= 0) {
