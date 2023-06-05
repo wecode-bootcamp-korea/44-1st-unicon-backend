@@ -5,41 +5,33 @@ require('dotenv').config();
 const cors = require('cors');
 const morgan = require('morgan');
 
-const router = require('./routes');
+const router = require('./src/routes');
 
-const app = express();
+const { errorHandler } = require('./src/middlewares/error');
 
-const { errorHandler } = require('./middlewares/error');
-const appDataSource = require('./models/appDataSource');
+const createApp = () => {
+  const app = express();
 
-app.use(cors());
-app.use(morgan('combined'));
-app.use(express.json());
-appDataSource
-  .initialize()
-  .then(() => {
-    console.log('Data Source has been initialized!');
-  })
-  .catch((err) => {
-    console.error('Error during Data Source initialization', err);
-    appDataSource.destroy();
+  app.use(cors());
+  app.use(morgan('combined'));
+  app.use(express.json());
+
+  app.use(router);
+
+  app.get('/ping', (req, res) => {
+    res.status(200).json({ message: 'pong' });
   });
 
-app.use(router);
-app.use(errorHandler);
+  app.all('*', (req, res, next) => {
+    const err = new Error(`Can't fine ${req.originalUrl} on this server`);
 
-app.get('/ping', (req, res) => {
-  res.status(200).json({ message: 'pong' });
-});
+    err.stautsCode = 404;
+    next(err);
+  });
 
-const PORT = process.env.PORT;
+  app.use(errorHandler);
 
-const start = () => {
-  try {
-    app.listen(PORT, () => console.log(`Server is listening on ${PORT}`));
-  } catch (err) {
-    console.error(err);
-  }
+  return app;
 };
 
-start();
+module.exports = { createApp };

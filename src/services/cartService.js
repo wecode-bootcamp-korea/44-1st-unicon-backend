@@ -36,7 +36,6 @@ const getCartList = async (userId) => {
 };
 
 const updatedCart = async (userId, productList) => {
-
   const updatedCartItems = await Promise.all(
     productList.map(async (element) => {
       if (element.quantity <= 0) {

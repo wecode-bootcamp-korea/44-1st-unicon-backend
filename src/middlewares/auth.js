@@ -11,8 +11,12 @@ const loginRequired = async (req, res, next) => {
 
       return res.status(error.statusCode).json({ message: error.message });
     }
+
     // 2) Verification token
-    const decoded = await jwt.verify(accessToken, process.env.SECRET_KEY);
+    const decoded = jwt.verify(accessToken, process.env.SECRET_KEY, {
+      issuer: 'min', // 발급자 검증
+      // ignoreNotBefore: false, // notBefore 검증 사용
+    });
 
     // 3) Check if user still exists
     const user = await userService.getUserById(decoded.id);
