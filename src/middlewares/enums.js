@@ -5,4 +5,9 @@ const orderStatusEnum = Object.freeze({
   DELIVERY_COMPLETED: 4,
 });
 
-module.exports = { orderStatusEnum };
+const defaltProductListEnum = Object.freeze({
+  DEFAULT_LIMIT: 15,
+  DEFAULT_OFFSET: 0,
+});
+
+module.exports = { orderStatusEnum, defaltProductListEnum };

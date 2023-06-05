@@ -1,5 +1,6 @@
 const productService = require('../services/productService');
 const { catchError, baseError } = require('../middlewares/error');
+const { defaltProductListEnum } = require('../middlewares/enums');
 
 const searchProduct = catchError(async (req, res) => {
   const { word } = req.body;
@@ -21,14 +22,14 @@ const getProductById = catchError(async (req, res) => {
     return new baseError('PRODUCT_DOES_NOT_EXIST', 404);
   }
 
-  const [product] = await productService.getProductById(productId);
+  const product = await productService.getProductById(productId);
 
   return res.status(200).json(product);
 });
 
 const getProductList = catchError(async (req, res) => {
-  const DEFAULT_LIMIT = 15;
-  const DEFAULT_OFFSET = 0;
+  const DEFAULT_LIMIT = defaltProductListEnum.DEFAULT_LIMIT;
+  const DEFAULT_OFFSET = defaltProductListEnum.DEFAULT_OFFSET;
 
   const {
     mainCategory,

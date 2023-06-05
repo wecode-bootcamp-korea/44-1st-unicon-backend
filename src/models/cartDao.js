@@ -23,6 +23,15 @@ const createCartItem = async ({ userId, productId, quantity }) => {
   }
 };
 
+const existCartItem = async (userId, productId) => {
+  const cart = await appDataSource.query(
+    `SELECT * FROM cart WHERE product_items = ? AND user_id =?`,
+    [productId, userId]
+  );
+  const cartArray = Array.isArray(cart) ? cart : [cart];
+  return cartArray;
+};
+
 const findMatchedProductId = async (productId) => {
   const cart = await appDataSource.query(
     `SELECT * FROM cart WHERE product_items = ?`,
@@ -191,4 +200,5 @@ module.exports = {
   deleteCart,
   findMatchedProductId,
   addCartItemQuantity,
+  existCartItem,
 };
