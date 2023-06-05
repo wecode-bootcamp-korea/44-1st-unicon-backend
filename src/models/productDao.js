@@ -86,14 +86,15 @@ const getProductList = async (
       isnew,
       pricefilter
     );
+
     let versity = filter.build();
-    if (pricefilter && !mainCategory && !subCategory && !isnew) {
-      condition = versity;
-    } else if (!pricefilter && !mainCategory && !subCategory && !isnew) {
+
+    if (!mainCategory && !subCategory && !isnew) {
       condition = versity;
     } else {
       versity ? (condition = `WHERE ` + versity) : (versity = ``);
     }
+    console.log(condition);
 
     const post = await appDataSource.query(
       `SELECT
@@ -123,7 +124,7 @@ const getProductList = async (
 
 const getProductById = async (productId) => {
   try {
-    const productDetail = await appDataSource.query(
+    const [productDetail] = await appDataSource.query(
       `SELECT
       p.id,
       p.names,
@@ -145,6 +146,7 @@ const getProductById = async (productId) => {
 	 `,
       [productId]
     );
+
     return productDetail;
   } catch (err) {
     throw new DatabaseError('INVALID_DATA_INPUT');

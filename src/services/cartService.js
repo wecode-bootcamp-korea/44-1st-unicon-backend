@@ -16,7 +16,7 @@ const createCartItem = async ({ userId, productId, quantity }) => {
     throw error;
   }
 
-  const existCartItem = await cartDao.findMatchedProductId(productId);
+  const existCartItem = await cartDao.existCartItem(userId, productId);
 
   if (existCartItem.length === 0) {
     await cartDao.createCartItem({

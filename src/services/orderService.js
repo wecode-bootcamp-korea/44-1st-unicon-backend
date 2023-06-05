@@ -1,6 +1,6 @@
 const orderDao = require('../models/orderDao');
 const appDataSource = require('../models/appDataSource');
-const {orderStatusEnum} = require('../middlewares/enums')
+const { orderStatusEnum } = require('../middlewares/enums');
 
 const createOrderAndItems = async (userId) => {
   const queryRunner = appDataSource.createQueryRunner();
@@ -16,13 +16,16 @@ const createOrderAndItems = async (userId) => {
   try {
     const orders = await orderDao.findMatched(userId);
 
-    if (orders.length === 0 || orders[0].order_status_id === orderStatusEnum.COMPLETE_PAYMENT) {
+    if (
+      orders.length === 0 ||
+      orders[0].order_status_id === orderStatusEnum.COMPLETE_PAYMENT
+    ) {
       await orderDao.createOrders(userId, orderStatusEnum.PENDING_PAYMENT);
       const newOrders = await orderDao.findMatched(userId);
       orderId = newOrders[0].id;
 
       totalAmount = await orderDao.createOrderAndItems(userId, orderId);
-    } else if(orders[0].order_status_id === orderStatusEnum.PENDING_PAYMENT) {
+    } else if (orders[0].order_status_id === orderStatusEnum.PENDING_PAYMENT) {
       orderId = orders[0].id;
       totalAmount = await orderDao.createOrderAndItems(userId, orderId);
     }
@@ -36,7 +39,7 @@ const createOrderAndItems = async (userId) => {
       totalAmount: totalAmount,
       imageUrl: imageUrl,
       userInfo: userInfo.addresses,
-      orderNumber: userInfo.orderNumber
+      orderNumber: userInfo.orderNumber,
     };
   } catch (err) {
     await queryRunner.rollbackTransaction();
@@ -48,25 +51,6 @@ const createOrderAndItems = async (userId) => {
   }
 };
 
-const executedOrder = async (userId) => {
-  try {
-    const currentPoints = (await orderDao.getUserInfoByUserId(userId)).map(
-      (result) => result['currentPoints']
-    );
-
-    await orderDao.executedOrder(userId);
-
-    const remainingPoints = (await orderDao.getUserInfoByUserId(userId)).map(
-      (result) => result['currentPoints']
-    );
-
-    return { currentPoints, remainingPoints };
-  } catch (err) {
-    throw new Error(
-      `Failed to create orders for userId ${userId}: ${err.message}`
-    );
-  }
-};
 const purchaseditems = async (userId) => {
   try {
     const items = await orderDao.purchaseditems(userId);
@@ -77,7 +61,6 @@ const purchaseditems = async (userId) => {
   }
 };
 module.exports = {
-  executedOrder,
   createOrderAndItems,
   purchaseditems,
 };
