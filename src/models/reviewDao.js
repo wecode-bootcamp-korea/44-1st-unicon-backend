@@ -1,4 +1,4 @@
-const appDataSource = require('./appDataSource.js');
+const appDataSource = require('./appDataSource');
 const { DatabaseError } = require('../middlewares/error.js');
 
 const createReview = async (title, content, rating, productId, userId) => {
