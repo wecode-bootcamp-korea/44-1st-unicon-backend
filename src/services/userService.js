@@ -27,7 +27,7 @@ const signIn = async (email, password) => {
     throw err;
   }
 
-  const ismatch = checkHash(password, users.passwords);
+  const ismatch = await checkHash(password, users.passwords);
 
   if (!ismatch) {
     const err = new Error('PASSWORD_NOT_MATCH');
