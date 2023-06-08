@@ -52,4 +52,22 @@ class conditionMake {
   }
 }
 
-module.exports = conditionMake;
+class AddOrUpdate {
+  constructor({ quantity, userId, productId }) {
+    this.quantity = quantity;
+    this.userId = userId;
+    this.productId = productId;
+  }
+  add() {
+    return `UPDATE cart
+             SET quantity = quantity+ ?
+             WHERE cart.user_id = ? AND cart.product_items = ? `;
+  }
+  update() {
+    return `UPDATE cart
+    SET quantity = ?
+    WHERE cart.user_id = ? AND cart.product_items = ? `;
+  }
+}
+
+module.exports = { conditionMake, AddOrUpdate };
