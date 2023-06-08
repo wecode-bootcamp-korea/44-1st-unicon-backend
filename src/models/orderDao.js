@@ -14,7 +14,7 @@ const purchaseditems = async (userId) => {
     );
 
     let productIdList = [];
-    await lists.forEach((i) => {
+    await lists[0].lists.forEach((i) => {
       productIdList.push(i.productId);
     });
     let productIdstr = productIdList.join();
@@ -40,7 +40,6 @@ const purchaseditems = async (userId) => {
     );
     return items;
   } catch (err) {
-    console.log(err);
     throw new DatabaseError('INVALID_DATA');
   }
 };
@@ -212,12 +211,14 @@ const getUserInfoByUserId = async (userId) => {
       user_id =?
       ORDER BY orders.id DESC 
       LIMIT 1      
-      `
-    ,
-    [userId]    
-  )
-  
-  return {addresses: addresses[0].addresses, orderNumber: orderNumber[0].order_number};
+      `,
+    [userId]
+  );
+
+  return {
+    addresses: addresses[0].addresses,
+    orderNumber: orderNumber[0].order_number,
+  };
 };
 
 const executedOrder = async (userId) => {
