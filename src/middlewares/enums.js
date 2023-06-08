@@ -10,4 +10,13 @@ const defaltProductListEnum = Object.freeze({
   DEFAULT_OFFSET: 0,
 });
 
-module.exports = { orderStatusEnum, defaltProductListEnum };
+const addORupdateStatusEnum = Object.freeze({
+  ADD: 0,
+  UPDATE: 1,
+});
+
+module.exports = {
+  orderStatusEnum,
+  defaltProductListEnum,
+  addORupdateStatusEnum,
+};
