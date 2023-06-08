@@ -30,7 +30,6 @@ const loginRequired = async (req, res, next) => {
     req.user = { id: decoded.id, names: user.names };
     next();
   } catch (error) {
-    console.error(error);
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
