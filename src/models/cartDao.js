@@ -106,14 +106,16 @@ const updateCartItemQuantity = async ({
   productId,
   addorupdatestatusEnum,
 }) => {
+  let query;
   let addorupdate = new AddOrUpdate(quantity, userId, productId);
-  if (!addorupdatestatusEnum) addorupdate = addorupdate.add();
-  if (addorupdatestatusEnum) addorupdate = addorupdate.update();
+  if (!addorupdatestatusEnum) query = addorupdate.add();
+  if (addorupdatestatusEnum) query = addorupdate.update();
+  console.log('------------' + query);
   const queryRunner = appDataSource.createQueryRunner();
   await queryRunner.connect();
   await queryRunner.startTransaction();
   try {
-    await queryRunner.query(addorupdate, [quantity, userId, productId]);
+    await queryRunner.query(query, [quantity, userId, productId]);
 
     const [updatedCartItem] = await queryRunner.query(
       `SELECT
@@ -134,7 +136,7 @@ const updateCartItemQuantity = async ({
   }
 };
 
-const deleteCart = async (userId, productId) => {
+const deleteCart = async ({ userId, productId }) => {
   await appDataSource.query(
     `
         DELETE

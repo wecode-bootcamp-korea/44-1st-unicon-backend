@@ -56,7 +56,6 @@ const purchaseditems = async (userId) => {
     const items = await orderDao.purchaseditems(userId);
     return items;
   } catch (err) {
-    console.log(err);
     throw new Error('NO_ITEM');
   }
 };

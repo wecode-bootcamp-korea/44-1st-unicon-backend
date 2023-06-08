@@ -49,7 +49,7 @@ const updatedCart = async (userId, productList) => {
   const updatedCartItems = await Promise.all(
     productList.map(async (element) => {
       if (element.quantity <= 0) {
-        await cartDao.deleteCart(userId, element.productId);
+        await cartDao.deleteCart({ userId, productId: element.productId });
         return null;
       } else {
         const { updatedCartItem } = await cartDao.updateCartItemQuantity({
@@ -65,7 +65,7 @@ const updatedCart = async (userId, productList) => {
   return updatedCartItems.filter((item) => item !== null);
 };
 
-const deleteCart = async (userId, productId) => {
+const deleteCart = async ({ userId, productId }) => {
   const existCartItem = await cartDao.findMatchedProductId(productId);
 
   if (existCartItem.length === 0) {
@@ -74,7 +74,7 @@ const deleteCart = async (userId, productId) => {
 
     throw error;
   }
-  return await cartDao.deleteCart(userId, productId);
+  return await cartDao.deleteCart({ userId, productId });
 };
 
 module.exports = {
