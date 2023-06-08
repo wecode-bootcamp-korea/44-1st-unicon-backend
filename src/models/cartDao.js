@@ -110,7 +110,7 @@ const updateCartItemQuantity = async ({
   let addorupdate = new AddOrUpdate(quantity, userId, productId);
   if (!addorupdatestatusEnum) query = addorupdate.add();
   if (addorupdatestatusEnum) query = addorupdate.update();
-  console.log('------------' + query);
+
   const queryRunner = appDataSource.createQueryRunner();
   await queryRunner.connect();
   await queryRunner.startTransaction();
