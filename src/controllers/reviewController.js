@@ -14,13 +14,13 @@ const createReview = catchError(async (req, res) => {
     return res.status(400).json({ message: 'KEY_ERROR' });
   }
 
-  const review = await reviewService.createReview(
+  const review = await reviewService.createReview({
     title,
     content,
     rating,
     productId,
-    userId
-  );
+    userId,
+  });
 
   return res.status(201).json(review);
 });
@@ -45,11 +45,11 @@ const deleteReview = catchError(async (req, res) => {
     return res.status(400).json({ message: 'KEY_ERROR' });
   }
 
-  const deleteReview = await reviewService.deleteReview(
+  const deleteReview = await reviewService.deleteReview({
     userId,
     productId,
-    reviewId
-  );
+    reviewId,
+  });
 
   return res.status(204).send(deleteReview);
 });

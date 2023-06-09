@@ -1,20 +1,20 @@
 const reviewDao = require('../models/reviewDao.js');
 const { baseError } = require('../middlewares/error');
 
-const createReview = async (title, content, rating, productId, userId) => {
-  const isOrder = await reviewDao.isOrder(userId, productId);
+const createReview = async ({ title, content, rating, productId, userId }) => {
+  const isOrder = await reviewDao.isOrder({ userId, productId });
 
-  if (isOrder.length == 0) {
+  if (!isOrder.includes(productId)) {
     throw new baseError('NOT_IN_ORDER', 403);
   }
 
-  return await reviewDao.createReview(
+  return await reviewDao.createReview({
     title,
     content,
     rating,
     productId,
-    userId
-  );
+    userId,
+  });
 };
 
 const getReviewByProductId = async (productId) => {
@@ -27,8 +27,8 @@ const getReviewByProductId = async (productId) => {
   return review;
 };
 
-const deleteReview = async (userId, productId, reviewId) => {
-  const review = await reviewDao.deleteReview(userId, productId, reviewId);
+const deleteReview = async ({ userId, productId, reviewId }) => {
+  const review = await reviewDao.deleteReview({ userId, productId, reviewId });
 
   if (deleteReview.affectedRows == 0)
     throw new baseError('NOT_YOUR_POST_CAN_NOT_DELETE', 401);
