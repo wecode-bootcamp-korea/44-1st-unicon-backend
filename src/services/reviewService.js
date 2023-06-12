@@ -1,8 +1,9 @@
 const reviewDao = require('../models/reviewDao.js');
 const { baseError } = require('../middlewares/error');
+const orderDao = require('../models/orderDao.js');
 
 const createReview = async ({ title, content, rating, productId, userId }) => {
-  const isOrder = await reviewDao.isOrder({ userId, productId });
+  const isOrder = await orderDao.purchasedIdList({ userId });
 
   if (!isOrder.includes(productId)) {
     throw new baseError('NOT_IN_ORDER', 403);

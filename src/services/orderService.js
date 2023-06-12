@@ -53,7 +53,9 @@ const createOrderAndItems = async (userId) => {
 
 const purchaseditems = async (userId) => {
   try {
-    const items = await orderDao.purchaseditems(userId);
+    const list = await orderDao.purchasedIdList({ userId });
+    const items = await orderDao.purchaseditems(list);
+
     return items;
   } catch (err) {
     throw new Error('NO_ITEM');

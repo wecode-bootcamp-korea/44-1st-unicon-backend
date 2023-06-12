@@ -18,34 +18,6 @@ const createReview = async ({ title, content, rating, productId, userId }) => {
   }
 };
 
-const isOrder = async ({ userId, productId }) => {
-  try {
-    const lists = await appDataSource.query(
-      `SELECT
-      lists
-    FROM receipt
-    WHERE user_id = ?`,
-      [userId]
-    );
-    const resultArray = Array.isArray(lists) ? lists : [lists];
-
-    let result = [];
-    resultArray.forEach((list) => {
-      if (list.lists[0].lists.length == 1) {
-        result.push(list.lists[0].lists[0].productId);
-      } else {
-        list.lists[0].lists.forEach((element) => {
-          result.push(element.productId);
-        });
-      }
-    });
-
-    return result;
-  } catch (err) {
-    throw new DatabaseError('INVALID_DATA');
-  }
-};
-
 const getReviewByProductId = async (productId) => {
   try {
     return await appDataSource.query(
@@ -79,7 +51,6 @@ const deleteReview = async ({ userId, productId, reviewId }) => {
 
 module.exports = {
   createReview,
-  isOrder,
   getReviewByProductId,
   deleteReview,
 };

@@ -3,22 +3,37 @@ const { DatabaseError } = require('../middlewares/error');
 const { orderStatusEnum } = require('../middlewares/enums');
 const { v4 } = require('uuid');
 
-const purchaseditems = async (userId) => {
+const purchasedIdList = async ({ userId }) => {
   try {
-    const [{ lists }] = await appDataSource.query(
+    const lists = await appDataSource.query(
       `SELECT
       lists
     FROM receipt
     WHERE user_id = ?`,
       [userId]
     );
-
-    let productIdList = [];
-    await lists[0].lists.forEach((i) => {
-      productIdList.push(i.productId);
+    const resultArray = Array.isArray(lists) ? lists : [lists];
+    let result = [];
+    resultArray.forEach((list) => {
+      if (list.lists.length == 1) {
+        result.push(list.lists[0].productId);
+      } else {
+        list.lists.forEach((element) => {
+          result.push(element.productId);
+        });
+      }
     });
-    let productIdstr = productIdList.join();
+    console.log(result);
+    return result;
+  } catch (err) {
+    throw new DatabaseError('INVALID_DATA');
+  }
+};
 
+const purchaseditems = async (list) => {
+  try {
+    let productIdstr = list.join();
+    console.log(productIdstr);
     const items = await appDataSource.query(
       `SELECT
       p.id,
@@ -250,4 +265,5 @@ module.exports = {
   executedOrder,
   createOrderAndItems,
   purchaseditems,
+  purchasedIdList,
 };

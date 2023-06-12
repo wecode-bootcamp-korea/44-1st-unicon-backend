@@ -71,7 +71,7 @@ const createPayment = async (orderNumber) => {
 
     const listsArray = Array.isArray(lists) ? lists : [lists];
 
-    const stringifyList = JSON.stringify(lists);
+    const stringifyList = JSON.stringify(listsArray[0].lists);
 
     await queryRunner.query(
       `INSERT INTO receipt(
@@ -97,7 +97,7 @@ const createPayment = async (orderNumber) => {
   } catch (err) {
     await queryRunner.rollbackTransaction();
     const error = new Error('INVALID_DATA_INPUT');
-    console.log(err);
+
     error.statusCode = 500;
     throw error;
   } finally {
